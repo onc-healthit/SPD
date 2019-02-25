@@ -8,14 +8,14 @@ if (typeof process.env.SPD_DB_HOST == 'undefined' ||
 }
 
 const npidb = new Sequelize(process.env.NPPES_DB, process.env.SPD_DB_USER, process.env.SPD_DB_PWD, {
-  host: process.env.SPD_DB_USER,
-  dialect: process.env.SPD_DB_HOST,
+  host: process.env.SPD_DB_HOST,
+  dialect: process.env.SPD_DB_DIALECT,
   port: process.env.SPD_DB_PORT
 });
 
 const spddb = new Sequelize(process.env.SPD_DB, process.env.SPD_DB_USER, process.env.SPD_DB_PWD, {
-  host: process.env.SPD_DB_USER,
-  dialect: process.env.SPD_DB_HOST,
+  host: process.env.SPD_DB_HOST,
+  dialect: process.env.SPD_DB_DIALECT,
   port: process.env.SPD_DB_PORT
 });
 

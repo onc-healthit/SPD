@@ -1,0 +1,25 @@
+{
+  "name": "loader",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./spdLoader.js --exec babel-node"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "dotenv": "^6.0.0",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "mysql2": "^1.6.1",
+    "nodemon": "^1.18.4",
+    "sequelize": "^4.38.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  }
+}

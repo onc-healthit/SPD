@@ -2,10 +2,6 @@ import Sequelize from 'sequelize';
 import { npidb, spddb } from '../util/dbconnect';
 import _ from 'lodash';
 
-/**
-* CaseModel is mapped to the table of case and 
-* used in case and  allCases queries.
-*/
 const npiModel = npidb.define('npi', {
   organization_id: { type: Sequelize.INTEGER},
   organization_name: { type: Sequelize.STRING },

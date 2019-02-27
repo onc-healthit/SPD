@@ -9,6 +9,11 @@ from nppes_data_generators.npis.utils import backward_digit_generator, double_to
 class TestNPIGenerator(unittest.TestCase):
 
     def test_backward_digit_generator(self):
+        '''
+        Test that for any given number backward_digit_generator returns it's digits from right to left
+        Ex. 123456789 -> (9, 8, 7, 6, 5, 4, 3, 2, 1)
+        :return:
+        '''
         numbers = (randrange(LOWER_LIMIT, UPPER_LIMIT) for _ in range(randint(10, 100)))
         for n in numbers:
             expected = list(reversed([int(_) for _ in str(n)]))
@@ -16,6 +21,11 @@ class TestNPIGenerator(unittest.TestCase):
             self.assertListEqual(expected, computed, '%s vs %s' % (str(expected), str(computed)))
 
     def test_double_to_digit(self):
+        '''
+        Test that for any 2-digit number double_to_digit returns the sum of the two digits
+        Ex. 15 -> 1 + 5 -> 6
+        :return:
+        '''
         numbers = (randint(0, 100) for _ in range(randint(10, 100)))
         for n in numbers:
             self.assertRaises(AssertionError) if n > 18 else \
@@ -24,6 +34,11 @@ class TestNPIGenerator(unittest.TestCase):
                                  "Failed for %i" % n)
 
     def test_luhn_digit_generator(self):
+        '''
+        Test that luhn_digit_generator "Double the value of alternate digits beginning with the rightmost digit"
+        Ex. 101010101 -> (2, 0, 2, 0, 2, 0, 2, 0, 2)
+        :return:
+        '''
         numbers = [101010101, 111111111, 222222222, 555555555, 999999999, 123456789]
         expected = [[2, 0, 2, 0, 2, 0, 2, 0, 2], [2, 1, 2, 1, 2, 1, 2, 1, 2],
                     [4, 2, 4, 2, 4, 2, 4, 2, 4], [1, 5, 1, 5, 1, 5, 1, 5, 1],
@@ -32,18 +47,33 @@ class TestNPIGenerator(unittest.TestCase):
         self.assertListEqual(expected, computed, "%s vs %s" % (str(expected), str(computed)))
 
     def test_calculate_check_digit(self):
+        '''
+        Test that calculate_check_digit "Subtract the total obtained in step 2 from the next higher number ending in
+        zero.  This is the check digit.  If the total obtained in step 2 is a number ending in zero,
+        the check digit is zero."
+        :return:
+        '''
         numbers = [22, 54, 18, 36, 80, 67, 29, 65, 71, 93]
         expected = [8, 6, 2, 4, 0, 3, 1, 5, 9, 7]
         computed = [calculate_check_digit(_) for _ in numbers]
         self.assertListEqual(expected, computed, "%s vs %s" % (str(expected), str(computed)))
 
     def test_append_digit(self):
+        '''
+        Test that append_digit appends a digit to a given number
+        Ex. append_digit(12345678, 9) -> 123456789
+        :return:
+        '''
         numbers = [randrange(LOWER_LIMIT, UPPER_LIMIT) for _ in range(randint(10, 100))]
         expected = list(map(lambda _: _[1] * 10 + _[0], enumerate(numbers)))
         computed = list(map(append_digit, numbers, range(len(numbers))))
         self.assertListEqual(expected, computed, "%s vs %s" % (str(expected), str(computed)))
 
     def test_npi(self):
+        '''
+        Test that npi builds an NPI given its first nine digits.
+        :return:
+        '''
         numbers = [526099177, 803868156, 661888417, 469207612, 940171461, 476079258, 711739480, 578171390, 459191466,
                    701160661, 725987492, 465074378, 377439506, 399668706, 391690382, 467638221, 719844374, 427463128,
                    401338489, 729990968, 690821879, 751338998, 450449884, 597066944, 899200931, 902955256, 516461292,
@@ -58,6 +88,10 @@ class TestNPIGenerator(unittest.TestCase):
         self.assertListEqual(expected, computed, "%s vs %s" % (str(expected), str(computed)))
 
     def test_backward_npi_generator(self):
+        '''
+        Test that backward_npi_generator generates NPIs, backwards and in a given range.
+        :return:
+        '''
         expected = [5456785364, 5456785356, 5456785349, 5456785331, 5456785323, 5456785315, 5456785307, 5456785299,
                     5456785281, 5456785273, 5456785265, 5456785257, 5456785240, 5456785232, 5456785224, 5456785216,
                     5456785208, 5456785190, 5456785182, 5456785174, 5456785166, 5456785158, 5456785141, 5456785133,

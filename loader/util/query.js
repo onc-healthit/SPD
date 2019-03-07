@@ -160,20 +160,20 @@ export const query = {
 		"order by `Provider Last Name (Legal Name)`, `Provider First Name`, `Provider Middle Name` "+
 		"limit 0, 100";
 		var res = await npidb.query(providerQuery, { model: Npi } );
-		console.log("NPI result: "+JSON.stringify(res));
+		//console.log("NPI result: "+JSON.stringify(res));
 		for (var i = 0; i < res.length; i++) {
 			var fullName = res[i].last_name+res[i].first_name+res[i].middle_name;
 			//console.log("full name: "+JSON.stringify(fullName));
 			var provider = await Provider.findOne({where: {photo: fullName}});
-			console.log("provider: "+JSON.stringify(provider));
+			//console.log("provider: "+JSON.stringify(provider));
 			if (provider == null) {
 				var created = await Provider.create({
 					active: '1',
 					gender: res[i].gender,
 					photo: res[i].last_name+res[i].first_name+res[i].middle_name});
-				console.log("Provider: "+JSON.stringify(created));
+				//console.log("Provider: "+JSON.stringify(created));
 				var providerCreated = await Provider.findOne({where: {photo: res[i].last_name+res[i].first_name+res[i].middle_name}});
-				console.log("ProviderCreated: "+JSON.stringify(providerCreated));
+				//console.log("ProviderCreated: "+JSON.stringify(providerCreated));
 				var address1 = await Address.create({
 					use: "billing",
 					line1: res[i].mailing_address_first_line, 
@@ -192,7 +192,7 @@ export const query = {
 					country: res[i].practice_location_country_code,
 					practitioner_id: providerCreated.practitioner_id
 				});
-				console.log("address: "+JSON.stringify(address2));
+				//console.log("address: "+JSON.stringify(address2));
 				var telecoms = await Telecom.create(
 					{
 					system: "phone",
@@ -217,7 +217,7 @@ export const query = {
 					value: res[i].practice_location_fax,
 					practitioner_id: providerCreated.practitioner_id									
 					});
-				console.log("telecoms: "+JSON.stringify(telecoms));
+				//console.log("telecoms: "+JSON.stringify(telecoms));
 				var name1 = await Name.create({
 					use: "official",
 					family: res[i].last_name,

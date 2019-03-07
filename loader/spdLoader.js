@@ -1,5 +1,7 @@
 // spdLoader.js
 import { query } from './util/query';
 
-query.getNpi();
+query.getOrgs();
+
+query.getProviders();
 

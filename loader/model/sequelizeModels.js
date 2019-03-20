@@ -1,6 +1,27 @@
 import Sequelize from 'sequelize';
-import { npidb, spddb } from '../util/dbconnect';
+import { npidb, spddb, cciiodb } from '../util/dbconnect';
 import _ from 'lodash';
+
+const cciioModel = cciiodb.define ('network', {
+	BusinessYear: { type: Sequelize.STRING }, StateCode: { type: Sequelize.STRING }, 
+	IssuerId: { type: Sequelize.STRING }, 
+	SourceName: { type: Sequelize.STRING }, 
+	ImportDate: { type: Sequelize.STRING },
+	NetworkName: { type: Sequelize.STRING },
+	NetworkId: { type: Sequelize.STRING }, 
+	NetworkURL: { type: Sequelize.STRING }, 
+	MarketCoverage: { type: Sequelize.STRING },
+	DentalOnlyPlan: { type: Sequelize.STRING },
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'network'	
+});
+cciioModel.removeAttribute('id');
+
+const Cciio = cciiodb.models.network;
+
 
 const npiModel = npidb.define('npi', {
 	NPI: { type: Sequelize.INTEGER},
@@ -191,6 +212,59 @@ const spdNameModel = spddb.define('name', {
 });
 spdNameModel.removeAttribute('id');
 
+const spdNetworkModel = spddb.define('vhdir_network', {
+  network_id: { type: Sequelize.INTEGER,
+				primaryKey: true},
+  meta_data_id: { type: Sequelize.INTEGER},
+  active: { type: Sequelize.STRING},
+  name: { type: Sequelize.STRING },
+  alias: { type: Sequelize.STRING },
+  period_start: { type: Sequelize.STRING },
+  period_end: { type: Sequelize.STRING },
+  part_of_resource_reference_id: { type: Sequelize.INTEGER},
+  practitioner_role_id: { type: Sequelize.INTEGER}, 
+  organization_affiliation_id: { type: Sequelize.INTEGER}, 
+  insurance_plan_id: { type: Sequelize.INTEGER}, 
+  coverage_id: { type: Sequelize.INTEGER}, 
+  plan_id: { type: Sequelize.INTEGER},
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'vhdir_network'	
+});
+spdNetworkModel.removeAttribute('id');
+
+const spdIdentifierModel = spddb.define('identifier', {
+	identifier_id: { type: Sequelize.INTEGER,
+				primaryKey: true},
+	identifier_status: { type: Sequelize.STRING },
+	identifier_status_value_code: { type: Sequelize.STRING },
+	use: { type: Sequelize.STRING },
+	system: { type: Sequelize.STRING },
+	value: { type: Sequelize.STRING },
+	type_cc_id: { type: Sequelize.INTEGER},  
+	period_start: { type: Sequelize.STRING }, 
+	period_end: { type: Sequelize.STRING }, 
+	endpoint_identifier_id: { type: Sequelize.INTEGER}, 
+	healthcare_service_id: { type: Sequelize.INTEGER}, 
+	insurance_plan_id: { type: Sequelize.INTEGER}, 
+	practitioner_role_id: { type: Sequelize.INTEGER}, 
+	practitioner_id: { type: Sequelize.INTEGER}, 
+	qualification_id: { type: Sequelize.INTEGER}, 
+	organization_id: { type: Sequelize.INTEGER}, 
+	organization_affiliation_id: { type: Sequelize.INTEGER}, 
+	careteam_id: { type: Sequelize.INTEGER}, 
+	location_id: { type: Sequelize.INTEGER}, 
+	network_id: { type: Sequelize.INTEGER}, 
+	plan_id: { type: Sequelize.INTEGER},
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'identifier'	
+});
+spdIdentifierModel.removeAttribute('id');
 
 spdOrgModel.hasMany(spdAddressModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
 spdAddressModel.belongsTo(spdOrgModel, {foreignKey: 'organization_id', targetKey: 'organization_id'});
@@ -208,7 +282,9 @@ const Telecom = spddb.models.telecom;
 const Contact = spddb.models.organization_contact;
 const Name = spddb.models.name;
 const Provider = spddb.models.vhdir_practitioner;
+const Network = spddb.models.vhdir_network;
+const Identifier = spddb.models.identifier;
 
 
 
-export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb };
+export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Network, Identifier };

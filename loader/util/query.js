@@ -69,7 +69,7 @@ export const query = {
 		"order by `Provider Organization Name (Legal Business Name)` , "+
 		"`Provider Other Organization Name`, `Other Provider Identifier_1`, "+
 		"`Provider First Line Business Mailing Address`, "+
-        "`Provider First Line Business Practice Location Address` limit 2000, 2000";
+        "`Provider First Line Business Practice Location Address` limit 4000, 2000";
 		var res = await npidb.query(npiQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		var lbn = "", olbn = null, oid = null, fmailing = "", floc = "", nameToUse = null;
@@ -218,7 +218,7 @@ export const query = {
 		"`Is Sole Proprietor` as is_sole_proprietor "+
 		"FROM nppes.npi WHERE `Entity Type Code` = 1 "+
 		"order by `Provider Last Name (Legal Name)`, `Provider First Name`, `Provider Middle Name` "+
-		"limit 2000, 2000";
+		"limit 4000, 2000";
 		var res = await npidb.query(providerQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		for (var i = 0; i < res.length; i++) {

@@ -3,8 +3,9 @@ import { npidb, spddb, cciiodb } from '../util/dbconnect';
 import _ from 'lodash';
 
 const cciioModel = cciiodb.define ('network', {
-	BusinessYear: { type: Sequelize.STRING }, StateCode: { type: Sequelize.STRING }, 
-	IssuerId: { type: Sequelize.STRING }, 
+	BusinessYear: { type: Sequelize.STRING }, 
+	StateCode: { type: Sequelize.STRING }, 
+	IssuerId: { type: Sequelize.INTEGER }, 
 	SourceName: { type: Sequelize.STRING }, 
 	ImportDate: { type: Sequelize.STRING },
 	NetworkName: { type: Sequelize.STRING },
@@ -22,8 +23,38 @@ cciioModel.removeAttribute('id');
 
 const Cciio = cciiodb.models.network;
 
+const hiosModel = cciiodb.define ('HIOS', {
+	HIOS_ISSUER_ID: { type: Sequelize.INTEGER }, 
+	ISSR_LGL_NAME: { type: Sequelize.STRING }, 
+	MarketingName: { type: Sequelize.STRING }, 
+	State: { type: Sequelize.STRING }, 
+	IndividualMarket: { type: Sequelize.STRING }, 
+	SmallGroupMarket: { type: Sequelize.STRING }, 
+	UnknownMarket: { type: Sequelize.STRING }, 
+	LargeMarket: { type: Sequelize.STRING }, 
+	FEDERAL_EIN: { type: Sequelize.STRING }, 
+	Active: { type: Sequelize.STRING }, 
+	DateCreated: { type: Sequelize.STRING }, 
+	LastModifiedDate: { type: Sequelize.STRING }, 
+	DatabaseCompanyID: { type: Sequelize.STRING }, 
+	ORG_ADR1: { type: Sequelize.STRING }, 
+	ORG_ADR2: { type: Sequelize.STRING }, 
+	ORG_CITY: { type: Sequelize.STRING }, 
+	ORG_STATE: { type: Sequelize.STRING }, 
+	ORG_ZIP: { type: Sequelize.STRING }, 
+	ORG_ZIP4: { type: Sequelize.STRING }, 
+	EMPTY: { type: Sequelize.STRING },
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'HIOS'	
+});
+hiosModel.removeAttribute('id');
 
-const npiModel = npidb.define('npi', {
+const Hios = cciiodb.models.HIOS;
+
+ const npiModel = npidb.define('npi', {
 	NPI: { type: Sequelize.INTEGER},
 	organization_name: { type: Sequelize.STRING },
 	other_organization_name: { type: Sequelize.STRING },
@@ -266,6 +297,22 @@ const spdIdentifierModel = spddb.define('identifier', {
 });
 spdIdentifierModel.removeAttribute('id');
 
+const spdReferenceModel = spddb.define('resource_reference', {
+	resource_reference_id: { type: Sequelize.INTEGER,
+				primaryKey: true},
+	identifier: { type: Sequelize.STRING },
+	reference: { type: Sequelize.STRING },
+	display: { type: Sequelize.STRING },
+	type: { type: Sequelize.INTEGER},  
+	validation_target_id: { type: Sequelize.INTEGER}, 
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'resource_reference'	
+});
+spdReferenceModel.removeAttribute('id');
+
 spdOrgModel.hasMany(spdAddressModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
 spdAddressModel.belongsTo(spdOrgModel, {foreignKey: 'organization_id', targetKey: 'organization_id'});
 spdOrgModel.hasMany(spdTelecomModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
@@ -284,7 +331,8 @@ const Name = spddb.models.name;
 const Provider = spddb.models.vhdir_practitioner;
 const Network = spddb.models.vhdir_network;
 const Identifier = spddb.models.identifier;
+const Reference = spddb.models.resource_reference
 
 
 
-export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Network, Identifier };
+export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Hios, Network, Identifier, Reference };

@@ -1,4 +1,4 @@
-import { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Network, Identifier } from '../model/sequelizeModels';
+import { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference } from '../model/sequelizeModels';
 import Sequelize from 'sequelize';
 
 export const query = {
@@ -7,13 +7,92 @@ export const query = {
 			" NetworkName FROM cciio.network"+
 			" WHERE SourceName='HIOS'";
 		var res = await cciiodb.query(cciioQuery, { model: Cciio } );
-		var nwId = '', names = [];
+		var nwId = '', names = [], owner = null, org = null, orgId = null, orgName = null ;
 		for (var i = 0; i < res.length; i++) {
 			if (res[i].NetworkId != nwId){
+				owner = await Hios.findOne({where: {HIOS_ISSUER_ID: res[i].IssuerId}}); 
+				if (owner != null) {
+					org = await Organization.findOne({where: {name: owner.ISSR_LGL_NAME}});
+					if (org != null) {
+						console.log("Org Found: "+JSON.stringify(org));
+						//orgId = org.organization_id
+						orgName = org.name;
+					}
+					else {
+						var tempName = 'EMPTY';
+						if (owner.ISSR_LGL_NAME != null && owner.ISSR_LGL_NAME.length > 0){
+							tempName = owner.ISSR_LGL_NAME;
+						}
+						var created = await Organization.create({
+						  active: '1',
+						  name: tempName});
+						//console.log("Org: "+JSON.stringify(created));
+						var orgCreated = await Organization.findOne({where: {name: tempName}});
+						//console.log("OrgCreated: "+JSON.stringify(orgCreated));
+						if (owner.ORG_STATE.length <= 2) {
+						console.log("Good State: "+owner.ORG_STATE);
+							var address1 = await Address.create({
+								use: "work",
+								line1: owner.ORG_ADR1,
+								line2: owner.ORG_ADR2,
+								city: owner.ORG_CITY, 
+								state: owner.ORG_STATE,
+								postalCode: owner.ORG_ZIP,
+								country: 'USA',
+								organization_id: orgCreated.organization_id
+							});							
+						}
+						else {
+						console.log("Bad State: "+owner.ORG_STATE);
+							var address1 = await Address.create({
+								use: "work",
+								line1: owner.ORG_ADR2,
+								line2: owner.ORG_CITY, 
+								city: owner.ORG_STATE,
+								state: owner.ORG_ZIP,
+								postalCode: owner.ORG_ZIP4,
+								country: 'USA',
+								organization_id: orgCreated.organization_id
+							});														
+						}
+						var id = await Identifier.create({
+							identifier_status_value_code: "active",
+							use: "issuer",
+							value: owner.HIOS_ISSUER_ID,
+							organization_id: orgCreated.organization_id
+						});											
+						//orgId = orgCreated.organization_id
+						orgName = orgCreated.name;
+					}
+				}
 				if (names.length > 0) {
+					var refId = null;
+					var ref = await Reference.findOne({where:
+						{
+							type: 'vhdir_organization',
+							identifier: orgName
+						}
+						});
+					if (ref == null) {
+						var tempRef = await Reference.create({
+							type: 'vhdir_organization',
+							identifier: orgName
+						});
+						var refCreated = await Reference.findOne({where:
+						{
+							type: 'vhdir_organization',
+							identifier: orgName
+						}
+						});
+						refId = refCreated.resource_reference_id
+					}
+					else {
+						refId = ref.resource_reference_id;						
+					}
 					var nw = await Network.create({
 						active: '1',
-						alias: names.join(";")
+						alias: names.join(";"),
+						part_of_resource_reference_id: refId
 					});
 					var nwCreated = await Network.findOne({where: {alias: names.join(";")}});
 					var id = await Identifier.create({

@@ -194,7 +194,6 @@ const spdTelecomModel = spddb.define('telecom', {
 	organization_affiliation_id: { type: Sequelize.INTEGER },
 	practitioner_id: { type: Sequelize.INTEGER },
 	practitioner_role_id: { type: Sequelize.INTEGER },
-	organization_id: { type: Sequelize.INTEGER },
 	organization_contact_id: { type: Sequelize.INTEGER },
 	careteam_id: { type: Sequelize.INTEGER },
 	healthcare_service_id: { type: Sequelize.INTEGER },

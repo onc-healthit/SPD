@@ -148,7 +148,7 @@ export const query = {
 		"order by `Provider Organization Name (Legal Business Name)` , "+
 		"`Provider Other Organization Name`, `Other Provider Identifier_1`, "+
 		"`Provider First Line Business Mailing Address`, "+
-        "`Provider First Line Business Practice Location Address` limit 4000, 2000";
+        "`Provider First Line Business Practice Location Address` limit 4000, 1000";
 		var res = await npidb.query(npiQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		var lbn = "", olbn = null, oid = null, fmailing = "", floc = "", nameToUse = null;
@@ -183,6 +183,46 @@ export const query = {
 				nameToUse = res[i].organization_name + res[i].practice_location_first_line;
 				floc = res[i].practice_location_first_line;					
 			}
+			//temp
+			var exist = await Organization.findOne({where: {name: nameToUse}});
+			if (exist != null) {
+				console.log("Org Found" + exist.organization_id);
+				/*var contactExisting = await Contact.findOne({where: {
+				organization_id: exist.organization_id				
+				}});
+			var telecoms = await Telecom.create(
+				{
+				system: "phone",
+				value: res[i].mailing_address_telephone,
+				organization_contact_id: contactExisting.organization_contact_id
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "fax",
+				value: res[i].mailing_address_fax,
+				organization_contact_id: contactExisting.organization_contact_id									
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "phone",
+				value: res[i].practice_location_telephone,
+				organization_contact_id: contactExisting.organization_contact_id									
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "fax",
+				value: res[i].practice_location_fax,
+				organization_contact_id: contactExisting.organization_contact_id									
+				});
+				var id = await Identifier.create({
+					identifier_status_value_code: "active",
+					use: "npi",
+					value: res[i].NPI,
+					organization_id: exist.organization_id
+				});	*/
+				continue;
+			}
+			console.log("Org Not Found: to create " + nameToUse)
 			var created = await Organization.create({
 			  active: '1',
 			  name: nameToUse,
@@ -190,6 +230,12 @@ export const query = {
 			//console.log("Org: "+JSON.stringify(created));
 			var orgCreated = await Organization.findOne({where: {name: nameToUse}});
 			//console.log("OrgCreated: "+JSON.stringify(orgCreated));
+			var idNpi = await Identifier.create({
+				identifier_status_value_code: "active",
+				use: "npi",
+				value: res[i].NPI,
+				organization_id: orgCreated.organization_id
+			});	
 			var address1 = await Address.create({
 				use: "billing",
 				line1: res[i].mailing_address_first_line, 
@@ -209,30 +255,6 @@ export const query = {
 				organization_id: orgCreated.organization_id
 			});
 			//console.log("address: "+JSON.stringify(address));
-			var telecoms = await Telecom.create(
-				{
-				system: "phone",
-				value: res[i].mailing_address_telephone,
-				organization_id: orgCreated.organization_id
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "fax",
-				value: res[i].mailing_address_fax,
-				organization_id: orgCreated.organization_id									
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "phone",
-				value: res[i].practice_location_telephone,
-				organization_id: orgCreated.organization_id									
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "fax",
-				value: res[i].practice_location_fax,
-				organization_id: orgCreated.organization_id									
-				});
 			//console.log("telecoms: "+JSON.stringify(telecoms));
 			var name = await Name.create({
 				use: "official",
@@ -244,10 +266,39 @@ export const query = {
 				family: res[i].authorized_official_last_name,
 				given: res[i].authorized_official_first_name}});
 			//console.log("nameCreated: "+JSON.stringify(nameCreated));
-			var contact = Contact.create({
+			var contact = await Contact.create({
 				name_id: nameCreated.name_id,
 				organization_id: orgCreated.organization_id
 			})
+			var contactCreated = await Contact.findOne({where: {
+				name_id: nameCreated.name_id,
+				organization_id: orgCreated.organization_id				
+			}});
+			var telecoms = await Telecom.create(
+				{
+				system: "phone",
+				value: res[i].mailing_address_telephone,
+				organization_contact_id: contactCreated.organization_contact_id
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "fax",
+				value: res[i].mailing_address_fax,
+				organization_contact_id: contactCreated.organization_contact_id									
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "phone",
+				value: res[i].practice_location_telephone,
+				organization_contact_id: contactCreated.organization_contact_id									
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "fax",
+				value: res[i].practice_location_fax,
+				organization_contact_id: contactCreated.organization_contact_id									
+				});
+			
 			//console.log("Contact: "+JSON.stringify(contact));
 		}
 

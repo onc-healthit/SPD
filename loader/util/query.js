@@ -57,7 +57,7 @@ export const query = {
 						}
 						var id = await Identifier.create({
 							identifier_status_value_code: "active",
-							use: "issuer",
+							use: "secondary",
 							value: owner.HIOS_ISSUER_ID,
 							organization_id: orgCreated.organization_id
 						});											
@@ -232,7 +232,8 @@ export const query = {
 			//console.log("OrgCreated: "+JSON.stringify(orgCreated));
 			var idNpi = await Identifier.create({
 				identifier_status_value_code: "active",
-				use: "npi",
+				use: "official",
+				system: "http://hl7.org/fhir/sid/us-npi",
 				value: res[i].NPI,
 				organization_id: orgCreated.organization_id
 			});	

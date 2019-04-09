@@ -148,7 +148,7 @@ export const query = {
 		"order by `Provider Organization Name (Legal Business Name)` , "+
 		"`Provider Other Organization Name`, `Other Provider Identifier_1`, "+
 		"`Provider First Line Business Mailing Address`, "+
-        "`Provider First Line Business Practice Location Address` limit 4000, 1000";
+        "`Provider First Line Business Practice Location Address` limit 0, 5000";
 		var res = await npidb.query(npiQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		var lbn = "", olbn = null, oid = null, fmailing = "", floc = "", nameToUse = null;
@@ -189,32 +189,32 @@ export const query = {
 				console.log("Org Found" + exist.organization_id);
 				/*var contactExisting = await Contact.findOne({where: {
 				organization_id: exist.organization_id				
-				}});
+				}});*/
 			var telecoms = await Telecom.create(
 				{
 				system: "phone",
 				value: res[i].mailing_address_telephone,
-				organization_contact_id: contactExisting.organization_contact_id
+				organization_id: exist.organization_id
 				});
 			telecoms = await Telecom.create(
 				{
 				system: "fax",
 				value: res[i].mailing_address_fax,
-				organization_contact_id: contactExisting.organization_contact_id									
+				organization_id: exist.organization_id									
 				});
 			telecoms = await Telecom.create(
 				{
 				system: "phone",
 				value: res[i].practice_location_telephone,
-				organization_contact_id: contactExisting.organization_contact_id									
+				organization_id: exist.organization_id									
 				});
 			telecoms = await Telecom.create(
 				{
 				system: "fax",
 				value: res[i].practice_location_fax,
-				organization_contact_id: contactExisting.organization_contact_id									
+				organization_id: exist.organization_id									
 				});
-				var id = await Identifier.create({
+				/*var id = await Identifier.create({
 					identifier_status_value_code: "active",
 					use: "npi",
 					value: res[i].NPI,
@@ -256,6 +256,30 @@ export const query = {
 				organization_id: orgCreated.organization_id
 			});
 			//console.log("address: "+JSON.stringify(address));
+			var telecoms = await Telecom.create(
+				{
+				system: "phone",
+				value: res[i].mailing_address_telephone,
+				organization_id: orgCreated.organization_id
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "fax",
+				value: res[i].mailing_address_fax,
+				organization_id: orgCreated.organization_id									
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "phone",
+				value: res[i].practice_location_telephone,
+				organization_id: orgCreated.organization_id									
+				});
+			telecoms = await Telecom.create(
+				{
+				system: "fax",
+				value: res[i].practice_location_fax,
+				organization_id: orgCreated.organization_id									
+				});
 			//console.log("telecoms: "+JSON.stringify(telecoms));
 			var name = await Name.create({
 				use: "official",
@@ -271,34 +295,10 @@ export const query = {
 				name_id: nameCreated.name_id,
 				organization_id: orgCreated.organization_id
 			})
-			var contactCreated = await Contact.findOne({where: {
+			/*var contactCreated = await Contact.findOne({where: {
 				name_id: nameCreated.name_id,
 				organization_id: orgCreated.organization_id				
-			}});
-			var telecoms = await Telecom.create(
-				{
-				system: "phone",
-				value: res[i].mailing_address_telephone,
-				organization_contact_id: contactCreated.organization_contact_id
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "fax",
-				value: res[i].mailing_address_fax,
-				organization_contact_id: contactCreated.organization_contact_id									
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "phone",
-				value: res[i].practice_location_telephone,
-				organization_contact_id: contactCreated.organization_contact_id									
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "fax",
-				value: res[i].practice_location_fax,
-				organization_contact_id: contactCreated.organization_contact_id									
-				});
+			}});*/
 			
 			//console.log("Contact: "+JSON.stringify(contact));
 		}

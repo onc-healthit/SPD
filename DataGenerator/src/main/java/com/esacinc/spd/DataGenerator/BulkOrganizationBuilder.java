@@ -17,6 +17,7 @@ import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
 
+import com.esacinc.spd.model.VhDirAlias;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirOrganization;
@@ -282,6 +283,36 @@ public class BulkOrganizationBuilder {
 			occ.setName(name);
 			
 			org.addContact(occ);
+		}
+	}
+	
+	/**
+	 * Handles the aliases for an organization using the organization ID passed in
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleAliases(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+		String aliasSql = "SELECT * FROM organization_alias WHERE organization_id = ?";
+     	PreparedStatement aliasStatement = connection.prepareStatement(aliasSql);
+     	aliasStatement.setInt(1, orgId);
+		ResultSet aliasResultset = aliasStatement.executeQuery();
+		while(aliasResultset.next()) {
+			VhDirAlias alias = new VhDirAlias();
+			
+			// Set id
+			alias.setId(aliasResultset.getString("organization_alias_id"));
+			
+			// Handle type
+			
+			// Handle period
+			
+			// Handle value
+			alias.setValue(aliasResultset.getString("value"));
+			
+			//org.addAlias(alias);
 		}
 	}
 }

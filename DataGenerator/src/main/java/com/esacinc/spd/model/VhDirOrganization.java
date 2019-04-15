@@ -23,6 +23,13 @@ public class VhDirOrganization extends Organization {
 	private StringType description;
 	
 	/**
+	 * Add the digital certificate
+	 */
+	@Child(name="digitalcertificate", type = {VhDirDigitalCertificate.class})
+	@Description(shortDefinition="Description of the organization")
+	private VhDirDigitalCertificate digitalcertficate;
+	
+	/**
      * It is important to override the isEmpty() method, adding a check for any
      * newly added fields. 
      */
@@ -47,4 +54,12 @@ public class VhDirOrganization extends Organization {
         }
         return this;
     }
+
+	public VhDirDigitalCertificate getDigitalcertficate() {
+		return digitalcertficate;
+	}
+
+	public void setDigitalcertficate(VhDirDigitalCertificate digitalcertficate) {
+		this.digitalcertficate = digitalcertficate;
+	}
 }

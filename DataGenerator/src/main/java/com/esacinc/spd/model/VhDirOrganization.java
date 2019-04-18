@@ -1,8 +1,5 @@
 package com.esacinc.spd.model;
 
-import java.util.List;
-
-import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.utilities.Utilities;
@@ -26,6 +23,13 @@ public class VhDirOrganization extends Organization {
 	private StringType description;
 	
 	/**
+	 * Add the digital certificate
+	 */
+	@Child(name="digitalcertificate", type = {VhDirDigitalCertificate.class})
+	@Description(shortDefinition="Description of the organization")
+	private VhDirDigitalCertificate digitalcertficate;
+	
+	/**
      * It is important to override the isEmpty() method, adding a check for any
      * newly added fields. 
      */
@@ -34,12 +38,12 @@ public class VhDirOrganization extends Organization {
         return super.isEmpty() && ElementUtil.isEmpty(description);
     }
     
-    /** Getter for description */
+    // Getter for description
     public String getDescription() {
     	return this.description == null ? null : this.description.getValue();
     }
     
-    /** Setter for description */
+    // Setter for description
     public VhDirOrganization setDescription(String value) { 
         if (Utilities.noString(value))
           this.description = null;
@@ -49,5 +53,13 @@ public class VhDirOrganization extends Organization {
           this.description.setValue(value);
         }
         return this;
-      }
+    }
+
+	public VhDirDigitalCertificate getDigitalcertficate() {
+		return digitalcertficate;
+	}
+
+	public void setDigitalcertficate(VhDirDigitalCertificate digitalcertficate) {
+		this.digitalcertficate = digitalcertficate;
+	}
 }

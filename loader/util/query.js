@@ -1,7 +1,130 @@
-import { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference } from '../model/sequelizeModels';
+import { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan} from '../model/sequelizeModels';
 import Sequelize from 'sequelize';
 
 export const query = {
+	/*async getNoOrg(){
+		var plans = await InsurancePlan.findAll({
+			order: [['PlanMarketingName']],
+			offset: 12000, 
+			limit: 4000});
+		var currentName = '';
+		for (var i = 0; i < plans.length; i++) {
+			console.log("Plan Name: "+plans[i].PlanMarketingName);
+			if (plans[i].PlanMarketingName === currentName) {
+				continue;
+			}
+			currentName = plans[i].PlanMarketingName;			
+			var hiosOrg = await Hios.findOne({where: {HIOS_ISSUER_ID: plans[i].IssuerId}}); 
+			if (hiosOrg === null) {
+				console.log("Org not found: "+plans[i].IssuerId);				
+			}
+		}
+		
+	},*/
+	async getInsurancePlans() {
+		var plans = await InsurancePlan.findAll({
+			order: [['PlanMarketingName']],
+			offset: 0, 
+			limit: 2000});
+		var currentName = '';
+		for (var i = 0; i < plans.length; i++) {
+			console.log("Plan Name: "+plans[i].PlanMarketingName);
+			var ownerId = 0;
+			if (plans[i].PlanMarketingName === currentName) {
+			console.log("Plan exist: "+plans[i].PlanMarketingName);
+				var exist = await SpdInsurancePlan.findOne({
+					where: {
+						name: plans[i].PlanMarketingName
+					}
+				});
+				if (exist !== null) {
+					var id = await Identifier.create({
+						identifier_status_value_code: "active",
+						use: "official",
+						value: plans[i].PlanId,
+						insurance_plan_id: exist.insurance_plan_id
+					});																
+				}
+				continue;
+			}
+			currentName = plans[i].PlanMarketingName;
+			var id = await Identifier.findOne({
+				where: {
+					use: 'secondary',
+					value: plans[i].IssuerId
+				}
+			});
+			if (id == null) {
+				var hiosOrg = await Hios.findOne({where: {HIOS_ISSUER_ID: plans[i].IssuerId}}); 
+				if (hiosOrg != null) {
+					var tempName = 'EMPTY';
+					if (hiosOrg.ISSR_LGL_NAME != null && hiosOrg.ISSR_LGL_NAME.length > 0){
+						tempName = hiosOrg.ISSR_LGL_NAME;
+					}
+					var created = await Organization.create({
+					  active: '1',
+					  name: tempName});
+					var orgCreated = await Organization.findOne({where: {name: tempName}});
+					if (hiosOrg.ORG_STATE.length <= 2) {
+					console.log("Good State: "+hiosOrg.ORG_STATE);
+						var address1 = await Address.create({
+							use: "work",
+							line1: hiosOrg.ORG_ADR1,
+							line2: hiosOrg.ORG_ADR2,
+							city: hiosOrg.ORG_CITY, 
+							state: hiosOrg.ORG_STATE,
+							postalCode: hiosOrg.ORG_ZIP,
+							country: 'USA',
+							organization_id: orgCreated.organization_id
+						});							
+					}
+					else {
+					console.log("Bad State: "+hiosOrg.ORG_STATE);
+						var address1 = await Address.create({
+							use: "work",
+							line1: hiosOrg.ORG_ADR2,
+							line2: hiosOrg.ORG_CITY, 
+							city: hiosOrg.ORG_STATE,
+							state: hiosOrg.ORG_ZIP,
+							postalCode: hiosOrg.ORG_ZIP4,
+							country: 'USA',
+							organization_id: orgCreated.organization_id
+						});														
+					}
+					var id = await Identifier.create({
+						identifier_status_value_code: "active",
+						use: "secondary",
+						value: hiosOrg.HIOS_ISSUER_ID,
+						organization_id: orgCreated.organization_id
+					});
+					ownerId = orgCreated.organization_id;					
+				}
+			}
+			else {
+				ownerId = id.organization_id;
+			}
+			var plan = await SpdInsurancePlan.create({
+				status: 'active',
+				name: plans[i].PlanMarketingName,
+				period_start: plans[i].PlanEffectiveDate,
+				period_end: plans[i].PlanExpirationDate,
+				owned_by_organization_id: ownerId,
+				administered_by_organization_id: ownerId
+			});
+			var planCreated = await SpdInsurancePlan.findOne({
+				where: {
+					name: plans[i].PlanMarketingName
+				}
+			});
+			var id = await Identifier.create({
+				identifier_status_value_code: "active",
+				use: "official",
+				value: plans[i].PlanId,
+				insurance_plan_id: planCreated.insurance_plan_id
+			});											
+			
+		}
+	},
 	async getNetworks() {
 		var cciioQuery = "SELECT NetworkId, SourceName, IssuerId,"+
 			" NetworkName FROM cciio.network"+
@@ -143,6 +266,9 @@ export const query = {
 		"`Other Provider Identifier Type Code_1` as other_identifier_type_code_1,"+
 		"`Other Provider Identifier State_1` as other_identifier_state_1,"+
 		"`Other Provider Identifier Issuer_1` as other_identifier_issuer_1,"+
+		"`NPI Deactivation Reason Code` as deactivation_reason, "+
+		"`NPI Deactivation Date` as deactivation_date, "+
+		"`NPI Reactivation Date` as reactivation_date, "+
 		"`Is Organization Subpart` as is_subpart,"+
 		"`Parent Organization LBN` as parent_name FROM nppes.npi WHERE `Entity Type Code` = 2 "+
 		"order by `Provider Organization Name (Legal Business Name)` , "+
@@ -186,35 +312,53 @@ export const query = {
 			//temp
 			var exist = await Organization.findOne({where: {name: nameToUse}});
 			if (exist != null) {
-				console.log("Org Found" + exist.organization_id);
-				/*var contactExisting = await Contact.findOne({where: {
+				//console.log("Org Found" + exist.organization_id);
+				/*if (res[i].deactivation_date != null && res[i].deactivation_date.length > 4 
+					&& (res[i].reactivation_date === null || res[i].reactivation_date.length <= 0)) {
+					Organization.update({
+						active: '0'
+					},
+					{where: {name: nameToUse}
+					});	
+					console.log("Status updated" + exist.organization_id);
+				}
+				var contactExisting = await Contact.findOne({where: {
 				organization_id: exist.organization_id				
-				}});*/
-			var telecoms = await Telecom.create(
-				{
-				system: "phone",
-				value: res[i].mailing_address_telephone,
-				organization_id: exist.organization_id
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "fax",
-				value: res[i].mailing_address_fax,
-				organization_id: exist.organization_id									
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "phone",
-				value: res[i].practice_location_telephone,
-				organization_id: exist.organization_id									
-				});
-			telecoms = await Telecom.create(
-				{
-				system: "fax",
-				value: res[i].practice_location_fax,
-				organization_id: exist.organization_id									
-				});
-				/*var id = await Identifier.create({
+				}});
+				if (contactExisting != null){
+					var telecoms = await Telecom.create(
+					{
+					system: "phone",
+					value: res[i].authorized_official_telephone,
+					organization_contact_id: contactExisting.organization_contact_id,
+					organization_id: exist.organization_id
+					});
+				}
+				var telecoms = await Telecom.create(
+					{
+					system: "phone",
+					value: res[i].mailing_address_telephone,
+					organization_id: exist.organization_id
+					});
+				telecoms = await Telecom.create(
+					{
+					system: "fax",
+					value: res[i].mailing_address_fax,
+					organization_id: exist.organization_id									
+					});
+				telecoms = await Telecom.create(
+					{
+					system: "phone",
+					value: res[i].practice_location_telephone,
+					organization_id: exist.organization_id									
+					});
+				telecoms = await Telecom.create(
+					{
+					system: "fax",
+					value: res[i].practice_location_fax,
+					organization_id: exist.organization_id									
+					});
+				var id = await Identifier.create({
 					identifier_status_value_code: "active",
 					use: "npi",
 					value: res[i].NPI,
@@ -223,8 +367,14 @@ export const query = {
 				continue;
 			}
 			console.log("Org Not Found: to create " + nameToUse)
+			var isActive = '1';
+			if (res[i].deactivation_date != null && res[i].deactivation_date.length > 4 
+				&& (res[i].reactivation_date === null || res[i].reactivation_date.length <= 0)) {
+				isActive = '0';
+				console.log("Org inactive: " + nameToUse);
+			}
 			var created = await Organization.create({
-			  active: '1',
+			  active: isActive,
 			  name: nameToUse,
 			partOf_organization_name: res[i].parent_name});
 			//console.log("Org: "+JSON.stringify(created));
@@ -295,10 +445,17 @@ export const query = {
 				name_id: nameCreated.name_id,
 				organization_id: orgCreated.organization_id
 			})
-			/*var contactCreated = await Contact.findOne({where: {
+			var contactCreated = await Contact.findOne({where: {
 				name_id: nameCreated.name_id,
 				organization_id: orgCreated.organization_id				
-			}});*/
+			}});
+			var telecoms = await Telecom.create(
+			{
+			system: "phone",
+			value: res[i].authorized_official_telephone,
+			organization_contact_id: contactCreated.organization_contact_id,
+			organization_id: orgCreated.organization_id
+			});
 			
 			//console.log("Contact: "+JSON.stringify(contact));
 		}

@@ -1,13 +1,9 @@
-# SPD
-Synthetic Data Provider
-Steps to follow to run the spd loader:
-1) Check out the loader code and run npm install
-2) Set up the following environment variables
-	NPPES_DB
-	SPD_DB
-	SPD_DB_USER
-	SPD_DB_PWD
-	SPD_DB_HOST,
-	SPD_DB_DIALECT,
-	SPD_DB_PORT
-3) run npm start
+# Synthetic Provider Data - SPD
+
+This repository contains the tools and applications used to create the Synthetic Provider Data (SPD) FHIR datasets.
+
+Multiple disparate data sources are present in their own MySql schemas houses on the SPD VM.  These data sources are read by data loader programs, converted as needed, and then inserted into a single SPD schema (MySql) also on the VM.
+
+Once the SPD schema is populated, the data is de-identified and/or "scrubbed" and inserted into an SPD_Scrubbed (MySql) schema on the VM.
+
+Finally, a Java application(s) will read the scrubbed data from various tables in the SPD_scrubbed schema, and generate FHIR resource data files created from the data.

@@ -16,8 +16,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Address.AddressUse;
+import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
@@ -25,18 +25,19 @@ import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.TimeType;
 
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirAlias;
 import com.esacinc.spd.model.VhDirContactPoint;
+import com.esacinc.spd.model.VhDirContactPointAvailableTime;
 import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirOrganization;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -190,7 +191,7 @@ public class BulkOrganizationBuilder {
 				trustCode.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate");
 				certTrust.addCoding(trustCode);
 				cert.setTrustFramework(certTrust);
-				org.setDigitalcertficate(cert);
+				org.addDigitalcertficate(cert);
 			}
 						
 			// Handle the identifiers
@@ -214,6 +215,7 @@ public class BulkOrganizationBuilder {
          	}
          			
 			// Handle aliases
+         	handleAliases(connection, org, orgId);
 			
             // Handle the telecoms
          	handleTelecoms(connection, org, orgId);
@@ -222,6 +224,13 @@ public class BulkOrganizationBuilder {
          	handleAddresses(connection, org, orgId);
 			
 			// Handle the partOf association reference
+         	String partOfId = resultSet.getString("partOf_organization_id");
+         	if (partOfId != null) {
+	         	Reference partOf = new Reference();
+	         	partOf.setId(partOfId);
+	         	partOf.setReference("urn:uuid:" + partOfId);
+	         	org.setPartOf(partOf);
+         	}
 			
 			// Handle contacts
          	handleContacts(connection, org, orgId);
@@ -414,6 +423,39 @@ public class BulkOrganizationBuilder {
 			// Set value
 			tele.setValue(telecomResultset.getString("value"));
 			
+			// Set some available time - for organizations make it all day 7 days a week
+			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
+			CodeType days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("sun");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("mon");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("tue");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("wed");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("thu");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("fri");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("sat");
+			available.addDaysOfWeek(days);
+			available.setAllDay(true);
+			tele.addAvailableTime(available);
+			
 			org.addTelecom(tele);
 		}
 	}
@@ -546,6 +588,37 @@ public class BulkOrganizationBuilder {
 			
 			// Set value
 			tele.setValue(telecomResultset.getString("value"));
+			
+			// Set some available time - for contacts make it 8 - 5 M-F
+			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
+			CodeType days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("mon");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("tue");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("wed");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("thu");
+			available.addDaysOfWeek(days);
+			days = new CodeType();
+			days.setSystem("http://hl7.org/fhir/days-of-week");
+			days.setValue("fri");
+			available.addDaysOfWeek(days);
+			available.setAllDay(false);
+			TimeType start = new TimeType();
+			start.setValue("08:00:00");
+			available.setAvailableStartTime(start);
+			TimeType end = new TimeType();
+			end.setValue("17:00:00");
+			available.setAvailableEndTime(end);
+			tele.addAvailableTime(available);
 			
 			occ.addTelecom(tele);
 		}

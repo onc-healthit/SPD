@@ -1,26 +1,29 @@
 package com.esacinc.spd.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.CodeType;
-import org.hl7.fhir.r4.model.DomainResource;
-import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.TimeType;
+import org.hl7.fhir.r4.model.Type;
 
 import ca.uhn.fhir.model.api.annotation.Child;
+import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
-import ca.uhn.fhir.model.api.annotation.ResourceDef;
 import ca.uhn.fhir.util.ElementUtil;
 
-@ResourceDef(name="ContactPointAvailableTime", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime")
-public class VhDirContactPointAvailableTime extends DomainResource {
+@DatatypeDef(name="contactpoint-availabletime")
+public class VhDirContactPointAvailableTime extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
     
 	/**
 	 * Add the daysOfWeek
 	 */
-	@Child(name="daysOfWeek", type = {CodeType.class})
+	@Child(name="daysOfWeek", type = {CodeType.class}, order=1, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=false)
     @Description(shortDefinition="indicates the days of week for availability")
-	private CodeType daysOfWeek;
+	private List<CodeType> daysOfWeek;
 	
 	/**
 	 * Add the allDay
@@ -64,18 +67,21 @@ public class VhDirContactPointAvailableTime extends DomainResource {
         return retVal;
 	}
 
-	@Override
-	public ResourceType getResourceType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public CodeType getDaysOfWeek() {
+	public List<CodeType> getDaysOfWeek() {
 		return daysOfWeek;
 	}
 
-	public void setDaysOfWeek(CodeType daysOfWeek) {
+	public void setDaysOfWeek(List<CodeType> daysOfWeek) {
 		this.daysOfWeek = daysOfWeek;
+	}
+	
+	public VhDirContactPointAvailableTime addDaysOfWeek(CodeType t) {
+	    if (t == null)
+	      return this;
+	    if (this.daysOfWeek == null)
+	      this.daysOfWeek = new ArrayList<CodeType>();
+	    this.daysOfWeek.add(t);
+	    return this;
 	}
 
 	public boolean getAllDay() {
@@ -101,5 +107,11 @@ public class VhDirContactPointAvailableTime extends DomainResource {
 
 	public void setAvailableEndTime(TimeType availableEndTime) {
 		this.availableEndTime = availableEndTime;
+	}
+
+	@Override
+	protected Type typedCopy() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

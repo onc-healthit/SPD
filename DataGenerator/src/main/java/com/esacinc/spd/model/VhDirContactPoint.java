@@ -29,6 +29,7 @@ public class VhDirContactPoint extends ContactPoint {
 	 * Add the contact point available time
 	 */
     @Child(name = "availabletime", type = {VhDirContactPointAvailableTime.class}, order=2, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=false)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime", definedLocally=false, isModifier=false)
     @Description(shortDefinition="A contact detail for the organization", formalDefinition="A contact detail for the organization." )
     protected List<VhDirContactPointAvailableTime> availabletime;
 	

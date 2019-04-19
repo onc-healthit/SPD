@@ -1,4 +1,4 @@
-<h2> SPD Data Model</h2>
+<h2>Synthetic Provider Data - SPD Data Model</h2>
 
 This section of the repository holds the relational data model representing the FHIR profiles defined in the VHDIR Implementation Guide (http://build.fhir.org/ig/HL7/VhDir/index.html).
 

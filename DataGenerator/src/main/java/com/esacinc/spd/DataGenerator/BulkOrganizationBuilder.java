@@ -9,21 +9,37 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.hl7.fhir.r4.model.Address;
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
 
+import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirAlias;
+import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirDigitalCertificate;
+import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirOrganization;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class BulkOrganizationBuilder {
 	
@@ -200,6 +216,7 @@ public class BulkOrganizationBuilder {
 			// Handle aliases
 			
             // Handle the telecoms
+         	handleTelecoms(connection, org, orgId);
          	
 			// Handle the addresses
          	handleAddresses(connection, org, orgId);
@@ -288,7 +305,7 @@ public class BulkOrganizationBuilder {
 		addrStatement.setInt(1, orgId);
 		ResultSet addrResultset = addrStatement.executeQuery();
 		while(addrResultset.next()) {
-			Address addr = new Address();
+			VhDirAddress addr = new VhDirAddress();
 			
 			// Set ID
 			addr.setId(addrResultset.getString("address_id"));
@@ -342,6 +359,8 @@ public class BulkOrganizationBuilder {
 			String postal = addrResultset.getString("postalCode");
 			if (postal != null) {
 				addr.setPostalCode(postal);
+				VhDirGeoLocation loc = geocodePostalCode(postal.substring(0,5));
+				addr.setGeolocation(loc);
 			}
 			
 			// Set PostalCode
@@ -351,6 +370,51 @@ public class BulkOrganizationBuilder {
 			}
 			
 			org.addAddress(addr);
+		}
+	}
+	
+	/**
+	 * Handles the telecoms for the organization id passed in
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleTelecoms(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+		String addrSql = "SELECT * from telecom where organization_id = ?";
+		PreparedStatement telecomStatement = connection.prepareStatement(addrSql);
+		telecomStatement.setInt(1, orgId);
+		ResultSet telecomResultset = telecomStatement.executeQuery();
+		while(telecomResultset.next()) {
+			VhDirContactPoint tele = new VhDirContactPoint();
+			
+			// Set id
+			tele.setId(telecomResultset.getString("telecom_id"));
+			
+			// Set system
+			String system = telecomResultset.getString("system");
+			if (system == null)
+				tele.setSystem(ContactPointSystem.NULL);
+			else if ("email".equals(system))
+				tele.setSystem(ContactPointSystem.EMAIL);
+			else if ("fax".equals(system))
+				tele.setSystem(ContactPointSystem.FAX);
+			else if ("other".equals(system))
+				tele.setSystem(ContactPointSystem.OTHER);
+			else if ("pager".equals(system))
+				tele.setSystem(ContactPointSystem.PAGER);
+			else if ("phone".equals(system))
+				tele.setSystem(ContactPointSystem.PHONE);
+			else if ("sms".equals(system))
+				tele.setSystem(ContactPointSystem.SMS);
+			else if ("url".equals(system))
+				tele.setSystem(ContactPointSystem.URL);
+			
+			// Set value
+			tele.setValue(telecomResultset.getString("value"));
+			
+			org.addTelecom(tele);
 		}
 	}
 	
@@ -365,7 +429,7 @@ public class BulkOrganizationBuilder {
 	private void handleContacts(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
 		String contactSql = "SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, " +
 				"oc.organization_contact_id " +
-     			"FROM spd.name as n, spd.organization_contact as oc " +
+     			"FROM name as n, organization_contact as oc " +
      			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?";
      	PreparedStatement contactStatement = connection.prepareStatement(contactSql);
      	contactStatement.setInt(1, orgId);
@@ -374,6 +438,7 @@ public class BulkOrganizationBuilder {
 			OrganizationContactComponent occ = new OrganizationContactComponent();
 			
 			// Set id
+			int orgContactId = contactResultset.getInt("organization_contact_id");
 			occ.setId(contactResultset.getString("organization_contact_id"));
 			
 			// Set name
@@ -402,6 +467,9 @@ public class BulkOrganizationBuilder {
 				name.setUse(NameUse.USUAL);
 			
 			occ.setName(name);
+			
+			// Handle telecoms for contacts
+			handleContactTelecoms(connection, occ, orgContactId);
 			
 			org.addContact(occ);
 		}
@@ -433,7 +501,102 @@ public class BulkOrganizationBuilder {
 			// Handle value
 			alias.setValue(aliasResultset.getString("value"));
 			
-			//org.addAlias(alias);
+			org.addAlias(alias);
 		}
+	}
+	
+	/**
+	 * Gets the telecoms for the contacts for an organization given the organization contact ID
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleContactTelecoms(Connection connection, OrganizationContactComponent occ,
+			int orgContactId) throws SQLException {
+		String contactSql = "SELECT * FROM telecom WHERE organization_contact_id = ?";
+     	PreparedStatement telecomStatement = connection.prepareStatement(contactSql);
+     	telecomStatement.setInt(1, orgContactId);
+		ResultSet telecomResultset = telecomStatement.executeQuery();
+		while(telecomResultset.next()) {
+			VhDirContactPoint tele = new VhDirContactPoint();
+			
+			// Set id
+			tele.setId(telecomResultset.getString("telecom_id"));
+			
+			// Set system
+			String system = telecomResultset.getString("system");
+			if (system == null)
+				tele.setSystem(ContactPointSystem.NULL);
+			else if ("email".equals(system))
+				tele.setSystem(ContactPointSystem.EMAIL);
+			else if ("fax".equals(system))
+				tele.setSystem(ContactPointSystem.FAX);
+			else if ("other".equals(system))
+				tele.setSystem(ContactPointSystem.OTHER);
+			else if ("pager".equals(system))
+				tele.setSystem(ContactPointSystem.PAGER);
+			else if ("phone".equals(system))
+				tele.setSystem(ContactPointSystem.PHONE);
+			else if ("sms".equals(system))
+				tele.setSystem(ContactPointSystem.SMS);
+			else if ("url".equals(system))
+				tele.setSystem(ContactPointSystem.URL);
+			
+			// Set value
+			tele.setValue(telecomResultset.getString("value"));
+			
+			occ.addTelecom(tele);
+		}
+	}
+	
+	/**
+	 * Calls a web service to get the lat/lon for the postal code passed in.
+	 * 
+	 * @param postalCode
+	 * @return
+	 */
+	private VhDirGeoLocation geocodePostalCode(String postalCode) {
+		VhDirGeoLocation loc = new VhDirGeoLocation();
+		String baseUrl = "http://api.geonames.org/postalCodeSearchJSON?country=US&postalcode=";
+		String fullUrl = baseUrl + postalCode + "&username=mholck";
+		
+		URL postResource;
+		try {
+			postResource = new URL(fullUrl);
+			HttpURLConnection con;
+			con = (HttpURLConnection) postResource.openConnection();
+			con.setRequestMethod("GET");
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setDoOutput(true);
+			con.setConnectTimeout(0);
+			con.setReadTimeout(0);
+	
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String l = null;
+			while ((l=br.readLine())!=null) {
+				System.out.println(l);
+				JsonElement result = new JsonParser().parse(l);
+			    JsonObject resultObj = result.getAsJsonObject();
+			    JsonArray postalCodes = resultObj.getAsJsonArray("postalCodes");
+			    JsonObject propertiesJson = postalCodes.get(0).getAsJsonObject();
+			    double lat = propertiesJson.get("lat").getAsDouble();
+			    double lon = propertiesJson.get("lng").getAsDouble();
+			    loc.setLatitude(lat);
+			    loc.setLongitude(lon);
+			}
+			br.close();
+	
+			con.disconnect();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return loc;
 	}
 }

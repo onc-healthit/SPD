@@ -2,22 +2,22 @@ package com.esacinc.spd.model;
 
 import java.util.Date;
 
+import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Configuration;
 import org.hl7.fhir.r4.model.DateType;
-import org.hl7.fhir.r4.model.DomainResource;
-import org.hl7.fhir.r4.model.ResourceType;
 import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.Type;
 import org.hl7.fhir.utilities.Utilities;
 
 import ca.uhn.fhir.model.api.annotation.Child;
+import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
-import ca.uhn.fhir.model.api.annotation.ResourceDef;
 import ca.uhn.fhir.util.ElementUtil;
 
-@ResourceDef(name="DigitalCertificate", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate")
-public class VhDirDigitalCertificate extends DomainResource {
+@DatatypeDef(name="DigitalCertificate")
+public class VhDirDigitalCertificate extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
     
 	/**
@@ -154,7 +154,7 @@ public class VhDirDigitalCertificate extends DomainResource {
 	}
 
 	@Override
-	public ResourceType getResourceType() {
+	protected Type typedCopy() {
 		// TODO Auto-generated method stub
 		return null;
 	}

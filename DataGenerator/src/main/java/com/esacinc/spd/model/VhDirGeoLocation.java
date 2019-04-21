@@ -1,87 +1,79 @@
 package com.esacinc.spd.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.r4.model.DecimalType;
 import org.hl7.fhir.r4.model.Type;
+import org.hl7.fhir.r4.model.Extension;
 
-import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
-import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.util.ElementUtil;
 
 @DatatypeDef(name="Geolocation")
 public class VhDirGeoLocation extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
     
-	/**
-	 * Add the latitude
-	 */
-	@Child(name="latitude", type = {DecimalType.class})
-    @Description(shortDefinition="latitude")
-	private DecimalType latitude;
-
-	/**
-	 * Add the longitude
-	 */
-	@Child(name="longitude", type = {DecimalType.class})
-    @Description(shortDefinition="longitude")
-	private DecimalType longitude;
-
-    public BigDecimal getLatitude() { 
-      return this.latitude == null ? null : this.latitude.getValue();
-    }
-    
-    public VhDirGeoLocation setLatitude(BigDecimal value) { 
-      if (value == null)
-        this.latitude = null;
-      else {
-        if (this.latitude == null)
-          this.latitude = new DecimalType();
-        this.latitude.setValue(value);
-      }
-      return this;
-    }
+	public VhDirGeoLocation setLatitude(BigDecimal value) {
+		if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("latitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+	}
 
     public VhDirGeoLocation setLatitude(long value) { 
-          this.latitude = new DecimalType();
-        this.latitude.setValue(value);
-      return this;
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("latitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
     }
 
     public VhDirGeoLocation setLatitude(double value) { 
-          this.latitude = new DecimalType();
-        this.latitude.setValue(value);
-      return this;
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("latitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
     }
-    
-    public BigDecimal getLongitude() { 
-        return this.longitude == null ? null : this.longitude.getValue();
-      }
       
-      public VhDirGeoLocation setLongitude(BigDecimal value) { 
-        if (value == null)
-          this.longitude = null;
-        else {
-          if (this.longitude == null)
-            this.longitude = new DecimalType();
-          this.longitude.setValue(value);
-        }
-        return this;
-      }
+    public VhDirGeoLocation setLongitude(BigDecimal value) { 
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("longitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+    }
 
-      public VhDirGeoLocation setLongitude(long value) { 
-            this.longitude = new DecimalType();
-          this.longitude.setValue(value);
-        return this;
-      }
+    public VhDirGeoLocation setLongitude(long value) { 
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("longitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+    }
 
-      public VhDirGeoLocation setLongitude(double value) { 
-            this.longitude = new DecimalType();
-          this.longitude.setValue(value);
-        return this;
-      }
+    public VhDirGeoLocation setLongitude(double value) { 
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("longitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+    }
     
 	/**
      * It is important to override the isEmpty() method, adding a check for any
@@ -89,15 +81,14 @@ public class VhDirGeoLocation extends Type implements ICompositeType {
      */
     @Override
     public boolean isEmpty() {
-        return super.isEmpty() && ElementUtil.isEmpty(latitude, longitude);
+        return super.isEmpty() && ElementUtil.isEmpty(extension);
     }
 
 	@Override
 	public VhDirGeoLocation copy() {
 		VhDirGeoLocation retVal = new VhDirGeoLocation();
         super.copyValues(retVal);
-        retVal.latitude = latitude;
-        retVal.longitude = longitude;
+        retVal.extension = extension;
         return retVal;
 	}
 

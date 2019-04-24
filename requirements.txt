@@ -1,3 +1,6 @@
 docutils
 fn
+git+https://github.com/tomkp75/OSlash.git
+mysql-connector-python
 Pygments
+toolz

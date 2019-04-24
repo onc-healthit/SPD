@@ -4,7 +4,6 @@ from fn import F
 
 from nppes_data_generators.npis.config import LOWER_LIMIT, UPPER_LIMIT, PREFIX
 from nppes_data_generators.npis.utils import double_to_digit, backward_digit_generator, add, append_digit
-from utils import timing
 
 ''' We will start our NPIs with 999999999 and decrement
     Real NPIs start with 1 or 2 so we don't go lower than 300000000
@@ -55,7 +54,7 @@ def npi(number):
     return pipeline(number)
 
 
-def npi_generator(upper_bound=UPPER_LIMIT, lower_bound=LOWER_LIMIT):
+def synthetic_npi_generator(upper_bound=UPPER_LIMIT, lower_bound=LOWER_LIMIT):
     '''
     Generates all NPIs in a given range going backward i.e. from the upper_bound down to the lower_bound.
     :param upper_bound:

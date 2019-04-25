@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirPractitioner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -42,6 +43,10 @@ public class BulkDataApp {
 			BulkOrganizationBuilder orgBuilder = new BulkOrganizationBuilder();
 			List<VhDirOrganization> organizations = orgBuilder.getOrganizations(connection);
 			
+			// Get Practitioners
+			BulkPractitionerBuilder pracBuilder = new BulkPractitionerBuilder();
+			List<VhDirPractitioner> practitioners = pracBuilder.getPractitioners(connection);
+			
 			// Now iterate through writing to the ndjson file
 			BufferedWriter writer = new BufferedWriter(new FileWriter("Organization.ndjson"));
 			for (VhDirOrganization org : organizations) {
@@ -56,6 +61,20 @@ public class BulkDataApp {
 				String prettyJsonString = gson.toJson(je);
 				System.out.println(prettyJsonString);
 			}
+			System.out.println("---------------------------------------------------------------------------------");
+			for (VhDirPractitioner prac : practitioners) {
+				String pracJson = jsonParser.encodeResourceToString(prac);
+				writer.write(pracJson);
+				writer.write("\n");
+				
+				// String above is appropriate for ndjson output but for now here is a pretty version
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				JsonParser jp = new JsonParser();
+				JsonElement je = jp.parse(pracJson);
+				String prettyJsonString = gson.toJson(je);
+				System.out.println(prettyJsonString);
+			}
+
 			writer.close();
 			
 		} catch (SQLException e) {

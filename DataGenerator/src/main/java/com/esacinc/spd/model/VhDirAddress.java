@@ -14,7 +14,7 @@ public class VhDirAddress extends Address {
 	/**
 	 * Add the geolocation
 	 */
-	@Child(name = "goelocation", type = {VhDirGeoLocation.class})
+	@Child(name = "geolocation", type = {VhDirGeoLocation.class})
 	@Extension(url="http://hl7.org/fhir/StructureDefinition/geolocation", definedLocally=false, isModifier=false)
     @Description(shortDefinition="geolocation of the organization")
     protected VhDirGeoLocation geolocation;

@@ -148,7 +148,7 @@ public class BulkOrganizationBuilder {
 		List<VhDirOrganization> organizations = new ArrayList<VhDirOrganization>();
 		
 		int certCount = 0;
-		String sql = "SELECT * FROM vhdir_organization LIMIT 3";
+		String sql = "SELECT * FROM vhdir_organization";
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
 		while (resultSet.next()) {
@@ -198,7 +198,11 @@ public class BulkOrganizationBuilder {
 			handleIdentifiers(connection, org, orgId);
 			
 			// TODO Hard coded active for now
-			org.setActive(true);
+			int active = resultSet.getInt("active");
+			if (active == 1)
+				org.setActive(true);
+			else
+				org.setActive(false);
 			
 			// TODO Hard coded type as provider for now
 			CodeableConcept typeConcept = new CodeableConcept();
@@ -290,11 +294,13 @@ public class BulkOrganizationBuilder {
 		    
 		    // Handle system
 		    String system = idResultset.getString("system");
-		    identifier.setSystem(system);
+		    if (system != null)
+		    	identifier.setSystem(system);
 		    
 		    // Handle value
 		    String value = idResultset.getString("value");
-		    identifier.setValue(value);
+		    if (value != null)
+		    	identifier.setValue(value);
 			
 			org.addIdentifier(identifier);
 		}
@@ -368,11 +374,25 @@ public class BulkOrganizationBuilder {
 			String postal = addrResultset.getString("postalCode");
 			if (postal != null) {
 				addr.setPostalCode(postal);
-				VhDirGeoLocation loc = geocodePostalCode(postal.substring(0,5));
+				
+				// First check to see if the lat and lon are set
+				double lat = addrResultset.getDouble("latitude");
+				double lon = addrResultset.getDouble("longitude");
+				
+				VhDirGeoLocation loc;
+				
+				if (lat == 0.0) {
+					loc = geocodePostalCode(postal.substring(0,5), connection);
+				} else {
+					loc = new VhDirGeoLocation();
+					loc.setLatitude(lat);
+					loc.setLongitude(lon);
+				}
+				
 				addr.setGeolocation(loc);
 			}
 			
-			// Set PostalCode
+			// Set Country
 			String country = addrResultset.getString("country");
 			if (country != null) {
 				addr.setCountry(country);
@@ -421,7 +441,9 @@ public class BulkOrganizationBuilder {
 				tele.setSystem(ContactPointSystem.URL);
 			
 			// Set value
-			tele.setValue(telecomResultset.getString("value"));
+			String value = telecomResultset.getString("value");
+			if (value != null)
+				tele.setValue(value);
 			
 			// Set some available time - for organizations make it all day 7 days a week
 			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
@@ -485,11 +507,25 @@ public class BulkOrganizationBuilder {
 			
 			// Set name
 			HumanName name = new HumanName();
-			name.setId(contactResultset.getString("name_id"));
-			name.setFamily(contactResultset.getString("family"));
-			name.addPrefix(contactResultset.getString("prefix"));
-			name.addGiven(contactResultset.getString("given"));
-			name.addSuffix(contactResultset.getString("suffix"));
+			String nameId = contactResultset.getString("name_id");
+			if (nameId != null)
+				name.setId(nameId);
+			
+			String family = contactResultset.getString("family");
+			if (family != null)
+				name.setFamily(family);
+			
+			String prefix = contactResultset.getString("prefix");
+			if (prefix != null)
+				name.addPrefix(prefix);
+			
+			String given = contactResultset.getString("given");
+			if (given != null)
+				name.addGiven(given);
+			
+			String suffix = contactResultset.getString("suffix");
+			if (suffix != null)
+				name.addSuffix(suffix);
 			
 			// Set name use
 			String use = contactResultset.getString("use");
@@ -541,7 +577,9 @@ public class BulkOrganizationBuilder {
 			// Handle period
 			
 			// Handle value
-			alias.setValue(aliasResultset.getString("value"));
+			String value = aliasResultset.getString("value");
+			if (value != null)
+				alias.setValue(value);
 			
 			org.addAlias(alias);
 		}
@@ -587,7 +625,9 @@ public class BulkOrganizationBuilder {
 				tele.setSystem(ContactPointSystem.URL);
 			
 			// Set value
-			tele.setValue(telecomResultset.getString("value"));
+			String value = telecomResultset.getString("value");
+			if (value != null)
+				tele.setValue(value);
 			
 			// Set some available time - for contacts make it 8 - 5 M-F
 			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
@@ -629,8 +669,9 @@ public class BulkOrganizationBuilder {
 	 * 
 	 * @param postalCode
 	 * @return
+	 * @throws SQLException 
 	 */
-	private VhDirGeoLocation geocodePostalCode(String postalCode) {
+	private VhDirGeoLocation geocodePostalCode(String postalCode, Connection connection) throws SQLException {
 		VhDirGeoLocation loc = new VhDirGeoLocation();
 		String baseUrl = "http://api.geonames.org/postalCodeSearchJSON?country=US&postalcode=";
 		String fullUrl = baseUrl + postalCode + "&username=mholck";
@@ -658,6 +699,14 @@ public class BulkOrganizationBuilder {
 			    double lon = propertiesJson.get("lng").getAsDouble();
 			    loc.setLatitude(lat);
 			    loc.setLongitude(lon);
+			    
+			    // Update all DB reoirds with this postalCode to add lat/lon
+			    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
+			    		postalCode + "%'";
+			    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+			    updateStatement.setDouble(1, lat);
+			    updateStatement.setDouble(2, lon);
+				updateStatement.executeUpdate();
 			}
 			br.close();
 	

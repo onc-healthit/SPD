@@ -22,6 +22,7 @@ import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
@@ -158,7 +159,8 @@ public class BulkPractitionerBuilder {
 			// set the id
 			int pracId = resultSet.getInt("practitioner_id");
 			prac.setId(resultSet.getString("practitioner_id"));
-			 					
+			 
+			prac.setActive(resultSet.getBoolean("active"));
 			
 			// Add a digital certificate to the first 3 practitioners
 			if (certCount < 3) {
@@ -193,8 +195,11 @@ public class BulkPractitionerBuilder {
 			// Handle the identifiers
 			handleIdentifiers(connection, prac, pracId);
 			
-			// TODO Hard coded active for now
-			prac.setActive(true);
+			// Handle the gender
+			handleGender(prac, resultSet.getString("gender"));
+			
+			// Handle the birth date
+			handleBirthDate(prac, resultSet.getDate("birthDate"));
 			
             // Handle names
          	handleNames(connection, prac, pracId);
@@ -217,7 +222,51 @@ public class BulkPractitionerBuilder {
 		
 		return practitioners;
 	}
-	
+
+	/**
+	 * Takes a string representing gender and sets the practitioner gender to a corresponding AdministrativeGender value.
+	 * 
+	 * @param prac
+	 * @param gender
+	 */
+	private void handleGender(VhDirPractitioner prac, String gender) {
+		// First of all, if there's nothing in the db for gender, then we'll say UNKNOWN
+		if (gender == null || gender.isEmpty()) {
+			prac.setGender(AdministrativeGender.UNKNOWN);
+		}
+		else {
+			// Otherwise, let's try to handle the db value in the normal way...
+			try {
+				prac.setGender(AdministrativeGender.valueOf(gender));
+			}
+			catch (IllegalArgumentException e){
+				// If we get an error, then it may just be that the db has "f" or "m" as the gender. At least we can handle that case...
+				if ("F".equalsIgnoreCase(gender)) {
+					prac.setGender(AdministrativeGender.FEMALE);
+				}
+				else if ("M".equalsIgnoreCase(gender)) {
+					prac.setGender(AdministrativeGender.MALE);
+				} 
+				else {
+					// Who knows what they've put as gender in the db. Let's just say OTHER.
+					prac.setGender(AdministrativeGender.OTHER);
+				}
+			}
+		}
+	}
+		
+	/**
+	 * Takes a Date representing birthDate and sets the practitioner birth date
+	 * 
+	 * @param prac
+	 * @param gender
+	 */
+	private void handleBirthDate(VhDirPractitioner prac, Date birthdate) {
+		if (birthdate != null) {
+			prac.setBirthDate(birthdate);
+		}
+	}
+
 	/**
 	 * Handles all the elements of the identifiers for Practitioners
 	 * 
@@ -473,6 +522,13 @@ public class BulkPractitionerBuilder {
 		}
 	}
 	
+	/**
+	 * Handle the restrictions associated with the practitioner 
+	 * @param connection
+	 * @param prac
+	 * @param pracId
+	 * @throws SQLException
+	 */
 	private void handleRestrictions(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
 		String resSql = "SELECT * from vhdir_restriction where practitioner_id = ?";
 		PreparedStatement nameStatement = connection.prepareStatement(resSql);
@@ -483,6 +539,13 @@ public class BulkPractitionerBuilder {
 
 	}
 	
+	/**
+	 * Handle the communication proficiencies associated with the practitioner
+	 * @param connection
+	 * @param prac
+	 * @param pracId
+	 * @throws SQLException
+	 */
 	private void handleCommunications(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
 		// A communication is a codeable concept. Such codeable concepts can have multiple codings in it.
 		// First, query the db for all the communications for this practioner
@@ -521,8 +584,8 @@ public class BulkPractitionerBuilder {
 			}
 			prac.addCommunication(comm_cc);
 		}
+		// If we didn't find any communications in the db, let's just make one up for now
 		if (cnt == 0) {
-			//  Didn't find any communications in the db, so let's just make something up for now
 			CodeableConcept comm_cc = new CodeableConcept();
 			Coding coding = new Coding();
 			coding.setDisplay("Functional Native Proficiency");
@@ -530,7 +593,7 @@ public class BulkPractitionerBuilder {
 			coding.setVersion("0.2.0");
 			coding.setUserSelected(true);
 			coding.setCode("50");
-			// Generate a totally random id, prefaced by "x"
+			// Generate a totally random id, prefixed by "x"
 			Random ran = new Random();
 			comm_cc.setId("x"+ ran.nextInt(10000-1 + 1));
 			comm_cc.setText("Just made something up");

@@ -22,6 +22,14 @@ import ca.uhn.fhir.parser.IParser;
 public class BulkDataApp {
 
 	public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_scrubbed";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small_scrubbed";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium_scrubbed";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_large";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_larged_scrubbed";
+	
 	public static String dbUsername = "spduser";
 	public static String dbPassword = "SpdUs3r45";
 	

@@ -39,6 +39,7 @@ import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirPractitioner;
+import com.esacinc.spd.util.Geocoding;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -150,7 +151,7 @@ public class BulkPractitionerBuilder {
 		List<VhDirPractitioner> practitioners = new ArrayList<VhDirPractitioner>();
 		
 		int certCount = 0;
-		String sql = "SELECT * FROM vhdir_practitioner LIMIT 3";
+		String sql = "SELECT * FROM vhdir_practitioner";
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
 		while (resultSet.next()) {
@@ -394,11 +395,26 @@ public class BulkPractitionerBuilder {
 			String postal = addrResultset.getString("postalCode");
 			if (postal != null) {
 				addr.setPostalCode(postal);
-				VhDirGeoLocation loc = geocodePostalCode(postal.substring(0,5));
+				
+				// First check to see if the lat and lon are set
+				double lat = addrResultset.getDouble("latitude");
+				double lon = addrResultset.getDouble("longitude");
+				
+				VhDirGeoLocation loc;
+				// If lat/lon not set, the use geocode service to determine lat/lon from postal code...
+				if (lat == 0.0) {
+					System.out.println("PractitionerBuilder: Geocoding lat-lon for postal code " + postal + ", addres:"+addr.getId());
+					loc = Geocoding.geocodePostalCode(postal.substring(0,5), connection);
+				} else {
+					loc = new VhDirGeoLocation();
+					loc.setLatitude(lat);
+					loc.setLongitude(lon);
+				}
+				
 				addr.setGeolocation(loc);
 			}
-			
-			// Set PostalCode
+
+			// Set Country
 			String country = addrResultset.getString("country");
 			if (country != null) {
 				addr.setCountry(country);
@@ -602,54 +618,5 @@ public class BulkPractitionerBuilder {
 		}
 	}
 	
-	/**
-	
-	/**
-	 * Calls a web service to get the lat/lon for the postal code passed in.
-	 * 
-	 * @param postalCode
-	 * @return
-	 */
-	private VhDirGeoLocation geocodePostalCode(String postalCode) {
-		VhDirGeoLocation loc = new VhDirGeoLocation();
-		String baseUrl = "http://api.geonames.org/postalCodeSearchJSON?country=US&postalcode=";
-		String fullUrl = baseUrl + postalCode + "&username=mholck";
-		
-		URL postResource;
-		try {
-			postResource = new URL(fullUrl);
-			HttpURLConnection con;
-			con = (HttpURLConnection) postResource.openConnection();
-			con.setRequestMethod("GET");
-			con.setRequestProperty("Content-Type", "application/json");
-			con.setDoOutput(true);
-			con.setConnectTimeout(0);
-			con.setReadTimeout(0);
-	
-			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String l = null;
-			while ((l=br.readLine())!=null) {
-				System.out.println(l);
-				JsonElement result = new JsonParser().parse(l);
-			    JsonObject resultObj = result.getAsJsonObject();
-			    JsonArray postalCodes = resultObj.getAsJsonArray("postalCodes");
-			    JsonObject propertiesJson = postalCodes.get(0).getAsJsonObject();
-			    double lat = propertiesJson.get("lat").getAsDouble();
-			    double lon = propertiesJson.get("lng").getAsDouble();
-			    loc.setLatitude(lat);
-			    loc.setLongitude(lon);
-			}
-			br.close();
-	
-			con.disconnect();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return loc;
-	}
+
 }

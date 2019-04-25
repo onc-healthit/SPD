@@ -37,6 +37,7 @@ import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.util.Geocoding;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -153,7 +154,7 @@ public class BulkOrganizationBuilder {
         ResultSet resultSet = statement.executeQuery();
 		while (resultSet.next()) {
 			VhDirOrganization org = new VhDirOrganization();
-		
+			try {
 			// set the id
 			int orgId = resultSet.getInt("organization_id");
 			org.setId(resultSet.getString("organization_id"));
@@ -219,7 +220,7 @@ public class BulkOrganizationBuilder {
          	}
          			
 			// Handle aliases
-         	handleAliases(connection, org, orgId);
+         	// TODO handleAliases(connection, org, orgId);
 			
             // Handle the telecoms
          	handleTelecoms(connection, org, orgId);
@@ -240,6 +241,10 @@ public class BulkOrganizationBuilder {
          	handleContacts(connection, org, orgId);
 			 
 			organizations.add(org);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return organizations;
@@ -382,7 +387,8 @@ public class BulkOrganizationBuilder {
 				VhDirGeoLocation loc;
 				
 				if (lat == 0.0) {
-					loc = geocodePostalCode(postal.substring(0,5), connection);
+					System.out.println("OrganizationBuilder: Geocoding lat-lon for postal code " + postal + ", addres:"+addr.getId());
+					loc = Geocoding.geocodePostalCode(postal.substring(0,5), connection);
 				} else {
 					loc = new VhDirGeoLocation();
 					loc.setLatitude(lat);
@@ -664,61 +670,5 @@ public class BulkOrganizationBuilder {
 		}
 	}
 	
-	/**
-	 * Calls a web service to get the lat/lon for the postal code passed in.
-	 * 
-	 * @param postalCode
-	 * @return
-	 * @throws SQLException 
-	 */
-	private VhDirGeoLocation geocodePostalCode(String postalCode, Connection connection) throws SQLException {
-		VhDirGeoLocation loc = new VhDirGeoLocation();
-		String baseUrl = "http://api.geonames.org/postalCodeSearchJSON?country=US&postalcode=";
-		String fullUrl = baseUrl + postalCode + "&username=mholck";
-		
-		URL postResource;
-		try {
-			postResource = new URL(fullUrl);
-			HttpURLConnection con;
-			con = (HttpURLConnection) postResource.openConnection();
-			con.setRequestMethod("GET");
-			con.setRequestProperty("Content-Type", "application/json");
-			con.setDoOutput(true);
-			con.setConnectTimeout(0);
-			con.setReadTimeout(0);
-	
-			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String l = null;
-			while ((l=br.readLine())!=null) {
-				System.out.println(l);
-				JsonElement result = new JsonParser().parse(l);
-			    JsonObject resultObj = result.getAsJsonObject();
-			    JsonArray postalCodes = resultObj.getAsJsonArray("postalCodes");
-			    JsonObject propertiesJson = postalCodes.get(0).getAsJsonObject();
-			    double lat = propertiesJson.get("lat").getAsDouble();
-			    double lon = propertiesJson.get("lng").getAsDouble();
-			    loc.setLatitude(lat);
-			    loc.setLongitude(lon);
-			    
-			    // Update all DB reoirds with this postalCode to add lat/lon
-			    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
-			    		postalCode + "%'";
-			    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-			    updateStatement.setDouble(1, lat);
-			    updateStatement.setDouble(2, lon);
-				updateStatement.executeUpdate();
-			}
-			br.close();
-	
-			con.disconnect();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return loc;
-	}
+
 }

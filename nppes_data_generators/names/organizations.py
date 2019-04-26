@@ -161,7 +161,7 @@ def synthetic_org_name_generator():
     :return: Partial :scrub_name with signature `str, list[str] -> str`
     """
     def load(file):
-        vocabulary = os.path.join(os.path.dirname(__file__), '..', 'vocabulary')
+        vocabulary = os.path.join(os.path.dirname(__file__), '..', 'vocabulary', 'names')
         return set(_[0] for _ in load_csv(os.path.join(vocabulary, file)))
 
     entity_types = load('entity_types.csv')

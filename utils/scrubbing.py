@@ -52,6 +52,16 @@ def breakdown(input):
 
 
 @toolz.curry
+def pick(population, sample_size):
+    return random.sample(population, sample_size)
+
+
+@toolz.curry
+def pick_one(population):
+    return pick(population, 1)[0]
+
+
+@toolz.curry
 def pick_other(population, given):
     """
     Randomly pick a different name that the one given in input and cache it so that the same input will give the same
@@ -65,6 +75,6 @@ def pick_other(population, given):
     :return: A string representing a single name picked from the population.
     """
     try:
-        return next(dropwhile(lambda _: _ == given, (_ for _ in random.sample(population, 2))))
+        return next(dropwhile(lambda _: _ == given, (_ for _ in pick(population, 2))))
     except StopIteration:
         return given

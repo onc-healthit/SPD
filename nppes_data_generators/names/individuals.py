@@ -13,9 +13,9 @@ def synthetic_first_name_generator():
     :return: Memoized partial application of :pick_name
              Its signature is `str -> str`
     """
-    static_data_path = os.path.join(os.path.dirname(__file__), '..', 'vocabulary')
+    vocabulary = os.path.join(os.path.dirname(__file__), '..', 'vocabulary', 'names')
 
-    first_names = set(_[0] for _ in load_csv(os.path.join(static_data_path, 'first_names.csv')))
+    first_names = set(_[0] for _ in load_csv(os.path.join(vocabulary, 'first_names.csv')))
 
     return memoize(pick_other(first_names))
 
@@ -27,8 +27,8 @@ def synthetic_last_name_generator():
     :return: Memoized partial application of :pick_name
              Its signature is `str -> str`
     """
-    static_data_path = os.path.join(os.path.dirname(__file__), '..', 'vocabulary')
+    vocabulary = os.path.join(os.path.dirname(__file__), '..', 'vocabulary', 'names')
 
-    last_name = set(_[0] for _ in load_csv(os.path.join(static_data_path, 'last_names.csv')))
+    last_name = set(_[0] for _ in load_csv(os.path.join(vocabulary, 'last_names.csv')))
 
     return memoize(pick_other(last_name))

@@ -354,6 +354,23 @@ const spdInsurancePlanModel = spddb.define('vhdir_insurance_plan', {
 });
 spdInsurancePlanModel.removeAttribute('id');
 
+const spdOrgAliasModel = spddb.define('organization_alias', {
+  organization_alias_id: { type: Sequelize.INTEGER,
+				primaryKey: true},
+  period_start: { type: Sequelize.DATE},
+  period_end: { type: Sequelize.DATE},
+  value: { type: Sequelize.STRING },
+  alias_type_cc_id: { type: Sequelize.INTEGER},
+  organization_id: { type: Sequelize.INTEGER},
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'organization_alias'	
+});
+spdOrgAliasModel.removeAttribute('id');
+
+
 spdOrgModel.hasMany(spdAddressModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
 spdAddressModel.belongsTo(spdOrgModel, {foreignKey: 'organization_id', targetKey: 'organization_id'});
 spdOrgModel.hasMany(spdTelecomModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
@@ -374,7 +391,8 @@ const Network = spddb.models.vhdir_network;
 const Identifier = spddb.models.identifier;
 const Reference = spddb.models.resource_reference
 const SpdInsurancePlan = spddb.models.vhdir_insurance_plan
+const OrgAlias = spddb.models.organization_alias
 
 
 
-export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan};
+export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias};

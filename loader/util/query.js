@@ -1,4 +1,4 @@
-import { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan} from '../model/sequelizeModels';
+import { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias} from '../model/sequelizeModels';
 import Sequelize from 'sequelize';
 
 export const query = {
@@ -24,8 +24,8 @@ export const query = {
 	async getInsurancePlans() {
 		var plans = await InsurancePlan.findAll({
 			order: [['PlanMarketingName']],
-			offset: 0, 
-			limit: 2000});
+			offset: 10000, 
+			limit: 5000});
 		var currentName = '';
 		for (var i = 0; i < plans.length; i++) {
 			console.log("Plan Name: "+plans[i].PlanMarketingName);
@@ -99,6 +99,10 @@ export const query = {
 					});
 					ownerId = orgCreated.organization_id;					
 				}
+				else {
+					console.log("Owner not found: "+plans[i].PlanMarketingName+" SKIP!!!");
+					continue;
+				}
 			}
 			else {
 				ownerId = id.organization_id;
@@ -128,7 +132,7 @@ export const query = {
 	async getNetworks() {
 		var cciioQuery = "SELECT NetworkId, SourceName, IssuerId,"+
 			" NetworkName FROM cciio.network"+
-			" WHERE SourceName='HIOS'";
+			" WHERE SourceName='HIOS' ";
 		var res = await cciiodb.query(cciioQuery, { model: Cciio } );
 		var nwId = '', names = [], owner = null, org = null, orgId = null, orgName = null ;
 		for (var i = 0; i < res.length; i++) {
@@ -274,7 +278,7 @@ export const query = {
 		"order by `Provider Organization Name (Legal Business Name)` , "+
 		"`Provider Other Organization Name`, `Other Provider Identifier_1`, "+
 		"`Provider First Line Business Mailing Address`, "+
-        "`Provider First Line Business Practice Location Address` limit 0, 5000";
+        "`Provider First Line Business Practice Location Address` limit 8000, 2000";
 		var res = await npidb.query(npiQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		var lbn = "", olbn = null, oid = null, fmailing = "", floc = "", nameToUse = null;
@@ -312,8 +316,20 @@ export const query = {
 			//temp
 			var exist = await Organization.findOne({where: {name: nameToUse}});
 			if (exist != null) {
-				//console.log("Org Found" + exist.organization_id);
-				/*if (res[i].deactivation_date != null && res[i].deactivation_date.length > 4 
+				console.log("Org Found" + exist.organization_id);
+				/*if (res[i].other_organization_name!= null && res[i].other_organization_name.length > 0){
+					var alias1 = await OrgAlias.create({
+						value: res[i].other_organization_name,
+						organization_id: exist.organization_id
+					});
+				}
+				if (res[i].other_identifier_1!= null && res[i].other_identifier_1.length > 0){
+					var alias1 = await OrgAlias.create({
+						value: res[i].other_identifier_1,
+						organization_id: exist.organization_id
+					});
+				}
+				if (res[i].deactivation_date != null && res[i].deactivation_date.length > 4 
 					&& (res[i].reactivation_date === null || res[i].reactivation_date.length <= 0)) {
 					Organization.update({
 						active: '0'
@@ -387,6 +403,18 @@ export const query = {
 				value: res[i].NPI,
 				organization_id: orgCreated.organization_id
 			});	
+			if (res[i].other_organization_name!= null && res[i].other_organization_name.length > 0){
+				var alias1 = await OrgAlias.create({
+					value: res[i].other_organization_name,
+					organization_id: orgCreated.organization_id
+				});
+			}
+			if (res[i].other_identifier_1!= null && res[i].other_identifier_1.length > 0){
+				var alias1 = await OrgAlias.create({
+					value: res[i].other_identifier_1,
+					organization_id: orgCreated.organization_id
+				});
+			}
 			var address1 = await Address.create({
 				use: "billing",
 				line1: res[i].mailing_address_first_line, 
@@ -506,7 +534,7 @@ export const query = {
 		"`Is Sole Proprietor` as is_sole_proprietor "+
 		"FROM nppes.npi WHERE `Entity Type Code` = 1 "+
 		"order by `Provider Last Name (Legal Name)`, `Provider First Name`, `Provider Middle Name` "+
-		"limit 4000, 2000";
+		"limit 0, 10000";
 		var res = await npidb.query(providerQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		for (var i = 0; i < res.length; i++) {
@@ -514,14 +542,38 @@ export const query = {
 			//console.log("full name: "+JSON.stringify(fullName));
 			var provider = await Provider.findOne({where: {photo: fullName}});
 			//console.log("provider: "+JSON.stringify(provider));
+			if (provider != null){
+				console.log("provider found "+provider.photo);
+				var idNpi = await Identifier.create({
+					identifier_status_value_code: "active",
+					use: "official",
+					system: "http://hl7.org/fhir/sid/us-npi",
+					value: res[i].NPI,
+					practitioner_id: provider.practitioner_id
+				});	
+				continue;
+			}
 			if (provider == null) {
+				var isActive = '1';
+				if (res[i].deactivation_date != null && res[i].deactivation_date.length > 4 
+					&& (res[i].reactivation_date === null || res[i].reactivation_date.length <= 0)) {
+					isActive = '0';
+					console.log("Provider inactive: " + fullName);
+				}
 				var created = await Provider.create({
-					active: '1',
+					active: isActive,
 					gender: res[i].gender,
 					photo: res[i].last_name+res[i].first_name+res[i].middle_name});
 				//console.log("Provider: "+JSON.stringify(created));
 				var providerCreated = await Provider.findOne({where: {photo: res[i].last_name+res[i].first_name+res[i].middle_name}});
 				//console.log("ProviderCreated: "+JSON.stringify(providerCreated));
+				var idNpi = await Identifier.create({
+					identifier_status_value_code: "active",
+					use: "official",
+					system: "http://hl7.org/fhir/sid/us-npi",
+					value: res[i].NPI,
+					practitioner_id: providerCreated.practitioner_id
+				});	
 				var address1 = await Address.create({
 					use: "billing",
 					line1: res[i].mailing_address_first_line, 

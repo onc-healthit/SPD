@@ -2,82 +2,70 @@ package com.esacinc.spd.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Configuration;
 import org.hl7.fhir.r4.model.DateType;
 import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.Type;
+import org.hl7.fhir.utilities.Utilities;
 
+import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
+import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="DigitalCertificate")
-public class VhDirDigitalCertificate extends Type implements ICompositeType {
+@DatatypeDef(name="Qualification")
+public class VhDirQualification extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
-    
-	public VhDirDigitalCertificate setType(Coding type) {
+
+	public VhDirQualification setIdentifer(Identifier id) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
-		ext.setUrl("type");
-		ext.setValue(type);
+		ext.setUrl("identifier");
+		ext.setValue(id);
 		this.extension.add(ext);
 		return this;
 	}
-
-	public VhDirDigitalCertificate setUse(Coding use) {
+	
+	public VhDirQualification setCode(CodeableConcept code) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
-		ext.setUrl("use");
-		ext.setValue(use);
+		ext.setUrl("code");
+		ext.setValue(code);
 		this.extension.add(ext);
 		return this;
 	}
-
-	public VhDirDigitalCertificate setCertificateStandard(Coding std) {
+	
+	public VhDirQualification setIssuer(Reference issuer) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
-		ext.setUrl("certificateStandard");
-		ext.setValue(std);
+		ext.setUrl("issuer");
+		ext.setValue(issuer);
 		this.extension.add(ext);
 		return this;
 	}
-    
-    public VhDirDigitalCertificate setCertificate(String value) { 
-    	if (this.extension == null)
+	
+	public VhDirQualification setStatus(Coding status) {
+		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
-		ext.setUrl("certificate");
-		ext.setValue(new StringType(value));
+		ext.setUrl("status");
+		ext.setValue(status);
 		this.extension.add(ext);
 		return this;
-    }
-    
-    public VhDirDigitalCertificate setExpirationDate(Date value) {
-    	if (this.extension == null)
-			this.extension = new ArrayList<Extension>();
-		Extension ext = new Extension();
-		ext.setUrl("expirationDate");
-		ext.setValue(new DateType(value));
-		this.extension.add(ext);
-		return this;
-    }
-    
-    public VhDirDigitalCertificate setTrustFramework(CodeableConcept value) { 
-    	if (this.extension == null)
-			this.extension = new ArrayList<Extension>();
-		Extension ext = new Extension();
-		ext.setUrl("trustFramework");
-		ext.setValue(value);
-		this.extension.add(ext);
-		return this;
-    }
-
+	}
+	
 	/**
      * It is important to override the isEmpty() method, adding a check for any
      * newly added fields. 
@@ -88,8 +76,8 @@ public class VhDirDigitalCertificate extends Type implements ICompositeType {
     }
 
 	@Override
-	public VhDirDigitalCertificate copy() {
-		VhDirDigitalCertificate retVal = new VhDirDigitalCertificate();
+	public VhDirQualification copy() {
+		VhDirQualification retVal = new VhDirQualification();
         super.copyValues(retVal);
         retVal.extension = extension;
         return retVal;

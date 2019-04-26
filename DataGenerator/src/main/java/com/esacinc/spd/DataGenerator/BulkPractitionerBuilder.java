@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,10 +22,11 @@ import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
-import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.TimeType;
 
@@ -36,18 +38,18 @@ import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
-import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.util.Geocoding;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class BulkOrganizationBuilder {
+public class BulkPractitionerBuilder {
 	
 	private String[] certs = new String[3];
 	
-	public BulkOrganizationBuilder() {
+	public BulkPractitionerBuilder() {
 		// 5 sample certificates to use for samples
 		certs[0] = "-----BEGIN CERTIFICATE-----" +
 			"MIIE2DCCAsACCQDMxyOS8py9rTANBgkqhkiG9w0BAQsFADAuMQswCQYDVQQGEwJV" +
@@ -137,35 +139,31 @@ public class BulkOrganizationBuilder {
 	}
 	
 	/**
-	 * uses the connection provided to get all organization and then builds a list
-	 * of Organization objects to return
+	 * uses the connection provided to get all practitioner and then builds a list
+	 * of Practitioner objects to return
 	 * 
 	 * @param connection
 	 * @return
 	 * @throws SQLException
 	 * @throws ParseException
 	 */
-	public List<VhDirOrganization> getOrganizations(Connection connection) throws SQLException, ParseException {
-		List<VhDirOrganization> organizations = new ArrayList<VhDirOrganization>();
+	public List<VhDirPractitioner> getPractitioners(Connection connection) throws SQLException, ParseException {
+		List<VhDirPractitioner> practitioners = new ArrayList<VhDirPractitioner>();
 		
 		int certCount = 0;
-		String sql = "SELECT * FROM vhdir_organization";
+		String sql = "SELECT * FROM vhdir_practitioner";
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet resultSet = statement.executeQuery();
 		while (resultSet.next()) {
-			VhDirOrganization org = new VhDirOrganization();
-			try {
+			VhDirPractitioner prac = new VhDirPractitioner();
+		
 			// set the id
-			int orgId = resultSet.getInt("organization_id");
-			org.setId(resultSet.getString("organization_id"));
-			 					
-			// Handle description
-			String description = resultSet.getString("description");
-			if (description != null) {
-				org.setDescription(description);
-			}
+			int pracId = resultSet.getInt("practitioner_id");
+			prac.setId(resultSet.getString("practitioner_id"));
+			 
+			prac.setActive(resultSet.getBoolean("active"));
 			
-			// Add a digital certificate to the first 3 organizations
+			// Add a digital certificate to the first 3 practitioners
 			if (certCount < 3) {
 				VhDirDigitalCertificate cert = new VhDirDigitalCertificate();
 				Coding certType = new Coding();
@@ -192,76 +190,96 @@ public class BulkOrganizationBuilder {
 				trustCode.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate");
 				certTrust.addCoding(trustCode);
 				cert.setTrustFramework(certTrust);
-				org.addDigitalcertficate(cert);
+				prac.addDigitalcertficate(cert);
 			}
 						
 			// Handle the identifiers
-			handleIdentifiers(connection, org, orgId);
+			handleIdentifiers(connection, prac, pracId);
 			
-			// TODO Hard coded active for now
-			int active = resultSet.getInt("active");
-			if (active == 1)
-				org.setActive(true);
-			else
-				org.setActive(false);
+			// Handle the gender
+			handleGender(prac, resultSet.getString("gender"));
 			
-			// TODO Hard coded type as provider for now
-			CodeableConcept typeConcept = new CodeableConcept();
-            Coding typeCode = new Coding();
-            typeCode.setCode("prov");
-            typeCode.setSystem("http://terminology.hl7.org/CodeSystem/organization-type");
-            typeConcept.addCoding(typeCode);
-            org.addType(typeConcept);
+			// Handle the birth date
+			handleBirthDate(prac, resultSet.getDate("birthDate"));
+			
+            // Handle names
+         	handleNames(connection, prac, pracId);
 					
-            // Handle the name
-         	String name = resultSet.getString("name");
-         	if (name != null) {
-         		org.setName(name);
-         	}
-         			
-			// Handle aliases
-         	// TODO handleAliases(connection, org, orgId);
 			
             // Handle the telecoms
-         	handleTelecoms(connection, org, orgId);
+         	handleTelecoms(connection, prac, pracId);
          	
 			// Handle the addresses
-         	handleAddresses(connection, org, orgId);
+         	handleAddresses(connection, prac, pracId);
+         	
+            // Handle the restrictions
+         	handleRestrictions(connection, prac, pracId);
+         	
+         	// Handle the communications
+         	handleCommunications(connection, prac, pracId);
 			
-			// Handle the partOf association reference
-         	String partOfId = resultSet.getString("partOf_organization_id");
-         	if (partOfId != null) {
-	         	Reference partOf = new Reference();
-	         	partOf.setId(partOfId);
-	         	partOf.setReference("urn:uuid:" + partOfId);
-	         	org.setPartOf(partOf);
-         	}
-			
-			// Handle contacts
-         	handleContacts(connection, org, orgId);
-			 
-			organizations.add(org);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
+			practitioners.add(prac);
 		}
 		
-		return organizations;
+		return practitioners;
 	}
-	
+
 	/**
-	 * Handles all the elements of the identifiers for Organizations
+	 * Takes a string representing gender and sets the practitioner gender to a corresponding AdministrativeGender value.
+	 * 
+	 * @param prac
+	 * @param gender
+	 */
+	private void handleGender(VhDirPractitioner prac, String gender) {
+		// First of all, if there's nothing in the db for gender, then we'll say UNKNOWN
+		if (gender == null || gender.isEmpty()) {
+			prac.setGender(AdministrativeGender.UNKNOWN);
+		}
+		else {
+			// Otherwise, let's try to handle the db value in the normal way...
+			try {
+				prac.setGender(AdministrativeGender.valueOf(gender));
+			}
+			catch (IllegalArgumentException e){
+				// If we get an error, then it may just be that the db has "f" or "m" as the gender. At least we can handle that case...
+				if ("F".equalsIgnoreCase(gender)) {
+					prac.setGender(AdministrativeGender.FEMALE);
+				}
+				else if ("M".equalsIgnoreCase(gender)) {
+					prac.setGender(AdministrativeGender.MALE);
+				} 
+				else {
+					// Who knows what they've put as gender in the db. Let's just say OTHER.
+					prac.setGender(AdministrativeGender.OTHER);
+				}
+			}
+		}
+	}
+		
+	/**
+	 * Takes a Date representing birthDate and sets the practitioner birth date
+	 * 
+	 * @param prac
+	 * @param gender
+	 */
+	private void handleBirthDate(VhDirPractitioner prac, Date birthdate) {
+		if (birthdate != null) {
+			prac.setBirthDate(birthdate);
+		}
+	}
+
+	/**
+	 * Handles all the elements of the identifiers for Practitioners
 	 * 
 	 * @param connection
 	 * @param org
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleIdentifiers(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String idSql = "SELECT * from identifier where organization_id = ?";
+	private void handleIdentifiers(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
+		String idSql = "SELECT * from identifier where practitioner_id = ?";
 		PreparedStatement idStatement = connection.prepareStatement(idSql);
-		idStatement.setInt(1, orgId);
+		idStatement.setInt(1, pracId);
 		ResultSet idResultset = idStatement.executeQuery();
 		while(idResultset.next()) {
 			VhDirIdentifier identifier = new VhDirIdentifier();
@@ -299,30 +317,28 @@ public class BulkOrganizationBuilder {
 		    
 		    // Handle system
 		    String system = idResultset.getString("system");
-		    if (system != null)
-		    	identifier.setSystem(system);
+		    identifier.setSystem(system);
 		    
 		    // Handle value
 		    String value = idResultset.getString("value");
-		    if (value != null)
-		    	identifier.setValue(value);
+		    identifier.setValue(value);
 			
-			org.addIdentifier(identifier);
+			prac.addIdentifier(identifier);
 		}
 	}
 	
 	/**
-	 * Handles the addresses for the passed in organization ID
+	 * Handles the addresses for the passed in practitioner ID
 	 * 
 	 * @param connection
 	 * @param org
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleAddresses(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String addrSql = "SELECT * from address where organization_id = ?";
+	private void handleAddresses(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
+		String addrSql = "SELECT * from address where practitioner_id = ?";
 		PreparedStatement addrStatement = connection.prepareStatement(addrSql);
-		addrStatement.setInt(1, orgId);
+		addrStatement.setInt(1, pracId);
 		ResultSet addrResultset = addrStatement.executeQuery();
 		while(addrResultset.next()) {
 			VhDirAddress addr = new VhDirAddress();
@@ -385,9 +401,9 @@ public class BulkOrganizationBuilder {
 				double lon = addrResultset.getDouble("longitude");
 				
 				VhDirGeoLocation loc;
-				
+				// If lat/lon not set, the use geocode service to determine lat/lon from postal code...
 				if (lat == 0.0) {
-					System.out.println("OrganizationBuilder: Geocoding lat-lon for postal code " + postal + ", addres:"+addr.getId());
+					System.out.println("PractitionerBuilder: Geocoding lat-lon for postal code " + postal + ", addres:"+addr.getId());
 					loc = Geocoding.geocodePostalCode(postal.substring(0,5), connection);
 				} else {
 					loc = new VhDirGeoLocation();
@@ -397,29 +413,29 @@ public class BulkOrganizationBuilder {
 				
 				addr.setGeolocation(loc);
 			}
-			
+
 			// Set Country
 			String country = addrResultset.getString("country");
 			if (country != null) {
 				addr.setCountry(country);
 			}
 			
-			org.addAddress(addr);
+			prac.addAddress(addr);
 		}
 	}
 	
 	/**
-	 * Handles the telecoms for the organization id passed in
+	 * Handles the telecoms for the practitioner id passed in
 	 * 
 	 * @param connection
 	 * @param org
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleTelecoms(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String addrSql = "SELECT * from telecom where organization_id = ?";
+	private void handleTelecoms(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
+		String addrSql = "SELECT * from telecom where practitioner_id = ?";
 		PreparedStatement telecomStatement = connection.prepareStatement(addrSql);
-		telecomStatement.setInt(1, orgId);
+		telecomStatement.setInt(1, pracId);
 		ResultSet telecomResultset = telecomStatement.executeQuery();
 		while(telecomResultset.next()) {
 			VhDirContactPoint tele = new VhDirContactPoint();
@@ -447,11 +463,9 @@ public class BulkOrganizationBuilder {
 				tele.setSystem(ContactPointSystem.URL);
 			
 			// Set value
-			String value = telecomResultset.getString("value");
-			if (value != null)
-				tele.setValue(value);
+			tele.setValue(telecomResultset.getString("value"));
 			
-			// Set some available time - for organizations make it all day 7 days a week
+			// Set some available time - for practitioners make it all day 7 days a week
 			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
 			CodeType days = new CodeType();
 			days.setSystem("http://hl7.org/fhir/days-of-week");
@@ -484,189 +498,123 @@ public class BulkOrganizationBuilder {
 			available.setAllDay(true);
 			tele.addAvailableTime(available);
 			
-			org.addTelecom(tele);
+			prac.addTelecom(tele);
 		}
 	}
 	
+	
 	/**
-	 * Handles the contacts for the organization ID passed in
+	 * Handles the telecoms for the practitioner id passed in
 	 * 
 	 * @param connection
 	 * @param org
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleContacts(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String contactSql = "SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, " +
-				"oc.organization_contact_id " +
-     			"FROM name as n, organization_contact as oc " +
-     			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?";
-     	PreparedStatement contactStatement = connection.prepareStatement(contactSql);
-     	contactStatement.setInt(1, orgId);
-		ResultSet contactResultset = contactStatement.executeQuery();
-		while(contactResultset.next()) {
-			OrganizationContactComponent occ = new OrganizationContactComponent();
-			
-			// Set id
-			int orgContactId = contactResultset.getInt("organization_contact_id");
-			occ.setId(contactResultset.getString("organization_contact_id"));
-			
-			// Set name
+	private void handleNames(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
+		String addrSql = "SELECT * from name where practitioner_id = ?";
+		PreparedStatement nameStatement = connection.prepareStatement(addrSql);
+		nameStatement.setInt(1, pracId);
+		ResultSet names = nameStatement.executeQuery();
+		while(names.next()) {
 			HumanName name = new HumanName();
-			String nameId = contactResultset.getString("name_id");
-			if (nameId != null)
-				name.setId(nameId);
+			// Set id
+			name.setId(names.getString("name_id"));
+			name.setFamily(names.getString("family"));
+			name.addGiven(names.getString("given"));
+			name.addPrefix(names.getString("prefix"));
+			name.addSuffix(names.getString("suffix"));
+			Period per = new Period();
+			per.setStart(names.getDate("period_start"));
+			per.setEnd(names.getDate("period_end"));
+			name.setPeriod(per);
 			
-			String family = contactResultset.getString("family");
-			if (family != null)
-				name.setFamily(family);
-			
-			String prefix = contactResultset.getString("prefix");
-			if (prefix != null)
-				name.addPrefix(prefix);
-			
-			String given = contactResultset.getString("given");
-			if (given != null)
-				name.addGiven(given);
-			
-			String suffix = contactResultset.getString("suffix");
-			if (suffix != null)
-				name.addSuffix(suffix);
-			
-			// Set name use
-			String use = contactResultset.getString("use");
-			if ("official".equals(use))
-				name.setUse(NameUse.OFFICIAL);
-			if ("official".equals(use))
-				name.setUse(NameUse.ANONYMOUS);
-			if ("official".equals(use))
-				name.setUse(NameUse.MAIDEN);
-			if ("official".equals(use))
-				name.setUse(NameUse.NICKNAME);
-			if ("official".equals(use))
-				name.setUse(NameUse.OLD);
-			if ("official".equals(use))
-				name.setUse(NameUse.TEMP);
-			if ("official".equals(use))
+			String use = names.getString("use");
+			if ( use == null || "usual".equals(use))
 				name.setUse(NameUse.USUAL);
 			
-			occ.setName(name);
 			
-			// Handle telecoms for contacts
-			handleContactTelecoms(connection, occ, orgContactId);
-			
-			org.addContact(occ);
+			prac.addName(name);
 		}
 	}
 	
 	/**
-	 * Handles the aliases for an organization using the organization ID passed in
-	 * 
+	 * Handle the restrictions associated with the practitioner 
 	 * @param connection
-	 * @param org
-	 * @param orgId
+	 * @param prac
+	 * @param pracId
 	 * @throws SQLException
 	 */
-	private void handleAliases(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String aliasSql = "SELECT * FROM organization_alias WHERE organization_id = ?";
-     	PreparedStatement aliasStatement = connection.prepareStatement(aliasSql);
-     	aliasStatement.setInt(1, orgId);
-		ResultSet aliasResultset = aliasStatement.executeQuery();
-		while(aliasResultset.next()) {
-			VhDirAlias alias = new VhDirAlias();
-			
-			// Set id
-			alias.setId(aliasResultset.getString("organization_alias_id"));
-			
-			// Handle type
-			
-			// Handle period
-			
-			// Handle value
-			String value = aliasResultset.getString("value");
-			if (value != null)
-				alias.setValue(value);
-			
-			org.addAlias(alias);
-		}
+	private void handleRestrictions(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
+		String resSql = "SELECT * from vhdir_restriction where practitioner_id = ?";
+		PreparedStatement nameStatement = connection.prepareStatement(resSql);
+		nameStatement.setInt(1, pracId);
+
+		//Reference restriction_ref = new Reference();
+		//prac.addUsageRestriction(restriction_ref);
+
 	}
 	
 	/**
-	 * Gets the telecoms for the contacts for an organization given the organization contact ID
-	 * 
+	 * Handle the communication proficiencies associated with the practitioner
 	 * @param connection
-	 * @param org
-	 * @param orgId
+	 * @param prac
+	 * @param pracId
 	 * @throws SQLException
 	 */
-	private void handleContactTelecoms(Connection connection, OrganizationContactComponent occ,
-			int orgContactId) throws SQLException {
-		String contactSql = "SELECT * FROM telecom WHERE organization_contact_id = ?";
-     	PreparedStatement telecomStatement = connection.prepareStatement(contactSql);
-     	telecomStatement.setInt(1, orgContactId);
-		ResultSet telecomResultset = telecomStatement.executeQuery();
-		while(telecomResultset.next()) {
-			VhDirContactPoint tele = new VhDirContactPoint();
-			
-			// Set id
-			tele.setId(telecomResultset.getString("telecom_id"));
-			
-			// Set system
-			String system = telecomResultset.getString("system");
-			if (system == null)
-				tele.setSystem(ContactPointSystem.NULL);
-			else if ("email".equals(system))
-				tele.setSystem(ContactPointSystem.EMAIL);
-			else if ("fax".equals(system))
-				tele.setSystem(ContactPointSystem.FAX);
-			else if ("other".equals(system))
-				tele.setSystem(ContactPointSystem.OTHER);
-			else if ("pager".equals(system))
-				tele.setSystem(ContactPointSystem.PAGER);
-			else if ("phone".equals(system))
-				tele.setSystem(ContactPointSystem.PHONE);
-			else if ("sms".equals(system))
-				tele.setSystem(ContactPointSystem.SMS);
-			else if ("url".equals(system))
-				tele.setSystem(ContactPointSystem.URL);
-			
-			// Set value
-			String value = telecomResultset.getString("value");
-			if (value != null)
-				tele.setValue(value);
-			
-			// Set some available time - for contacts make it 8 - 5 M-F
-			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
-			CodeType days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("mon");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("tue");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("wed");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("thu");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("fri");
-			available.addDaysOfWeek(days);
-			available.setAllDay(false);
-			TimeType start = new TimeType();
-			start.setValue("08:00:00");
-			available.setAvailableStartTime(start);
-			TimeType end = new TimeType();
-			end.setValue("17:00:00");
-			available.setAvailableEndTime(end);
-			tele.addAvailableTime(available);
-			
-			occ.addTelecom(tele);
+	private void handleCommunications(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
+		// A communication is a codeable concept. Such codeable concepts can have multiple codings in it.
+		// First, query the db for all the communications for this practioner
+		String commSql = "SELECT * from communication where practitioner_id = ?";
+		PreparedStatement commStatement = connection.prepareStatement(commSql);
+		commStatement.setInt(1, pracId);
+		ResultSet comms = commStatement.executeQuery();
+		// Then, for each communication in the result set above, go and get all the codings for that communication...
+		int cnt = 0;
+		while (comms.next())   
+		{	
+			cnt++;
+			CodeableConcept comm_cc = new CodeableConcept(); // To hold all the codings
+			String commId = comms.getString("communication_id"); // set commId to the communication id
+			comm_cc.setId(commId);
+			// Now get all the codes belonging to this communication
+			String codingSql = "SELECT * from fhir_codeable_concept where communication_id = ?";
+			PreparedStatement codeStatement = connection.prepareStatement(codingSql);
+			codeStatement.setString(1, commId);
+			ResultSet codes = codeStatement.executeQuery();
+			// Then for each code, above, add to the codeable concept
+			while(codes.next()) {
+				Coding coding = new Coding();
+				coding.setId(codes.getString(codes.getString("codeable_concept_id")));
+				coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
+				coding.setVersion("0.2.0");
+				coding.setDisplay(codes.getString("coding_display"));
+				coding.setUserSelected(codes.getBoolean("coding_user_selected"));
+				coding.setCode(codes.getString("coding_code"));
+				comm_cc.addCoding(coding);
+				String text = "";
+				if (comm_cc.getText() != null) {
+					text = comm_cc.getText();
+				}
+				comm_cc.setText(text + ", " + codes.getString("text"));
+			}
+			prac.addCommunication(comm_cc);
+		}
+		// If we didn't find any communications in the db, let's just make one up for now
+		if (cnt == 0) {
+			CodeableConcept comm_cc = new CodeableConcept();
+			Coding coding = new Coding();
+			coding.setDisplay("Functional Native Proficiency");
+			coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
+			coding.setVersion("0.2.0");
+			coding.setUserSelected(true);
+			coding.setCode("50");
+			// Generate a totally random id, prefixed by "x"
+			Random ran = new Random();
+			comm_cc.setId("x"+ ran.nextInt(10000-1 + 1));
+			comm_cc.setText("Just made something up");
+			comm_cc.addCoding(coding);
+			prac.addCommunication(comm_cc);
 		}
 	}
 	

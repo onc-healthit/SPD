@@ -1,83 +1,80 @@
 package com.esacinc.spd.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.hl7.fhir.instance.model.api.ICompositeType;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.DateType;
-import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.DecimalType;
 import org.hl7.fhir.r4.model.Type;
+import org.hl7.fhir.r4.model.Extension;
 
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="DigitalCertificate")
-public class VhDirDigitalCertificate extends Type implements ICompositeType {
+@DatatypeDef(name="Geolocation")
+public class VhDirGeoLocation extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
     
-	public VhDirDigitalCertificate setType(Coding type) {
+	public VhDirGeoLocation setLatitude(BigDecimal value) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
-		ext.setUrl("type");
-		ext.setValue(type);
+		ext.setUrl("latitude");
+		ext.setValue(new DecimalType(value));
 		this.extension.add(ext);
 		return this;
 	}
 
-	public VhDirDigitalCertificate setUse(Coding use) {
-		if (this.extension == null)
-			this.extension = new ArrayList<Extension>();
-		Extension ext = new Extension();
-		ext.setUrl("use");
-		ext.setValue(use);
-		this.extension.add(ext);
-		return this;
-	}
-
-	public VhDirDigitalCertificate setCertificateStandard(Coding std) {
-		if (this.extension == null)
-			this.extension = new ArrayList<Extension>();
-		Extension ext = new Extension();
-		ext.setUrl("certificateStandard");
-		ext.setValue(std);
-		this.extension.add(ext);
-		return this;
-	}
-    
-    public VhDirDigitalCertificate setCertificate(String value) { 
+    public VhDirGeoLocation setLatitude(long value) { 
     	if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
-		ext.setUrl("certificate");
-		ext.setValue(new StringType(value));
-		this.extension.add(ext);
-		return this;
-    }
-    
-    public VhDirDigitalCertificate setExpirationDate(Date value) {
-    	if (this.extension == null)
-			this.extension = new ArrayList<Extension>();
-		Extension ext = new Extension();
-		ext.setUrl("expirationDate");
-		ext.setValue(new DateType(value));
-		this.extension.add(ext);
-		return this;
-    }
-    
-    public VhDirDigitalCertificate setTrustFramework(CodeableConcept value) { 
-    	if (this.extension == null)
-			this.extension = new ArrayList<Extension>();
-		Extension ext = new Extension();
-		ext.setUrl("trustFramework");
-		ext.setValue(value);
+		ext.setUrl("latitude");
+		ext.setValue(new DecimalType(value));
 		this.extension.add(ext);
 		return this;
     }
 
+    public VhDirGeoLocation setLatitude(double value) { 
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("latitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+    }
+      
+    public VhDirGeoLocation setLongitude(BigDecimal value) { 
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("longitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+    }
+
+    public VhDirGeoLocation setLongitude(long value) { 
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("longitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+    }
+
+    public VhDirGeoLocation setLongitude(double value) { 
+    	if (this.extension == null)
+			this.extension = new ArrayList<Extension>();
+		Extension ext = new Extension();
+		ext.setUrl("longitude");
+		ext.setValue(new DecimalType(value));
+		this.extension.add(ext);
+		return this;
+    }
+    
 	/**
      * It is important to override the isEmpty() method, adding a check for any
      * newly added fields. 
@@ -88,8 +85,8 @@ public class VhDirDigitalCertificate extends Type implements ICompositeType {
     }
 
 	@Override
-	public VhDirDigitalCertificate copy() {
-		VhDirDigitalCertificate retVal = new VhDirDigitalCertificate();
+	public VhDirGeoLocation copy() {
+		VhDirGeoLocation retVal = new VhDirGeoLocation();
         super.copyValues(retVal);
         retVal.extension = extension;
         return retVal;

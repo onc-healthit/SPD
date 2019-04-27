@@ -40,6 +40,7 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.util.Geocoding;
+import com.esacinc.spd.util.ResourceFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -282,47 +283,7 @@ public class BulkPractitionerBuilder {
 		idStatement.setInt(1, pracId);
 		ResultSet idResultset = idStatement.executeQuery();
 		while(idResultset.next()) {
-			VhDirIdentifier identifier = new VhDirIdentifier();
-			
-			// Set id
-			identifier.setId(idResultset.getString("identifier_id"));
-			
-			// Handle identifier status
-			String status = idResultset.getString("identifier_status_value_code");
-			if ("active".equals(status))
-				identifier.setStatus(IdentifierStatus.ACTIVE);
-		    if ("inactive".equals(status))
-		    	identifier.setStatus(IdentifierStatus.INACTIVE);
-		    if ("issuedinerror".equals(status))
-		    	identifier.setStatus(IdentifierStatus.ISSUEDINERROR);
-		    if ("revoked".equals(status))
-		    	identifier.setStatus(IdentifierStatus.REVOKED);
-		    if ("pending".equals(status))
-		    	identifier.setStatus(IdentifierStatus.PENDING);
-		    if ("unknown".equals(status))
-		    	identifier.setStatus(IdentifierStatus.UNKNOWN);
-		    
-		    // Handle use
-		    String use = idResultset.getString("use");
-		    if ("usual".equals(use))
-		        identifier.setUse(IdentifierUse.USUAL);
-		    if ("official".equals(use))
-		    	identifier.setUse(IdentifierUse.OFFICIAL);
-		    if ("temp".equals(use))
-		    	identifier.setUse(IdentifierUse.TEMP);
-		    if ("secondary".equals(use))
-		    	identifier.setUse(IdentifierUse.SECONDARY);
-		    if ("old".equals(use))
-		    	identifier.setUse(IdentifierUse.OLD);
-		    
-		    // Handle system
-		    String system = idResultset.getString("system");
-		    identifier.setSystem(system);
-		    
-		    // Handle value
-		    String value = idResultset.getString("value");
-		    identifier.setValue(value);
-			
+			VhDirIdentifier identifier = ResourceFactory.makeIdentifier(idResultset);
 			prac.addIdentifier(identifier);
 		}
 	}

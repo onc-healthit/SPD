@@ -225,7 +225,7 @@ public class BulkPractitionerBuilder {
 		while(telecomResultset.next()) {
 				VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
 				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun,mon,tue,wed,thu,fri,sat,sun", false, "09:00:00", "17:30:00"));
+				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
 				prac.addTelecom(tele);
 		}
 	}

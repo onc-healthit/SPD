@@ -204,7 +204,7 @@ public class BulkOrganizationBuilder {
 		while(telecomResultset.next()) {
 			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
 			// Add a 24x7 available time for this telecom contact point
-			tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun,mon,tue,wed,thu,fri,sat,sun", true, null, null));
+			tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat;sun", true, null, null));
 			org.addTelecom(tele);
 		}
 	}
@@ -329,7 +329,7 @@ public class BulkOrganizationBuilder {
 		while(telecomResultset.next()) {
 			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset); 
 			// Add weekday, normal business hours availablility for this contact
-			tele.addAvailableTime(ResourceFactory.makeAvailableTime("mon,tue,wed,thu,fri", false, "08:00:00", "17:00:00"));
+			tele.addAvailableTime(ResourceFactory.makeAvailableTime("mon;tue;wed;thu;fri", false, "08:00:00", "17:00:00"));
 			occ.addTelecom(tele);
 		}
 	}

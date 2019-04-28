@@ -511,7 +511,7 @@ public class ResourceFactory {
 			while(sqlResultset.next()) {
 				VhDirContactPoint tele = ResourceFactory.getContactPoint(sqlResultset);
 				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun,mon,tue,wed,thu,fri,sat,sun", false, "09:00:00", "17:30:00"));
+				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
 				con.addTelecom(tele);
 			}
 			// Get the address for this contact
@@ -582,7 +582,7 @@ public class ResourceFactory {
 
 	/**
 	 * Generate an availableTime object from the given parameters
-	 * @param daysString, comma delimited string of 3-letter day names, e.g.  "mon,tue,wed,thu,fri"
+	 * @param daysString, semicolon delimited string of 3-letter day names, e.g.  "mon;tue;wed;thu;fri"
 	 * @param allDay  true if this available time is all day
 	 * @param startTime if allday is false, start time, e.g. "08:00:00"
 	 * @param endTime if allday is false, start time, e.g. "17:00:00"
@@ -592,7 +592,7 @@ public class ResourceFactory {
 		// Set some available time - for organizations make it all day 7 days a week
 		VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
 		CodeType dayCode = null;
-		String[] days = daysString.split(",");
+		String[] days = daysString.split(";");
 		for (String d : days) {
 			dayCode = new CodeType();
 			dayCode.setSystem("http://hl7.org/fhir/days-of-week");

@@ -29,6 +29,7 @@ import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
+import com.esacinc.spd.model.VhDirNetworkContact;
 
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
@@ -37,25 +38,13 @@ import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
  *
  */
 public class ResourceFactory {
-	
-	/**
-	 * Creates a Reference resource using the component parameters passed in
-	 * 
-	 * @param resourceId
-	 * @param typeUri
-	 * @param identifier
-	 * @param display
-	 * @return Reference
-	 */
-	static public Reference makeResourceReference(String resourceId, String typeUri, Identifier identifier, String display) {
-		Reference ref = new Reference();
-		ref.setDisplay(display);
-		ref.setReference(resourceId);
-		ref.setIdentifier(identifier);
-		ref.setType(typeUri);
-		return ref;
-	}
-	
+
+	///////////////   GET METHODS  ////////////////////////////////////////////////////////////////
+    // Get methods are those methods that create resources from data obtained from the database,
+	// often presented in the form of a resultset.
+	// For methods that create resources from scratch (no database query), see Make Methods, below
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/**
 	 * Creates a Reference resource by retrieving the resource_reference with the given id from the database 
 	 * @param refId
@@ -74,9 +63,9 @@ public class ResourceFactory {
 			ref.setDisplay(refs.getString("display"));
 			ref.setReference(refs.getString("reference"));
 			// If the reference points to an identifier, go get it from the db....
-			String identifierId = refs.getString("identifier");
+			String identifierId = refs.getString("reference");
 			if (identifierId != null && !identifierId.isEmpty()) {
-				ref.setIdentifier(getIdentifier(Integer.valueOf(identifierId), connection));
+				ref.setIdentifier(getIdentifier(Integer.valueOf(ref.getReference()), connection));
 			}
 			ref.setType(refs.getString("type"));	
 			return ref;
@@ -174,8 +163,8 @@ public class ResourceFactory {
 	}
 	
 	/**
-	 * Creates a VhDirIdentifier from the data pointed to by the current cursor in the given database query result set.
-	 * This assumes that the ResultSet argument is the result from a "Select * from identifier ...." sql statement 
+	 * Creates a VhDirAddress from the data pointed to by the current cursor in the given database query result set.
+	 * This assumes that the ResultSet argument is the result from a "Select * from address ...." sql statement 
 	 * @param addrResultset
 	 * @param connection  - need to pass in the connection in case we need to do some geocoding
 	 * @return VhDirAddress
@@ -321,38 +310,25 @@ public class ResourceFactory {
 			contactPoint.setValue(value);
 		return contactPoint;
 	}
-	
+
 	/**
-	 * Generate an availableTime object from the given parameters
-	 * @param daysString, comma delimited string of 3-letter day names, e.g.  "mon,tue,wed,thu,fri"
-	 * @param allDay  true if this available time is all day
-	 * @param startTime if allday is false, start time, e.g. "08:00:00"
-	 * @param endTime if allday is false, start time, e.g. "17:00:00"
-	 * @return VhDirContactPointAvailableTime
+	 * Creates a HumanName resource from data in the name table of the database with the given name_id
+	 * @param name_id
+	 * @param connection
+	 * @return HumanName
+	 * @throws SQLException
 	 */
-	static public VhDirContactPointAvailableTime makeAvailableTime(String daysString, boolean allDay, String startTime, String endTime) {
-		// Set some available time - for organizations make it all day 7 days a week
-		VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
-		CodeType dayCode = null;
-		String[] days = daysString.split(",");
-		for (String d : days) {
-			dayCode = new CodeType();
-			dayCode.setSystem("http://hl7.org/fhir/days-of-week");
-			dayCode.setValue(d);
-			available.addDaysOfWeek(dayCode);
+	static public HumanName getHumanName(int name_id, Connection connection) throws SQLException{
+		String strSql = "SELECT * from name where name_id = ?";
+		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+		sqlStatement.setInt(1, name_id);
+		ResultSet names = sqlStatement.executeQuery();
+		while(names.next()) {
+			return getHumanName(names);  // We expect only one.
 		}
-		available.setAllDay(allDay);
-		if (!allDay) {
-			TimeType start = new TimeType();
-			start.setValue("08:00:00");
-			available.setAvailableStartTime(start);
-			TimeType end = new TimeType();
-			end.setValue("17:00:00");
-			available.setAvailableEndTime(end);
-		}
-		return available;	
+		return null; // If we get here, there was no name with that id
 	}
-	
+
 	/**
 	 * Create a HumanName resource from the data in the current cursor of the given result set
 	 * @param names
@@ -420,27 +396,6 @@ public class ResourceFactory {
 		return coding;
 	}
 	
-	/**
-	 * Return a totally made up codeable concept object representing a Communication proficiency code.
-	 * The returned object id is a random integer between 1 and 10,000, prefixed with an "x";
-	 * @return CodeableConcept
-	 */
-	static public CodeableConcept makeCommunicationProficiencyCodes() {
-		CodeableConcept comm_cc = new CodeableConcept();
-		Coding coding = new Coding();
-		coding.setDisplay("Functional Native Proficiency");
-		coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
-		coding.setVersion("0.2.0");
-		coding.setUserSelected(true);
-		coding.setCode("50");
-		// Generate a totally random id, prefixed by "x"
-		Random ran = new Random();
-		comm_cc.setId("x"+ ran.nextInt(10000-1 + 1));
-		comm_cc.setText("Just made something up");
-		comm_cc.addCoding(coding);
-		return comm_cc;
-
-	}
 	
 	/**
 	 * Return a resource reference built from the current cursor into the given result set.
@@ -499,10 +454,11 @@ public class ResourceFactory {
 	/**
 	 * Return a VhDirEndpoint object created from the row in the fhir_codeable_concept table with the given id.
 	 * @param resultset
+	 * @param connection  if not null, used to get other resources to populate the endpoint
 	 * @return VhDirEndpoint
 	 * @throws SQLException
 	 */
-	static public VhDirEndpoint getEndpoint(ResultSet resultset) throws SQLException{
+	static public VhDirEndpoint getEndpoint(ResultSet resultset, Connection connection) throws SQLException{
 		VhDirEndpoint ep = new VhDirEndpoint();
 		ep.setId(resultset.getString("endpoint_id"));
 		ep.setRank(new IntegerType(resultset.getInt("rank")));
@@ -512,11 +468,82 @@ public class ResourceFactory {
 		ep.setPeriod(makePeriod(resultset.getDate("period_start"),resultset.getDate("period_start")));
 		ep.addPayloadMimeType(resultset.getString("payload_mime_type"));
 		ep.addHeader(resultset.getString("header"));
+		if (connection != null) {
+			String strSql = "SELECT * FROM fhir_codeable_concept WHERE endpoint_payload_type_id = ?";
+	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+	     	sqlStatement.setInt(1, Integer.valueOf(ep.getId()));
+			ResultSet sqlResultset = sqlStatement.executeQuery();
+			while(sqlResultset.next()) {
+				ep.addPayloadType(getCodeableConcept(sqlResultset));
+			}
+
+			strSql = "SELECT * FROM fhir_restriction WHERE endpoint_id = ?";
+			sqlStatement = connection.prepareStatement(strSql);
+			sqlStatement.setInt(1, Integer.valueOf(ep.getId()));
+			sqlResultset = sqlStatement.executeQuery();
+			while(sqlResultset.next()) {
+				ep.addUsageRestriction(getRestrictionReference(sqlResultset));
+			}
+		}
 		// Digital certificates, resrtictions and use cases should be added after this object is created.
-		// PayloadType list of codeable concepts should be added afterwards, as well.
 		return ep;
 	}
 
+	/**
+	 * Creates a VhDirNetworkContact resource from the data in the given resultset at the current cursor location.
+	 * Connection is needed to retrieve further data from other tables to populate the contact info
+	 * @param resultset
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	static public VhDirNetworkContact getNetworkContact(ResultSet resultset, Connection connection) throws SQLException{
+		VhDirNetworkContact con = new VhDirNetworkContact();
+		con.setId(resultset.getString("contact_id"));
+		con.setPurpose(getCodeableConcept(resultset.getInt("purpose_id"),connection));
+		con.setName(getHumanName(resultset.getInt("name_id"),connection));
+		if (connection != null) {
+			// Gather the telecoms for this netowrk contact
+			String strSql = "SELECT * FROM telecom WHERE organization_contact_id = ?";
+	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+	     	sqlStatement.setInt(1, resultset.getInt("name_id"));
+			ResultSet sqlResultset = sqlStatement.executeQuery();
+			while(sqlResultset.next()) {
+				VhDirContactPoint tele = ResourceFactory.getContactPoint(sqlResultset);
+				// Add 9:00-4:30 any day, available time for this telecom contact point
+				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun,mon,tue,wed,thu,fri,sat,sun", false, "09:00:00", "17:30:00"));
+				con.addTelecom(tele);
+			}
+			// Get the address for this contact
+			con.setAddress(getAddress(resultset.getInt("address_id"),connection));
+		}
+		return con;
+	}
+	
+	///////////////   MAKE METHODS  ////////////////////////////////////////////////////////////////
+    // Make methods are those methods that create resources from data parameters passed into them.
+	// They are not created from data queried from the database.
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * Creates a Reference resource using the component parameters passed in
+	 * 
+	 * @param resourceId
+	 * @param typeUri
+	 * @param identifier
+	 * @param display
+	 * @return Reference
+	 */
+	static public Reference makeResourceReference(String resourceId, String typeUri, Identifier identifier, String display) {
+		Reference ref = new Reference();
+		ref.setDisplay(display);
+		ref.setReference(resourceId);
+		ref.setIdentifier(identifier);
+		ref.setType(typeUri);
+		return ref;
+	}
+	
+	
 	/** 
 	 * Create a Coding object from the input parameters
 	 * 
@@ -543,9 +570,69 @@ public class ResourceFactory {
 	 */
 	static public Period makePeriod(Date startDatetime, Date endDatetime) {
 		Period per = new Period();
-		per.setStart(startDatetime);
-		per.setEnd(endDatetime);
+		try {
+			per.setStart(startDatetime);
+			per.setEnd(endDatetime);
+		}
+		catch (Exception e) {
+			per.setUserData("Error","Invalid date for start or end encountered.");
+		}
 		return per;
 	}
+
+	/**
+	 * Generate an availableTime object from the given parameters
+	 * @param daysString, comma delimited string of 3-letter day names, e.g.  "mon,tue,wed,thu,fri"
+	 * @param allDay  true if this available time is all day
+	 * @param startTime if allday is false, start time, e.g. "08:00:00"
+	 * @param endTime if allday is false, start time, e.g. "17:00:00"
+	 * @return VhDirContactPointAvailableTime
+	 */
+	static public VhDirContactPointAvailableTime makeAvailableTime(String daysString, boolean allDay, String startTime, String endTime) {
+		// Set some available time - for organizations make it all day 7 days a week
+		VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
+		CodeType dayCode = null;
+		String[] days = daysString.split(",");
+		for (String d : days) {
+			dayCode = new CodeType();
+			dayCode.setSystem("http://hl7.org/fhir/days-of-week");
+			dayCode.setValue(d);
+			available.addDaysOfWeek(dayCode);
+		}
+		available.setAllDay(allDay);
+		if (!allDay) {
+			TimeType start = new TimeType();
+			start.setValue("08:00:00");
+			available.setAvailableStartTime(start);
+			TimeType end = new TimeType();
+			end.setValue("17:00:00");
+			available.setAvailableEndTime(end);
+		}
+		return available;	
+	}
+	
+
+	/**
+	 * Return a totally made up codeable concept object representing a Communication proficiency code.
+	 * The returned object id is a random integer between 1 and 10,000, prefixed with an "x";
+	 * @return CodeableConcept
+	 */
+	static public CodeableConcept makeCommunicationProficiencyCodes() {
+		CodeableConcept comm_cc = new CodeableConcept();
+		Coding coding = new Coding();
+		coding.setDisplay("Functional Native Proficiency");
+		coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
+		coding.setVersion("0.2.0");
+		coding.setUserSelected(true);
+		coding.setCode("50");
+		// Generate a totally random id, prefixed by "x"
+		Random ran = new Random();
+		comm_cc.setId("x"+ ran.nextInt(10000-1 + 1));
+		comm_cc.setText("Just made something up");
+		comm_cc.addCoding(coding);
+		return comm_cc;
+
+	}
+
 
 }

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.google.gson.Gson;
@@ -73,7 +74,22 @@ public class BulkDataApp {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 			
-		
+
+		try {
+			// Get and write Practitioners
+			System.out.println("Generate Network resources...");
+
+			BulkNetworkBuilder nwBuilder = new BulkNetworkBuilder();
+			List<VhDirNetwork> networks = nwBuilder.getNetworks(connection);
+			outputNetworkList(networks, "Network.ndjson", 0); // last arg indicates prettyPrint nth prac. Use -1 to skip
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 			
+
 		System.out.println("\nFHIR Resource generation complete");
 
 	}
@@ -143,6 +159,41 @@ public class BulkDataApp {
 		}
 		catch (NullPointerException e) {
 			System.err.println("NULL POINTER EXCEPTION writing practitioner list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+	
+	private static void outputNetworkList(List<VhDirNetwork>networks, String filename, int prettyPrintNth) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			for (VhDirNetwork nw : networks) {
+				String nwJson = jsonParser.encodeResourceToString(nw);
+				writer.write(nwJson);
+				writer.write("\n");
+				
+				// String above is appropriate for ndjson output but for now here is a pretty version
+				if (cnt == prettyPrintNth) {
+					Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					JsonParser jp = new JsonParser();
+					JsonElement je = jp.parse(nwJson);
+					String prettyJsonString = gson.toJson(je);
+					System.out.println("\n------------------------------- NETWORK ------------------------------------\n");
+					System.out.println(prettyJsonString);
+				}
+				cnt++;
+			}
+			writer.close();
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing network list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing network list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

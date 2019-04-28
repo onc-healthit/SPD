@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Random;
 
 import org.hl7.fhir.r4.model.CodeType;
@@ -12,16 +13,19 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
+import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.TimeType;
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirContactPointAvailableTime;
+import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
@@ -448,4 +452,100 @@ public class ResourceFactory {
 		
 		return usageRestrctionRef;
 	}
+
+	/**
+	 * Return a CodeableConcept built from the current cursor into the given result set.
+	 * Note that a CodeableConcept may have multiple codings within it. However, the SPD
+	 * database only models one coding in a CodeableConcept, and that coding is represented
+	 * by individual fields in the resultset row.
+	 * 
+	 * @param resultset
+	 * @return CodeableConcept
+	 */
+
+	static public CodeableConcept getCodeableConcept(ResultSet resultset) throws SQLException{
+		CodeableConcept cc = new CodeableConcept();
+		cc.setId(resultset.getString("codeable_concept_id"));
+		cc.setText(resultset.getString("text"));
+		Coding cdng = new Coding();
+		cdng.setCode(resultset.getString("coding_code"));
+		cdng.setSystem(resultset.getString("coding_system"));
+		cdng.setVersion(resultset.getString("coding_version"));
+		cdng.setDisplay(resultset.getString("coding_display"));
+		cdng.setUserSelected(resultset.getBoolean("user_selected"));
+		cc.addCoding(cdng);
+		return cc;
+	}
+	
+	/**
+	 * Return a CodeableConcept object created from the row in the fhir_codeable_concept table with the given id.
+	 * 
+	 * @param concept_id
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	static public CodeableConcept getCodeableConcept(int concept_id, Connection connection) throws SQLException{
+		String codingSql = "SELECT * from fhir_codeable_concept where codeable_concept_id = ?";
+		PreparedStatement codeStatement = connection.prepareStatement(codingSql);
+		codeStatement.setInt(1, concept_id);
+		ResultSet codes = codeStatement.executeQuery();
+		while(codes.next()) {
+			return getCodeableConcept(codes); // We only expect one with this query
+		}
+		return null;  // If we get here, there was no cc found.
+	}
+
+	/**
+	 * Return a VhDirEndpoint object created from the row in the fhir_codeable_concept table with the given id.
+	 * @param resultset
+	 * @return VhDirEndpoint
+	 * @throws SQLException
+	 */
+	static public VhDirEndpoint getEndpoint(ResultSet resultset) throws SQLException{
+		VhDirEndpoint ep = new VhDirEndpoint();
+		ep.setId(resultset.getString("endpoint_id"));
+		ep.setRank(new IntegerType(resultset.getInt("rank")));
+		ep.setStatus(EndpointStatus.valueOf(resultset.getString("status")));
+		ep.setConnectionType(makeCoding(resultset.getString("connectionType"),resultset.getString("connectionType"),"http://terminology.hl7.org/CodeSystem/endpoint-connection-type",false));
+		ep.setName(resultset.getString("name"));
+		ep.setPeriod(makePeriod(resultset.getDate("period_start"),resultset.getDate("period_start")));
+		ep.addPayloadMimeType(resultset.getString("payload_mime_type"));
+		ep.addHeader(resultset.getString("header"));
+		// Digital certificates, resrtictions and use cases should be added after this object is created.
+		// PayloadType list of codeable concepts should be added afterwards, as well.
+		return ep;
+	}
+
+	/** 
+	 * Create a Coding object from the input parameters
+	 * 
+	 * @param code
+	 * @param display
+	 * @param system
+	 * @param userSelected
+	 * @return Coding
+	 */
+	static public Coding makeCoding(String code, String display, String system, boolean userSelected ) {
+		Coding cd = new Coding();
+		cd.setCode(code);
+		cd.setDisplay(display);
+		cd.setSystem(system);
+		cd.setUserSelected(userSelected);
+		return cd;
+	}
+	
+	/**
+	 * Create a Period object from the given parmeters.
+	 * @param startDatetime
+	 * @param endDatetime
+	 * @return Period
+	 */
+	static public Period makePeriod(Date startDatetime, Date endDatetime) {
+		Period per = new Period();
+		per.setStart(startDatetime);
+		per.setEnd(endDatetime);
+		return per;
+	}
+
 }

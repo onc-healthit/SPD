@@ -283,7 +283,7 @@ public class BulkPractitionerBuilder {
 		idStatement.setInt(1, pracId);
 		ResultSet idResultset = idStatement.executeQuery();
 		while(idResultset.next()) {
-			VhDirIdentifier identifier = ResourceFactory.makeIdentifier(idResultset);
+			VhDirIdentifier identifier = ResourceFactory.getIdentifier(idResultset);
 			prac.addIdentifier(identifier);
 		}
 	}
@@ -302,85 +302,7 @@ public class BulkPractitionerBuilder {
 		addrStatement.setInt(1, pracId);
 		ResultSet addrResultset = addrStatement.executeQuery();
 		while(addrResultset.next()) {
-			VhDirAddress addr = new VhDirAddress();
-			
-			// Set ID
-			addr.setId(addrResultset.getString("address_id"));
-			
-			// Set use
-			String use = addrResultset.getString("use");
-			if ("home".equals(use))
-				addr.setUse(AddressUse.HOME);
-			if ("work".equals(use))
-				addr.setUse(AddressUse.WORK);
-			if ("temp".equals(use))
-				addr.setUse(AddressUse.TEMP);
-			if ("old".equals(use))
-				addr.setUse(AddressUse.OLD);
-			if ("billing".equals(use))
-				addr.setUse(AddressUse.BILLING);
-			
-			// Set Type
-			
-			// Set Text
-			
-			// Set Line
-			String line1 = addrResultset.getString("line1");
-			if (line1 != null ) {
-				addr.addLine(line1);
-			}
-			String line2 = addrResultset.getString("line2");
-			if (line2 != null) {
-				addr.addLine(line2);
-			}
-			
-			// Set City
-			String city = addrResultset.getString("line2");
-			if (city != null) {
-				addr.setCity(city);
-			}
-			
-			// Set District (County)
-			String district = addrResultset.getString("district");
-			if (district != null) {
-				addr.setDistrict(district);
-			}
-						
-			// Set State
-			String state = addrResultset.getString("state");
-			if (state != null) {
-				addr.setState(state);
-			}
-			
-			// Set PostalCode
-			String postal = addrResultset.getString("postalCode");
-			if (postal != null) {
-				addr.setPostalCode(postal);
-				
-				// First check to see if the lat and lon are set
-				double lat = addrResultset.getDouble("latitude");
-				double lon = addrResultset.getDouble("longitude");
-				
-				VhDirGeoLocation loc;
-				// If lat/lon not set, the use geocode service to determine lat/lon from postal code...
-				if (lat == 0.0) {
-					System.out.println("PractitionerBuilder: Geocoding lat-lon for postal code " + postal + ", addres:"+addr.getId());
-					loc = Geocoding.geocodePostalCode(postal.substring(0,5), connection);
-				} else {
-					loc = new VhDirGeoLocation();
-					loc.setLatitude(lat);
-					loc.setLongitude(lon);
-				}
-				
-				addr.setGeolocation(loc);
-			}
-
-			// Set Country
-			String country = addrResultset.getString("country");
-			if (country != null) {
-				addr.setCountry(country);
-			}
-			
+			VhDirAddress addr = ResourceFactory.getAddress(addrResultset, connection);
 			prac.addAddress(addr);
 		}
 	}
@@ -399,67 +321,10 @@ public class BulkPractitionerBuilder {
 		telecomStatement.setInt(1, pracId);
 		ResultSet telecomResultset = telecomStatement.executeQuery();
 		while(telecomResultset.next()) {
-			VhDirContactPoint tele = new VhDirContactPoint();
-			
-			// Set id
-			tele.setId(telecomResultset.getString("telecom_id"));
-			
-			// Set system
-			String system = telecomResultset.getString("system");
-			if (system == null)
-				tele.setSystem(ContactPointSystem.NULL);
-			else if ("email".equals(system))
-				tele.setSystem(ContactPointSystem.EMAIL);
-			else if ("fax".equals(system))
-				tele.setSystem(ContactPointSystem.FAX);
-			else if ("other".equals(system))
-				tele.setSystem(ContactPointSystem.OTHER);
-			else if ("pager".equals(system))
-				tele.setSystem(ContactPointSystem.PAGER);
-			else if ("phone".equals(system))
-				tele.setSystem(ContactPointSystem.PHONE);
-			else if ("sms".equals(system))
-				tele.setSystem(ContactPointSystem.SMS);
-			else if ("url".equals(system))
-				tele.setSystem(ContactPointSystem.URL);
-			
-			// Set value
-			tele.setValue(telecomResultset.getString("value"));
-			
-			// Set some available time - for practitioners make it all day 7 days a week
-			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
-			CodeType days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("sun");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("mon");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("tue");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("wed");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("thu");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("fri");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("sat");
-			available.addDaysOfWeek(days);
-			available.setAllDay(true);
-			tele.addAvailableTime(available);
-			
-			prac.addTelecom(tele);
+				VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
+				// Add 9:00-4:30 any day, available time for this telecom contact point
+				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun,mon,tue,wed,thu,fri,sat,sun", false, "09:00:00", "17:30:00"));
+				prac.addTelecom(tele);
 		}
 	}
 	
@@ -478,27 +343,12 @@ public class BulkPractitionerBuilder {
 		nameStatement.setInt(1, pracId);
 		ResultSet names = nameStatement.executeQuery();
 		while(names.next()) {
-			HumanName name = new HumanName();
-			// Set id
-			name.setId(names.getString("name_id"));
-			name.setFamily(names.getString("family"));
-			name.addGiven(names.getString("given"));
-			name.addPrefix(names.getString("prefix"));
-			name.addSuffix(names.getString("suffix"));
-			Period per = new Period();
-			per.setStart(names.getDate("period_start"));
-			per.setEnd(names.getDate("period_end"));
-			name.setPeriod(per);
-			
-			String use = names.getString("use");
-			if ( use == null || "usual".equals(use))
-				name.setUse(NameUse.USUAL);
-			
-			
+			HumanName name = ResourceFactory.getHumanName(names);
 			prac.addName(name);
 		}
 	}
 	
+	//TODO following is not complete at all!
 	/**
 	 * Handle the restrictions associated with the practitioner 
 	 * @param connection
@@ -507,13 +357,14 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleRestrictions(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-		String resSql = "SELECT * from vhdir_restriction where practitioner_id = ?";
-		PreparedStatement nameStatement = connection.prepareStatement(resSql);
-		nameStatement.setInt(1, pracId);
-
-		//Reference restriction_ref = new Reference();
-		//prac.addUsageRestriction(restriction_ref);
-
+		String resSql = "SELECT * from vhdir_restriction where practitioner_id = ?"; //TODO this might need to use the resource_reference table. Is it modeled?
+		PreparedStatement resStatement = connection.prepareStatement(resSql);
+		resStatement.setInt(1, pracId);
+		ResultSet restrictions = resStatement.executeQuery();
+		while(restrictions.next()) {
+			Reference ref = ResourceFactory.getRestrictionReference(restrictions);
+			prac.addUsageRestriction(ref);
+		}
 	}
 	
 	/**
@@ -535,47 +386,12 @@ public class BulkPractitionerBuilder {
 		while (comms.next())   
 		{	
 			cnt++;
-			CodeableConcept comm_cc = new CodeableConcept(); // To hold all the codings
-			String commId = comms.getString("communication_id"); // set commId to the communication id
-			comm_cc.setId(commId);
-			// Now get all the codes belonging to this communication
-			String codingSql = "SELECT * from fhir_codeable_concept where communication_id = ?";
-			PreparedStatement codeStatement = connection.prepareStatement(codingSql);
-			codeStatement.setString(1, commId);
-			ResultSet codes = codeStatement.executeQuery();
-			// Then for each code, above, add to the codeable concept
-			while(codes.next()) {
-				Coding coding = new Coding();
-				coding.setId(codes.getString(codes.getString("codeable_concept_id")));
-				coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
-				coding.setVersion("0.2.0");
-				coding.setDisplay(codes.getString("coding_display"));
-				coding.setUserSelected(codes.getBoolean("coding_user_selected"));
-				coding.setCode(codes.getString("coding_code"));
-				comm_cc.addCoding(coding);
-				String text = "";
-				if (comm_cc.getText() != null) {
-					text = comm_cc.getText();
-				}
-				comm_cc.setText(text + ", " + codes.getString("text"));
-			}
+			CodeableConcept comm_cc = ResourceFactory.getCommunicationProficiency(comms.getString("communication_id"), connection); // To hold all the codings
 			prac.addCommunication(comm_cc);
 		}
 		// If we didn't find any communications in the db, let's just make one up for now
 		if (cnt == 0) {
-			CodeableConcept comm_cc = new CodeableConcept();
-			Coding coding = new Coding();
-			coding.setDisplay("Functional Native Proficiency");
-			coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
-			coding.setVersion("0.2.0");
-			coding.setUserSelected(true);
-			coding.setCode("50");
-			// Generate a totally random id, prefixed by "x"
-			Random ran = new Random();
-			comm_cc.setId("x"+ ran.nextInt(10000-1 + 1));
-			comm_cc.setText("Just made something up");
-			comm_cc.addCoding(coding);
-			prac.addCommunication(comm_cc);
+			prac.addCommunication(ResourceFactory.makeCommunicationProficiencyCodes());
 		}
 	}
 	

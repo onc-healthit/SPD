@@ -265,7 +265,7 @@ public class BulkOrganizationBuilder {
 		idStatement.setInt(1, orgId);
 		ResultSet idResultset = idStatement.executeQuery();
 		while(idResultset.next()) {
-				VhDirIdentifier identifier = ResourceFactory.makeIdentifier(idResultset);
+				VhDirIdentifier identifier = ResourceFactory.getIdentifier(idResultset);
 				org.addIdentifier(identifier);
 		}
 	}
@@ -284,86 +284,10 @@ public class BulkOrganizationBuilder {
 		addrStatement.setInt(1, orgId);
 		ResultSet addrResultset = addrStatement.executeQuery();
 		while(addrResultset.next()) {
-			VhDirAddress addr = new VhDirAddress();
-			
-			// Set ID
-			addr.setId(addrResultset.getString("address_id"));
-			
-			// Set use
-			String use = addrResultset.getString("use");
-			if ("home".equals(use))
-				addr.setUse(AddressUse.HOME);
-			if ("work".equals(use))
-				addr.setUse(AddressUse.WORK);
-			if ("temp".equals(use))
-				addr.setUse(AddressUse.TEMP);
-			if ("old".equals(use))
-				addr.setUse(AddressUse.OLD);
-			if ("billing".equals(use))
-				addr.setUse(AddressUse.BILLING);
-			
-			// Set Type
-			
-			// Set Text
-			
-			// Set Line
-			String line1 = addrResultset.getString("line1");
-			if (line1 != null ) {
-				addr.addLine(line1);
+			while(addrResultset.next()) {
+				VhDirAddress addr = ResourceFactory.getAddress(addrResultset, connection);
+				org.addAddress(addr);
 			}
-			String line2 = addrResultset.getString("line2");
-			if (line2 != null) {
-				addr.addLine(line2);
-			}
-			
-			// Set City
-			String city = addrResultset.getString("line2");
-			if (city != null) {
-				addr.setCity(city);
-			}
-			
-			// Set District (County)
-			String district = addrResultset.getString("district");
-			if (district != null) {
-				addr.setDistrict(district);
-			}
-						
-			// Set State
-			String state = addrResultset.getString("state");
-			if (state != null) {
-				addr.setState(state);
-			}
-			
-			// Set PostalCode
-			String postal = addrResultset.getString("postalCode");
-			if (postal != null) {
-				addr.setPostalCode(postal);
-				
-				// First check to see if the lat and lon are set
-				double lat = addrResultset.getDouble("latitude");
-				double lon = addrResultset.getDouble("longitude");
-				
-				VhDirGeoLocation loc;
-				
-				if (lat == 0.0) {
-					System.out.println("OrganizationBuilder: Geocoding lat-lon for postal code " + postal + ", addres:"+addr.getId());
-					loc = Geocoding.geocodePostalCode(postal.substring(0,5), connection);
-				} else {
-					loc = new VhDirGeoLocation();
-					loc.setLatitude(lat);
-					loc.setLongitude(lon);
-				}
-				
-				addr.setGeolocation(loc);
-			}
-			
-			// Set Country
-			String country = addrResultset.getString("country");
-			if (country != null) {
-				addr.setCountry(country);
-			}
-			
-			org.addAddress(addr);
 		}
 	}
 	
@@ -381,68 +305,9 @@ public class BulkOrganizationBuilder {
 		telecomStatement.setInt(1, orgId);
 		ResultSet telecomResultset = telecomStatement.executeQuery();
 		while(telecomResultset.next()) {
-			VhDirContactPoint tele = new VhDirContactPoint();
-			
-			// Set id
-			tele.setId(telecomResultset.getString("telecom_id"));
-			
-			// Set system
-			String system = telecomResultset.getString("system");
-			if (system == null)
-				tele.setSystem(ContactPointSystem.NULL);
-			else if ("email".equals(system))
-				tele.setSystem(ContactPointSystem.EMAIL);
-			else if ("fax".equals(system))
-				tele.setSystem(ContactPointSystem.FAX);
-			else if ("other".equals(system))
-				tele.setSystem(ContactPointSystem.OTHER);
-			else if ("pager".equals(system))
-				tele.setSystem(ContactPointSystem.PAGER);
-			else if ("phone".equals(system))
-				tele.setSystem(ContactPointSystem.PHONE);
-			else if ("sms".equals(system))
-				tele.setSystem(ContactPointSystem.SMS);
-			else if ("url".equals(system))
-				tele.setSystem(ContactPointSystem.URL);
-			
-			// Set value
-			String value = telecomResultset.getString("value");
-			if (value != null)
-				tele.setValue(value);
-			
-			// Set some available time - for organizations make it all day 7 days a week
-			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
-			CodeType days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("sun");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("mon");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("tue");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("wed");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("thu");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("fri");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("sat");
-			available.addDaysOfWeek(days);
-			available.setAllDay(true);
-			tele.addAvailableTime(available);
-			
+			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
+			// Add a 24x7 available time for this telecom contact point
+			tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun,mon,tue,wed,thu,fri,sat,sun", true, null, null));
 			org.addTelecom(tele);
 		}
 	}
@@ -565,66 +430,9 @@ public class BulkOrganizationBuilder {
      	telecomStatement.setInt(1, orgContactId);
 		ResultSet telecomResultset = telecomStatement.executeQuery();
 		while(telecomResultset.next()) {
-			VhDirContactPoint tele = new VhDirContactPoint();
-			
-			// Set id
-			tele.setId(telecomResultset.getString("telecom_id"));
-			
-			// Set system
-			String system = telecomResultset.getString("system");
-			if (system == null)
-				tele.setSystem(ContactPointSystem.NULL);
-			else if ("email".equals(system))
-				tele.setSystem(ContactPointSystem.EMAIL);
-			else if ("fax".equals(system))
-				tele.setSystem(ContactPointSystem.FAX);
-			else if ("other".equals(system))
-				tele.setSystem(ContactPointSystem.OTHER);
-			else if ("pager".equals(system))
-				tele.setSystem(ContactPointSystem.PAGER);
-			else if ("phone".equals(system))
-				tele.setSystem(ContactPointSystem.PHONE);
-			else if ("sms".equals(system))
-				tele.setSystem(ContactPointSystem.SMS);
-			else if ("url".equals(system))
-				tele.setSystem(ContactPointSystem.URL);
-			
-			// Set value
-			String value = telecomResultset.getString("value");
-			if (value != null)
-				tele.setValue(value);
-			
-			// Set some available time - for contacts make it 8 - 5 M-F
-			VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
-			CodeType days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("mon");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("tue");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("wed");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("thu");
-			available.addDaysOfWeek(days);
-			days = new CodeType();
-			days.setSystem("http://hl7.org/fhir/days-of-week");
-			days.setValue("fri");
-			available.addDaysOfWeek(days);
-			available.setAllDay(false);
-			TimeType start = new TimeType();
-			start.setValue("08:00:00");
-			available.setAvailableStartTime(start);
-			TimeType end = new TimeType();
-			end.setValue("17:00:00");
-			available.setAvailableEndTime(end);
-			tele.addAvailableTime(available);
-			
+			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset); 
+			// Add weekday, normal business hours availablility for this contact
+			tele.addAvailableTime(ResourceFactory.makeAvailableTime("mon,tue,wed,thu,fri", false, "08:00:00", "17:00:00"));
 			occ.addTelecom(tele);
 		}
 	}

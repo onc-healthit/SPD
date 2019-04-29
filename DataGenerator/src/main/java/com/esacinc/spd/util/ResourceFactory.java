@@ -226,22 +226,11 @@ public class ResourceFactory {
 		if (postal != null) {
 			addr.setPostalCode(postal);
 			
-			// First check to see if the lat and lon are set
-			double lat = addrResultset.getDouble("latitude");
-			double lon = addrResultset.getDouble("longitude");
+			// Set Geolocation
+			Double lat = addrResultset.getDouble("latitude");
+			Double lon = addrResultset.getDouble("longitude");
+			addr.setGeolocation(Geocoding.getGeoLocation(lat, lon, postal,  connection));
 			
-			VhDirGeoLocation loc;
-			
-			if (lat == 0.0) {
-				System.out.println("makeAddress in ResourceFactory: Geocoding lat-lon for postal code " + postal + ", addres:"+addr.getId());
-				loc = Geocoding.geocodePostalCode(postal.substring(0,5), connection);
-			} else {
-				loc = new VhDirGeoLocation();
-				loc.setLatitude(lat);
-				loc.setLongitude(lon);
-			}
-			
-			addr.setGeolocation(loc);
 		}
 		
 		// Set Country

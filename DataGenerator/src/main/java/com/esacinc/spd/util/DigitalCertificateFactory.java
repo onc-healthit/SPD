@@ -9,6 +9,8 @@ import com.esacinc.spd.model.VhDirDigitalCertificate;
 
 public class DigitalCertificateFactory {
 
+	static public int MAX_CERTS = 3;   //  Use this to control how many orgs, practitioners, etc will get certs.
+
 	static private String[] certs = null;
 	
 	public DigitalCertificateFactory() { init();}

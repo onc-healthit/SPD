@@ -79,7 +79,7 @@ public class BulkPractitionerBuilder {
 			prac.setActive(resultSet.getBoolean("active"));
 			
 			// Add a digital certificate to the first 3 organizations
-			if (certCount < 3) {
+			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
 				// Figure the date one year from now, use that as an expiration date
 				Date expire = new Date();
 				Calendar cal = Calendar.getInstance();

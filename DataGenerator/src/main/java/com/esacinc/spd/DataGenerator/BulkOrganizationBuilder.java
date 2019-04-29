@@ -85,7 +85,7 @@ public class BulkOrganizationBuilder {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(expire);
 				cal.add(Calendar.YEAR, 1);
-				// args are:  type, use, trustFramework, standard, expirationDate
+				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
 				org.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", cal.getTime()));
 			}
 						

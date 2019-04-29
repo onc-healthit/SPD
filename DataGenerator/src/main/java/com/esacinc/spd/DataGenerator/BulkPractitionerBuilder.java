@@ -80,20 +80,13 @@ public class BulkPractitionerBuilder {
 			
 			// Add a digital certificate to the first 3 organizations
 			if (certCount < 3) {
-				VhDirDigitalCertificate cert = new VhDirDigitalCertificate();
-				cert.setType(ResourceFactory.makeCoding("role",  "role", "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-				cert.setUse(ResourceFactory.makeCoding("auth",  "auth", "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-				cert.setCertificateStandard(ResourceFactory.makeCoding("x.509v3",  "x.509v3", "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-				cert.setCertificate(DigitalCertificateFactory.getNthCert(certCount++));
+				// Figure the date one year from now, use that as an expiration date
 				Date expire = new Date();
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(expire);
 				cal.add(Calendar.YEAR, 1);
-				cert.setExpirationDate(cal.getTime());
-				CodeableConcept certTrust = new CodeableConcept();
-				certTrust.addCoding(ResourceFactory.makeCoding("other",  "other", "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-				cert.setTrustFramework(certTrust);
-				prac.addDigitalcertficate(cert);
+				// args are:  type, use, trustFramework, standard, expirationDate
+				prac.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", cal.getTime()));
 			}
 						
 			// Handle the identifiers

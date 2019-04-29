@@ -1,5 +1,12 @@
 package com.esacinc.spd.util;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import org.hl7.fhir.r4.model.CodeableConcept;
+
+import com.esacinc.spd.model.VhDirDigitalCertificate;
+
 public class DigitalCertificateFactory {
 
 	static private String[] certs = null;
@@ -105,6 +112,19 @@ public class DigitalCertificateFactory {
 			return certs[n];
 		}
 		return null;
+	}
+	
+	static public VhDirDigitalCertificate makeDigitalCertificate(int nth, String type, String use, String trustFramework, String standard, Date expiration) {
+		VhDirDigitalCertificate cert = new VhDirDigitalCertificate();
+		cert.setType(ResourceFactory.makeCoding(type,  type, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
+		cert.setUse(ResourceFactory.makeCoding(use,  use, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
+		cert.setCertificateStandard(ResourceFactory.makeCoding(standard,  standard, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
+		cert.setExpirationDate(expiration);
+		CodeableConcept certTrust = new CodeableConcept();
+		certTrust.addCoding(ResourceFactory.makeCoding(trustFramework,  trustFramework, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
+		cert.setTrustFramework(certTrust);
+
+		return cert;
 	}
 
 }

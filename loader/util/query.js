@@ -544,13 +544,44 @@ export const query = {
 			//console.log("provider: "+JSON.stringify(provider));
 			if (provider != null){
 				console.log("provider found "+provider.photo);
-				var idNpi = await Identifier.create({
+				/*var idNpi = await Identifier.create({
 					identifier_status_value_code: "active",
 					use: "official",
 					system: "http://hl7.org/fhir/sid/us-npi",
 					value: res[i].NPI,
 					practitioner_id: provider.practitioner_id
 				});	
+				var givenName = res[i].first_name;				
+				if (res[i].middle_name != null && res[i].middle_name.length > 0){
+					givenName +=  " " + res[i].middle_name;
+				}
+				var name1 = await Name.update({
+					given: givenName,
+					prefix: res[i].prefix,
+					suffix: res[i].suffix
+				}, {
+					where: {
+						practitioner_id: provider.practitioner_id,
+						use: "official"											
+					}
+				});
+				if ((res[i].other_last_name != null && res[i].other_last_name.length > 0)
+					|| (res[i].other_first_name != null && res[i].other_first_name.length > 0)) { 
+					givenName = res[i].other_first_name;
+					if (res[i].other_middle_name != null && res[i].other_middle_name.length > 0){
+						givenName +=  " " + res[i].other_middle_name;
+					}
+					var name2 = await Name.update({
+						given: givenName,
+						prefix: res[i].other_prefix,
+						suffix: res[i].other_suffix
+					}, {
+					where: {
+						practitioner_id: provider.practitioner_id,
+						use: "usual"											
+					}
+				});
+				}*/
 				continue;
 			}
 			if (provider == null) {
@@ -618,18 +649,33 @@ export const query = {
 					practitioner_id: providerCreated.practitioner_id									
 					});
 				//console.log("telecoms: "+JSON.stringify(telecoms));
+				var givenName = res[i].first_name;				
+				if (res[i].middle_name != null && res[i].middle_name.length > 0){
+					givenName +=  " " + res[i].middle_name;
+				}
 				var name1 = await Name.create({
 					use: "official",
 					family: res[i].last_name,
-					given: res[i].first_name,
+					given: givenName,
+					prefix: res[i].prefix,
+					suffix: res[i].suffix,
 					practitioner_id: providerCreated.practitioner_id									
 				});
-				var name2 = await Name.create({
-					use: "usual",
-					family: res[i].other_last_name,
-					given: res[i].other_first_name,
-					practitioner_id: providerCreated.practitioner_id									
-				});
+				if ((res[i].other_last_name != null && res[i].other_last_name.length > 0)
+					|| (res[i].other_first_name != null && res[i].other_first_name.length > 0)) { 
+					givenName = res[i].other_first_name;
+					if (res[i].other_middle_name != null && res[i].other_middle_name.length > 0){
+						givenName +=  " " + res[i].other_middle_name;
+					}
+					var name2 = await Name.create({
+						use: "usual",
+						family: res[i].other_last_name,
+						given: givenName,
+						prefix: res[i].other_prefix,
+						suffix: res[i].other_suffix,
+						practitioner_id: providerCreated.practitioner_id									
+					});
+				}
 			}
 		}
 

@@ -23,12 +23,24 @@ public class Geocoding {
 	 * non-null, then update all of the rows in the 'address' table in the database with the same postal code with the
 	 * newly determined lat/lon values.
 	 *  
-	 * @param postalCode
+	 * @param postalCode must be at least a 5-digit postal code
 	 * @param connection
 	 * @return
 	 * @throws SQLException
 	 */
 	public static VhDirGeoLocation geocodePostalCode(String postalCode, Connection connection) throws SQLException {
+		
+		// Don't even bother if we don't have a postal code that is at least 5 characters
+		if (postalCode.length() < 5) {
+			System.err.println("Invalid postal code: " + postalCode + ". Must be at least 5 characters. Unable to geolocate");
+			return null;
+		}
+		postalCode = postalCode.substring(0,5);
+		// If first 5 chars of the postal code aren't digits, then we also have a problem.
+		if (!postalCode.matches("[0-9]+")) {
+			System.err.println("Invalid postal code: " + postalCode + ". Must be all digits. Unable to geolocate");
+			return null;
+		}
 		VhDirGeoLocation loc = new VhDirGeoLocation();
 		String baseUrl = "http://api.geonames.org/postalCodeSearchJSON?country=US&postalcode=";
 		String fullUrl = baseUrl + postalCode + "&username=mholck";
@@ -79,5 +91,28 @@ public class Geocoding {
 		}
 		
 		return loc;
+	}
+	
+	static public VhDirGeoLocation getGeoLocation(Double lat, Double lon, String postalCode, Connection connection)  {
+		VhDirGeoLocation loc = new VhDirGeoLocation();
+		try {
+			// If we don't have a valid lat/lon, the get one by geo locating the given postalCode
+			if (lat == null || lon == null || lat == 0.0 || lon == 0.0) {
+				System.out.println("Geocoding.getGeoLocation:  Calling Geocoding lat-lon for postal code " + postalCode);
+				loc = Geocoding.geocodePostalCode(postalCode, connection);
+			} else {
+				// Otherwise, simply put the lat/lon into a geolocation object.
+				loc = new VhDirGeoLocation();
+				loc.setLatitude(lat);
+				loc.setLongitude(lon);
+			}
+		}
+		catch (Exception e) {
+				System.err.println("Exception creating geolocation for (" + lat + ", " + lon + ") and postalCode '" + postalCode + "'" + e.getMessage());
+				e.printStackTrace();
+		}
+
+		return loc;
+		
 	}
 }

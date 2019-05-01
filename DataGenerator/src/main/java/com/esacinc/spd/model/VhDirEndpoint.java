@@ -3,40 +3,18 @@ package com.esacinc.spd.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.Endpoint;
+import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.api.annotation.Child;
+import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
-import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
-/**
-   The VhDirPractioner profile extends the base FHIR Practitioner resource.
-    It has two extensions:  
-	   - usage-restriction  (a FHIR reference)
-	   - digitalcertificate, modeled in VhDirDigitalCertificate (a FHIR complex type)
-	   
-	It also uses versions of other FHIR resources that contain extensions within them, and are therefore defined as separate
-	classes that extend the original FHIR resource class:
-	   - VhDirIdentifer extends identifier
-	   - VhDirContactPoint extends ContactPoint
-	   - VhDirAddres extends Address 
-	   - VhDirQualiication extends Type
-	   
-	The fields that continue to use unextended standard FHIR resources are:
-	   - name uses HumanName
-	   - active uses boolean type
-	   - gender uses AdministrativeGender code
-	   - birthDate uses date type
-	   - communication uses CodeableConcept
-
-*/
-
-@ResourceDef(name="Practitioner", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-Practitioner")
-public class VhDirPractitioner extends Practitioner { 
+@DatatypeDef(name="Endpoint")
+public class VhDirEndpoint extends Endpoint {
 	private static final long serialVersionUID = 1L;
-    
 
 	/**
 	 * Add the usage restriction
@@ -54,6 +32,15 @@ public class VhDirPractitioner extends Practitioner {
 	@Description(shortDefinition="Certificate for the organization")
 	private List<VhDirDigitalCertificate> digitalcertficate;
 
+	/**
+	 * Add the rank
+	 */
+	@Child(name="rank", type = {IntegerType.class}, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/endpoint-rank", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Preferred order for connecting to the endpoint")
+	private IntegerType rank;
+	
+	// TODO add use-case
 	
 	public List<Reference> getUsageRestriction() {
 		return usageRestriction;
@@ -63,7 +50,7 @@ public class VhDirPractitioner extends Practitioner {
 		this.usageRestriction = val;
 	}
 	
-	public VhDirPractitioner addUsageRestriction(Reference t) {
+	public VhDirEndpoint addUsageRestriction(Reference t) {
 	    if (t == null)
 	      return this;
 	    if (this.usageRestriction == null)
@@ -80,7 +67,7 @@ public class VhDirPractitioner extends Practitioner {
 		this.digitalcertficate = digitalcertficate;
 	}
 	
-	public VhDirPractitioner addDigitalcertficate(VhDirDigitalCertificate t) {
+	public VhDirEndpoint addDigitalcertficate(VhDirDigitalCertificate t) {
 	    if (t == null)
 	      return this;
 	    if (this.digitalcertficate == null)
@@ -88,6 +75,13 @@ public class VhDirPractitioner extends Practitioner {
 	    this.digitalcertficate.add(t);
 	    return this;
 	}
-
 	
+	public IntegerType getRank() {
+		return rank;
+	}
+
+	public void setRank(IntegerType val) {
+		this.rank = val;
+	}
+
 }

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.google.gson.Gson;
@@ -21,6 +22,12 @@ import ca.uhn.fhir.parser.IParser;
 
 public class BulkDataApp {
 
+	// Database credentials...
+	public static String dbUsername = "spduser";
+	public static String dbPassword = "SpdUs3r45";
+	
+	// Which schema to read data from....
+
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_scrubbed";
 	public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small";
@@ -30,8 +37,11 @@ public class BulkDataApp {
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_large";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_larged_scrubbed";
 	
-	public static String dbUsername = "spduser";
-	public static String dbPassword = "SpdUs3r45";
+	// Which VhDir resources to generate...
+	private static boolean DO_ORGANIZATIONS = true;
+	private static boolean DO_PRACTITIONERS = true;
+	private static boolean DO_NETWORKS = true;
+	
 	
 	public static void main(String[] args) {		
 		Connection connection = null;
@@ -39,40 +49,69 @@ public class BulkDataApp {
 		// Connect to the DB
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(BulkDataApp.connectionUrl,
-					BulkDataApp.dbUsername, BulkDataApp.dbPassword);
-	        
-			// Get and write Organizations
-			System.out.println("Generate Organization resources...");
-			BulkOrganizationBuilder orgBuilder = new BulkOrganizationBuilder();
-			List<VhDirOrganization> organizations = orgBuilder.getOrganizations(connection);
-			outputOrganizationList(organizations, "Organization.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
-			
+			connection = DriverManager.getConnection(BulkDataApp.connectionUrl,	BulkDataApp.dbUsername, BulkDataApp.dbPassword);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			System.err.println("\nFHIR Resource generation terminated with connection error");
 			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return;
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.err.println("\nFHIR Resource generation terminated, mysql driver not found");
 			e.printStackTrace();
+			return;
 		} 
-
-		try {
-			// Get and write Practitioners
-			System.out.println("Generate Practitioner resources...");
-
-			BulkPractitionerBuilder pracBuilder = new BulkPractitionerBuilder();
-			List<VhDirPractitioner> practitioners = pracBuilder.getPractitioners(connection);
-			outputPractitionerList(practitioners, "Practitioner.ndjson", 0); // last arg indicates prettyPrint nth prac. Use -1 to skip
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 			
+		
+		if (DO_ORGANIZATIONS) {
+			try{
+				// Get and write Organizations
+				System.out.println("Generate Organization resources...");
+				BulkOrganizationBuilder orgBuilder = new BulkOrganizationBuilder();
+				List<VhDirOrganization> organizations = orgBuilder.getOrganizations(connection);
+				outputOrganizationList(organizations, "Organization.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
+		
+		if (DO_PRACTITIONERS) {
+			try {
+				// Get and write Practitioners
+				System.out.println("Generate Practitioner resources...");
+	
+				BulkPractitionerBuilder pracBuilder = new BulkPractitionerBuilder();
+				List<VhDirPractitioner> practitioners = pracBuilder.getPractitioners(connection);
+				outputPractitionerList(practitioners, "Practitioner.ndjson", 0); // last arg indicates prettyPrint nth prac. Use -1 to skip
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 			
+		}
+		
+		if (DO_NETWORKS) {
+			try {
+				// Get and write Networks
+				System.out.println("Generate Network resources...");
+	
+				BulkNetworkBuilder nwBuilder = new BulkNetworkBuilder();
+				List<VhDirNetwork> networks = nwBuilder.getNetworks(connection);
+				outputNetworkList(networks, "Network.ndjson", 0); // last arg indicates prettyPrint nth network. Use -1 to skip
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 			
+		}
 		
 		System.out.println("\nFHIR Resource generation complete");
 
@@ -143,6 +182,41 @@ public class BulkDataApp {
 		}
 		catch (NullPointerException e) {
 			System.err.println("NULL POINTER EXCEPTION writing practitioner list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+	
+	private static void outputNetworkList(List<VhDirNetwork>networks, String filename, int prettyPrintNth) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			for (VhDirNetwork nw : networks) {
+				String nwJson = jsonParser.encodeResourceToString(nw);
+				writer.write(nwJson);
+				writer.write("\n");
+				
+				// String above is appropriate for ndjson output but for now here is a pretty version
+				if (cnt == prettyPrintNth) {
+					Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					JsonParser jp = new JsonParser();
+					JsonElement je = jp.parse(nwJson);
+					String prettyJsonString = gson.toJson(je);
+					System.out.println("\n------------------------------- NETWORK ------------------------------------\n");
+					System.out.println(prettyJsonString);
+				}
+				cnt++;
+			}
+			writer.close();
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing network list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing network list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

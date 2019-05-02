@@ -1,4 +1,4 @@
-import { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias} from '../model/sequelizeModels';
+import { Npi, npidb, spddb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias} from '../model/sequelizeModels';
 import Sequelize from 'sequelize';
 
 export const query = {
@@ -21,6 +21,221 @@ export const query = {
 		}
 		
 	},*/
+	async findParentOrg(){
+		var orgWithParentQuery = "SELECT organization_id, partOf_organization_name FROM vhdir_organization where partOf_organization_name is not null and partOf_organization_name <> '' order by partOf_organization_name";
+		var orgWithParent = await spddb.query(orgWithParentQuery, {model: Organization});
+		var currentParent = '', currentParentId = 0;
+		for (var i = 0; i < orgWithParent.length; i++){
+			if (currentParent === orgWithParent[i].partOf_organization_name && currentParentId > 0) {
+				Organization.update({
+					partOf_organization_id: currentParentId
+				}, {
+					where: {
+						organization_id: orgWithParent[i].organization_id
+					}
+				});				
+			}
+			else {
+				currentParent = orgWithParent[i].partOf_organization_name
+				var parentOrg = await Organization.findOne({where: {name: orgWithParent[i].partOf_organization_name}});
+				if (parentOrg != null){
+					console.log("Parent found: "+parentOrg.name);
+					Organization.update({
+						partOf_organization_id: parentOrg.organization_id
+					}, {
+						where: {
+							organization_id: orgWithParent[i].organization_id
+						}
+					});
+					currentParentId = parentOrg.organization_id;
+				}
+				else {
+					console.log("Parent not found: "+orgWithParent[i].partOf_organization_name);currentParentId = 0;				
+				}
+			}
+		}
+	},
+	async findParentOrgNpi(){
+		var orgWithParentQuery = "SELECT organization_id, partOf_organization_name FROM vhdir_organization where partOf_organization_name is not null and partOf_organization_name <> '' and partOf_organization_id is null order by partOf_organization_name";
+		var orgWithParent = await spddb.query(orgWithParentQuery, {model: Organization});
+		var currentParent = '', currentParentId = 0;
+		for (var i = 0; i < orgWithParent.length; i++){
+			if (currentParent === orgWithParent[i].partOf_organization_name && currentParentId > 0) {
+				Organization.update({
+					partOf_organization_id: currentParentId
+				}, {
+					where: {
+						organization_id: orgWithParent[i].organization_id
+					}
+				});				
+			}
+			else {
+				
+				currentParent = orgWithParent[i].partOf_organization_name;
+				console.log("Look for parent: "+orgWithParent[i].partOf_organization_name);
+				var npiQuery = "SELECT NPI, `Provider Organization Name (Legal Business Name)` as organization_name,"+
+				"`Provider Other Organization Name` as other_organization_name,"+
+				"`Provider Other Organization Name Type Code` as other_organization_name_type,"+
+				"`Provider First Line Business Mailing Address`  as mailing_address_first_line,"+
+				"`Provider Second Line Business Mailing Address` as mailing_address_second_line,"+
+				"`Provider Business Mailing Address City Name` as mailing_address_city,"+
+				"`Provider Business Mailing Address State Name` as mailing_address_state,"+
+				"`Provider Business Mailing Address Postal Code` as mailing_address_postal_code,"+
+				"`Provider Business Mailing Address Country Code` as mailing_address_country_code,"+
+				"`Provider Business Mailing Address Telephone Number` as mailing_address_telephone,"+
+				"`Provider Business Mailing Address Fax Number` as mailing_address_fax,"+
+				"`Provider First Line Business Practice Location Address` as practice_location_first_line,"+
+				"`Provider Second Line Business Practice Location Address` as practice_location_second_line,"+
+				"`Provider Business Practice Location Address City Name` as practice_location_city,"+
+				"`Provider Business Practice Location Address State Name` as practice_location_state,"+
+				"`Provider Business Practice Location Address Postal Code` as practice_location_postal_code,"+
+				"`Provider Business Practice Location Address Ctry Code` as practice_location_country_code,"+
+				"`Provider Business Practice Location Address Telephone Number` as practice_location_telephone,"+
+				"`Provider Business Practice Location Address Fax Number` as practice_location_fax,"+
+				"`Authorized Official Last Name` as authorized_official_last_name,"+
+				"`Authorized Official First Name` as authorized_official_first_name,"+
+				"`Authorized Official Middle Name` as authorized_official_middle_name,"+
+				"`Authorized Official Title or Position` as authorized_official_title,"+
+				"`Authorized Official Telephone Number` as authorized_official_telephone,"+
+				"`Authorized Official Name Prefix Text` as authorized_official_name_prefix,"+
+				"`Authorized Official Name Suffix Text` as authorized_official_name_suffix,"+
+				"`Authorized Official Credential Text` as authorized_official_credential,"+
+				"`Other Provider Identifier_1` as other_identifier_1,"+
+				"`Other Provider Identifier Type Code_1` as other_identifier_type_code_1,"+
+				"`Other Provider Identifier State_1` as other_identifier_state_1,"+
+				"`Other Provider Identifier Issuer_1` as other_identifier_issuer_1,"+
+				"`NPI Deactivation Reason Code` as deactivation_reason, "+
+				"`NPI Deactivation Date` as deactivation_date, "+
+				"`NPI Reactivation Date` as reactivation_date, "+
+				"`Is Organization Subpart` as is_subpart,"+
+				"`Parent Organization LBN` as parent_name FROM nppes.npi WHERE `Entity Type Code` = 2 "+
+				" and `Provider Organization Name (Legal Business Name)` = '"+
+				orgWithParent[i].partOf_organization_name +
+				"'";
+				var res = await npidb.query(npiQuery, { model: Npi } );
+				if (res != null && res.length > 0) {
+					console.log("Parent found in NPI: "+res[0].organization_name);
+					var isActive = '1';
+					if (res[0].deactivation_date != null && res[0].deactivation_date.length > 4 
+						&& (res[0].reactivation_date === null || res[0].reactivation_date.length <= 0)) {
+						isActive = '0';
+						//console.log("Org inactive: " + nameToUse);
+					}
+					var created = await Organization.create({
+					  active: isActive,
+					  name: res[0].organization_name,
+					  partOf_organization_name: res[0].parent_name});
+					//console.log("Org: "+JSON.stringify(created));
+					var orgCreated = await Organization.findOne({where: {name: res[0].organization_name}});
+					//console.log("OrgCreated: "+JSON.stringify(orgCreated));
+					
+					currentParentId = orgCreated.organization_id;
+					Organization.update({
+						partOf_organization_id: currentParentId
+					}, {
+						where: {
+							organization_id: orgWithParent[i].organization_id
+						}
+					});				
+					
+					var idNpi = await Identifier.create({
+						identifier_status_value_code: "active",
+						use: "official",
+						system: "http://hl7.org/fhir/sid/us-npi",
+						value: res[0].NPI,
+						organization_id: orgCreated.organization_id
+					});	
+					if (res[0].other_organization_name!= null && res[0].other_organization_name.length > 0){
+						var alias1 = await OrgAlias.create({
+							value: res[0].other_organization_name,
+							organization_id: orgCreated.organization_id
+						});
+					}
+					if (res[0].other_identifier_1!= null && res[0].other_identifier_1.length > 0){
+						var alias1 = await OrgAlias.create({
+							value: res[0].other_identifier_1,
+							organization_id: orgCreated.organization_id
+						});
+					}
+					var address1 = await Address.create({
+						use: "billing",
+						line1: res[0].mailing_address_first_line, 
+						city: res[0].mailing_address_city, 
+						state: res[0].mailing_address_state, 
+						postalCode: res[0].mailing_address_postal_code,
+						country: res[0].mailing_address_country_code,
+						organization_id: orgCreated.organization_id
+					});
+					var address2 = await Address.create({					
+						use: "work",
+						line1: res[0].practice_location_first_line, 
+						city: res[0].practice_location_city, 
+						state: res[0].practice_location_state, 
+						postalCode: res[0].practice_location_postal_code,
+						country: res[0].practice_location_country_code,
+						organization_id: orgCreated.organization_id
+					});
+					//console.log("address: "+JSON.stringify(address));
+					var telecoms = await Telecom.create(
+						{
+						system: "phone",
+						value: res[0].mailing_address_telephone,
+						organization_id: orgCreated.organization_id
+						});
+					telecoms = await Telecom.create(
+						{
+						system: "fax",
+						value: res[0].mailing_address_fax,
+						organization_id: orgCreated.organization_id									
+						});
+					telecoms = await Telecom.create(
+						{
+						system: "phone",
+						value: res[0].practice_location_telephone,
+						organization_id: orgCreated.organization_id									
+						});
+					telecoms = await Telecom.create(
+						{
+						system: "fax",
+						value: res[0].practice_location_fax,
+						organization_id: orgCreated.organization_id									
+						});
+					//console.log("telecoms: "+JSON.stringify(telecoms));
+					var name = await Name.create({
+						use: "official",
+						family: res[0].authorized_official_last_name,
+						given: res[0].authorized_official_first_name,
+					})
+					//console.log("name: "+JSON.stringify(name));
+					var nameCreated = await Name.findOne({where: {
+						family: res[0].authorized_official_last_name,
+						given: res[0].authorized_official_first_name}});
+					//console.log("nameCreated: "+JSON.stringify(nameCreated));
+					var contact = await Contact.create({
+						name_id: nameCreated.name_id,
+						organization_id: orgCreated.organization_id
+					})
+					var contactCreated = await Contact.findOne({where: {
+						name_id: nameCreated.name_id,
+						organization_id: orgCreated.organization_id				
+					}});
+					var telecoms = await Telecom.create(
+					{
+					system: "phone",
+					value: res[0].authorized_official_telephone,
+					organization_contact_id: contactCreated.organization_contact_id,
+					organization_id: orgCreated.organization_id
+					});
+
+				}
+				else {
+					console.log("Parent not found in NPI: "+orgWithParent[i].partOf_organization_name);
+					currentParentId = 0;
+				}
+			}
+		}
+
+	},
 	async getInsurancePlans() {
 		var plans = await InsurancePlan.findAll({
 			order: [['PlanMarketingName']],

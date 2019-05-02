@@ -493,7 +493,7 @@ export const query = {
 		"order by `Provider Organization Name (Legal Business Name)` , "+
 		"`Provider Other Organization Name`, `Other Provider Identifier_1`, "+
 		"`Provider First Line Business Mailing Address`, "+
-        "`Provider First Line Business Practice Location Address` limit 8000, 2000";
+        "`Provider First Line Business Practice Location Address` limit 0, 10000";
 		var res = await npidb.query(npiQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		var lbn = "", olbn = null, oid = null, fmailing = "", floc = "", nameToUse = null;
@@ -564,32 +564,49 @@ export const query = {
 					organization_contact_id: contactExisting.organization_contact_id,
 					organization_id: exist.organization_id
 					});
-				}
-				var telecoms = await Telecom.create(
+				}*/
+				var telecoms = null;
+				if (res[i].mailing_address_telephone != null && res[i].mailing_address_telephone.length > 0) {
+					telecoms = await Telecom.create(
 					{
 					system: "phone",
 					value: res[i].mailing_address_telephone,
+					use: "work",
+					rank: 1,
 					organization_id: exist.organization_id
 					});
+				}
+				if (res[i].mailing_address_fax != null && res[i].mailing_address_fax.length > 0) {
 				telecoms = await Telecom.create(
 					{
 					system: "fax",
+					use: "work",
+					rank: 1,
 					value: res[i].mailing_address_fax,
 					organization_id: exist.organization_id									
 					});
+				}
+				if (res[i].practice_location_telephone != null && res[i].practice_location_telephone.length > 0) {
 				telecoms = await Telecom.create(
 					{
 					system: "phone",
 					value: res[i].practice_location_telephone,
+					use: "work",
+					rank: 2,
 					organization_id: exist.organization_id									
 					});
+				}
+				if (res[i].practice_location_fax != null && res[i].practice_location_fax.length > 0) {
 				telecoms = await Telecom.create(
 					{
 					system: "fax",
 					value: res[i].practice_location_fax,
+					use: "work",
+					rank: 2,
 					organization_id: exist.organization_id									
 					});
-				var id = await Identifier.create({
+				}
+				/*var id = await Identifier.create({
 					identifier_status_value_code: "active",
 					use: "npi",
 					value: res[i].NPI,
@@ -649,30 +666,47 @@ export const query = {
 				organization_id: orgCreated.organization_id
 			});
 			//console.log("address: "+JSON.stringify(address));
-			var telecoms = await Telecom.create(
+			var telecoms = null;
+			if (res[i].mailing_address_telephone != null && res[i].mailing_address_telephone.length > 0) {
+				telecoms = await Telecom.create(
 				{
 				system: "phone",
 				value: res[i].mailing_address_telephone,
+				use: "work",
+				rank: 1,
 				organization_id: orgCreated.organization_id
 				});
+			}
+			if (res[i].mailing_address_fax != null && res[i].mailing_address_fax.length > 0) {
 			telecoms = await Telecom.create(
 				{
 				system: "fax",
+				use: "work",
+				rank: 1,
 				value: res[i].mailing_address_fax,
 				organization_id: orgCreated.organization_id									
 				});
+			}
+			if (res[i].practice_location_telephone != null && res[i].practice_location_telephone.length > 0) {
 			telecoms = await Telecom.create(
 				{
 				system: "phone",
 				value: res[i].practice_location_telephone,
+				use: "work",
+				rank: 2,
 				organization_id: orgCreated.organization_id									
 				});
+			}
+			if (res[i].practice_location_fax != null && res[i].practice_location_fax.length > 0) {
 			telecoms = await Telecom.create(
 				{
 				system: "fax",
 				value: res[i].practice_location_fax,
+				use: "work",
+				rank: 2,
 				organization_id: orgCreated.organization_id									
 				});
+			}
 			//console.log("telecoms: "+JSON.stringify(telecoms));
 			var name = await Name.create({
 				use: "official",
@@ -839,30 +873,47 @@ export const query = {
 					practitioner_id: providerCreated.practitioner_id
 				});
 				//console.log("address: "+JSON.stringify(address2));
-				var telecoms = await Telecom.create(
+				var telecoms = null;
+				if (res[i].mailing_address_telephone != null && res[i].mailing_address_telephone.length > 0) {
+					telecoms = await Telecom.create(
 					{
 					system: "phone",
 					value: res[i].mailing_address_telephone,
+					use: "work",
+					rank: 1,
 					practitioner_id: providerCreated.practitioner_id
 					});
+				}
+				if (res[i].mailing_address_fax != null && res[i].mailing_address_fax.length > 0) {
 				telecoms = await Telecom.create(
 					{
 					system: "fax",
+					use: "work",
+					rank: 1,
 					value: res[i].mailing_address_fax,
 					practitioner_id: providerCreated.practitioner_id									
 					});
+				}
+				if (res[i].practice_location_telephone != null && res[i].practice_location_telephone.length > 0) {
 				telecoms = await Telecom.create(
 					{
 					system: "phone",
 					value: res[i].practice_location_telephone,
+					use: "work",
+					rank: 2,
 					practitioner_id: providerCreated.practitioner_id									
 					});
+				}
+				if (res[i].practice_location_fax != null && res[i].practice_location_fax.length > 0) {
 				telecoms = await Telecom.create(
 					{
 					system: "fax",
 					value: res[i].practice_location_fax,
+					use: "work",
+					rank: 2,
 					practitioner_id: providerCreated.practitioner_id									
 					});
+				}
 				//console.log("telecoms: "+JSON.stringify(telecoms));
 				var givenName = res[i].first_name;				
 				if (res[i].middle_name != null && res[i].middle_name.length > 0){

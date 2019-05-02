@@ -2,6 +2,8 @@ import toolz
 
 from nppes_data_generators.addresses.address_lines import synthetic_address_line_generator
 from nppes_data_generators.names.organizations import synthetic_org_name_generator
+from nppes_data_generators.names.individuals import synthetic_first_name_generator
+from nppes_data_generators.names.individuals import synthetic_last_name_generator
 from nppes_data_generators.npis.npi import synthetic_npi_generator
 from nppes_data_generators.phone_numbers.phone_number import synthetic_number
 from nppes_data_loaders.connections import connection, query
@@ -39,6 +41,7 @@ def migrate_vhdir_organization(from_cursor, to_cursor):
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
 
+
 @toolz.curry
 def update_vhdir_organization_partOf(from_cursor, to_cursor):
     extract_stmt = """
@@ -52,6 +55,7 @@ def update_vhdir_organization_partOf(from_cursor, to_cursor):
 
     return query(from_cursor, extract_stmt)\
         .bind(lambda orgs: query(to_cursor, load_stmt, tuple(orgs)))
+
 
 @toolz.curry
 def migrate_identifier(from_cursor, to_cursor):
@@ -72,6 +76,28 @@ def migrate_identifier(from_cursor, to_cursor):
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
 
+
+@toolz.curry
+def migrate_contacts(from_cursor, to_cursor):
+    extract_stmt = """
+        SELECT organization_contact_id, purpose_id, name_id, address_id, organization_id FROM organization_contact;
+        """
+    load_stmt = """
+        INSERT INTO organization_contact (organization_contact_id, purpose_id, name_id, address_id, organization_id)
+                VALUES (%s, %s, %s, %s, %s);
+        """
+
+    def transform(contacts):
+        def scrub_contact(contact):
+            organization_contact_id, purpose_id, name_id, address_id, organization_id = contact
+            return organization_contact_id, purpose_id, name_id, address_id, organization_id
+        return map(scrub_contact, contacts)
+
+    return query(from_cursor, extract_stmt)\
+        .map(transform)\
+        .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
+
+
 @toolz.curry
 def migrate_telecom(from_cursor, to_cursor):
     extract_stmt = """
@@ -91,6 +117,7 @@ def migrate_telecom(from_cursor, to_cursor):
     return query(from_cursor, extract_stmt)\
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
+
 
 @toolz.curry
 def migrate_address(from_cursor, to_cursor):
@@ -116,6 +143,32 @@ def migrate_address(from_cursor, to_cursor):
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
 
+
+@toolz.curry
+def migrate_contact_names(from_cursor, to_cursor):
+    extract_stmt = """
+        SELECT DISTINCT(name.name_id), `use`, text, family, given, prefix, suffix, period_start, period_end
+        FROM name, organization_contact
+        WHERE name.name_id = organization_contact.name_id;
+        """
+    load_stmt = """
+        INSERT INTO name (name_id, `use`, text, family, given, prefix, suffix, period_start, period_end)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+        """
+
+    def transform(names):
+        def scrub_name(name):
+            first_name_generator = synthetic_first_name_generator()
+            last_name_generator = synthetic_last_name_generator()
+            name_id, use, text, family, given, *rest = name
+            return (name_id, use, text, last_name_generator(family), first_name_generator(given), *rest)
+        return map(scrub_name, names)
+
+    return query(from_cursor, extract_stmt)\
+        .map(transform)\
+        .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
+
+
 def migrate_organizations(from_, to):
     from_cnx = connection(from_)
     from_cursor = from_cnx.cursor()
@@ -127,7 +180,9 @@ def migrate_organizations(from_, to):
              | update_vhdir_organization_partOf(from_cursor) \
              | migrate_identifier(from_cursor) \
              | migrate_telecom(from_cursor) \
-             | migrate_address(from_cursor)
+             | migrate_address(from_cursor) \
+             | migrate_contact_names(from_cursor) \
+             | migrate_contacts(from_cursor)
 
     if result.is_just():
         to_cnx.commit()

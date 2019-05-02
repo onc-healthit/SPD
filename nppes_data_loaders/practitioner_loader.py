@@ -1,7 +1,6 @@
 import toolz
 
 from nppes_data_generators.addresses.address_lines import synthetic_address_line_generator
-from nppes_data_generators.names.organizations import synthetic_org_name_generator
 from nppes_data_generators.names.individuals import synthetic_first_name_generator
 from nppes_data_generators.names.individuals import synthetic_last_name_generator
 from nppes_data_generators.npis.npi import synthetic_npi_generator
@@ -37,6 +36,7 @@ def migrate_vhdir_practitioner(from_cursor, to_cursor):
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
 
+
 @toolz.curry
 def migrate_identifier(from_cursor, to_cursor):
     extract_stmt = """
@@ -55,6 +55,7 @@ def migrate_identifier(from_cursor, to_cursor):
     return query(from_cursor, extract_stmt)\
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
+
 
 @toolz.curry
 def migrate_telecom(from_cursor, to_cursor):
@@ -75,6 +76,7 @@ def migrate_telecom(from_cursor, to_cursor):
     return query(from_cursor, extract_stmt)\
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
+
 
 @toolz.curry
 def migrate_address(from_cursor, to_cursor):
@@ -100,6 +102,7 @@ def migrate_address(from_cursor, to_cursor):
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
 
+
 @toolz.curry
 def migrate_names(from_cursor, to_cursor):
     extract_stmt = """
@@ -123,6 +126,7 @@ def migrate_names(from_cursor, to_cursor):
     return query(from_cursor, extract_stmt)\
         .map(transform)\
         .bind(lambda ts: query(to_cursor, load_stmt, tuple(ts)))
+
 
 def migrate_practitioners(from_, to):
     from_cnx = connection(from_)

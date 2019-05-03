@@ -12,6 +12,7 @@ import java.util.List;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
+import com.esacinc.spd.util.Geocoding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -39,12 +40,26 @@ public class BulkDataApp {
 	
 	// Which VhDir resources to generate...
 	private static boolean DO_ORGANIZATIONS = true;
-	private static boolean DO_PRACTITIONERS = true;
-	private static boolean DO_NETWORKS = true;
+	private static boolean DO_PRACTITIONERS = false;
+	private static boolean DO_NETWORKS = false;
 	
+	private static int MAX_ENTRIES = -1;  // Control how many entries we process in each section and output. -1 means ALL.
 	
 	public static void main(String[] args) {		
 		Connection connection = null;
+		
+		// Testing some geocode stuff.
+		if (!DO_ORGANIZATIONS && !DO_PRACTITIONERS && !DO_NETWORKS)
+		{
+			try {
+				Geocoding.geocodePostalCode("46224", null); // We know this is valid;
+				Geocoding.geocodePostalCode("096030300", null);
+				Geocoding.geocodePostalCode("96297", null);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 		// Connect to the DB
 		try {
@@ -124,6 +139,9 @@ public class BulkDataApp {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 			int cnt = 0;
 			for (VhDirOrganization org : organizations) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
 				String orgJson = jsonParser.encodeResourceToString(org);
 				writer.write(orgJson);
 				writer.write("\n");
@@ -159,6 +177,9 @@ public class BulkDataApp {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 			for (VhDirPractitioner prac : practitioners) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
 				String pracJson = jsonParser.encodeResourceToString(prac);
 				writer.write(pracJson);
 				writer.write("\n");
@@ -194,6 +215,9 @@ public class BulkDataApp {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 			for (VhDirNetwork nw : networks) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
 				String nwJson = jsonParser.encodeResourceToString(nw);
 				writer.write(nwJson);
 				writer.write("\n");

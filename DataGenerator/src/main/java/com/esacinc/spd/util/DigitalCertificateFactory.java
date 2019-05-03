@@ -122,6 +122,7 @@ public class DigitalCertificateFactory {
 		cert.setUse(ResourceFactory.makeCoding(use,  use, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setCertificateStandard(ResourceFactory.makeCoding(standard,  standard, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setExpirationDate(expiration);
+		cert.setCertificate(getNthCert(nth));
 		CodeableConcept certTrust = new CodeableConcept();
 		certTrust.addCoding(ResourceFactory.makeCoding(trustFramework,  trustFramework, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setTrustFramework(certTrust);

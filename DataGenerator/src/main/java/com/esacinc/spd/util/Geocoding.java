@@ -32,13 +32,13 @@ public class Geocoding {
 		
 		// Don't even bother if we don't have a postal code that is at least 5 characters
 		if (postalCode.length() < 5) {
-			System.err.println("Invalid postal code: " + postalCode + ". Must be at least 5 characters. Unable to geolocate");
+			System.err.println("Geocoding Error: Invalid postal code: " + postalCode + ". Must be at least 5 characters. Unable to geolocate");
 			return null;
 		}
 		postalCode = postalCode.substring(0,5);
 		// If first 5 chars of the postal code aren't digits, then we also have a problem.
 		if (!postalCode.matches("[0-9]+")) {
-			System.err.println("Invalid postal code: " + postalCode + ". Must be all digits. Unable to geolocate");
+			System.err.println("Geocoding Error: Invalid postal code: " + postalCode + ". Must be all digits. Unable to geolocate");
 			return null;
 		}
 		VhDirGeoLocation loc = new VhDirGeoLocation();
@@ -63,35 +63,44 @@ public class Geocoding {
 				JsonElement result = new JsonParser().parse(l);
 			    JsonObject resultObj = result.getAsJsonObject();
 			    JsonArray postalCodes = resultObj.getAsJsonArray("postalCodes");
-			    JsonObject propertiesJson = postalCodes.get(0).getAsJsonObject();
-			    double lat = propertiesJson.get("lat").getAsDouble();
-			    double lon = propertiesJson.get("lng").getAsDouble();
-			    loc.setLatitude(lat);
-			    loc.setLongitude(lon);
+			    if (postalCodes == null || !postalCodes.isJsonArray()) {
+			    	System.err.println("Geocoding Error: Error parsing results from http://api.geonames.org with postal code: " + postalCode + " Returned line: '" + l + "'");
+			    }
+			    else if (postalCodes.size() == 0 ) {
+			    	System.err.println("Geocoding Error: No valid values returned from http://api.geonames.org  for postal code " + postalCode );
+			    }
+			    else {
+				    JsonObject propertiesJson = postalCodes.get(0).getAsJsonObject();
+				    double lat = propertiesJson.get("lat").getAsDouble();
+				    double lon = propertiesJson.get("lng").getAsDouble();
+				    loc.setLatitude(lat);
+				    loc.setLongitude(lon);
 			    
-			    // Update all DB records with this postalCode to add lat/lon
-			    if (connection != null) {
-				    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
-				    		postalCode + "%'";
-				    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-				    updateStatement.setDouble(1, lat);
-				    updateStatement.setDouble(2, lon);
-					updateStatement.executeUpdate();
+				    // Update all DB records with this postalCode to add lat/lon
+				    if (connection != null) {
+					    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
+					    		postalCode + "%'";
+					    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+					    updateStatement.setDouble(1, lat);
+					    updateStatement.setDouble(2, lon);
+						updateStatement.executeUpdate();
+				    }
 			    }
 			}
 			br.close();
 	
 			con.disconnect();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Geocoding Error: MalformedURLException: " + e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Geocoding Error: IOException: " + e.getMessage());
 			e.printStackTrace();
 		}
 		
 		return loc;
 	}
+	
 	
 	static public VhDirGeoLocation getGeoLocation(Double lat, Double lon, String postalCode, Connection connection)  {
 		VhDirGeoLocation loc = new VhDirGeoLocation();

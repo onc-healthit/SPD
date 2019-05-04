@@ -54,7 +54,7 @@ public class BulkLocationBuilder {
 			loc.addAlias(resultSet.getString("alias"));
 			loc.setDescription(resultSet.getString("description"));
 			loc.setAddress(ResourceFactory.getAddress(resultSet.getInt("address_id"), connection));
-			loc.setPhysicalType(ResourceFactory.getCodeableConcept(resultSet.getInt("physcial_type_cc_id"),connection)); // TOTO fix physcial in db
+			loc.setPhysicalType(ResourceFactory.getCodeableConcept(resultSet.getInt("physical_type_cc_id"),connection)); 
 			
 			LocationPositionComponent pos = new LocationPositionComponent();
 			pos.setLatitude(resultSet.getDouble("latitude"));

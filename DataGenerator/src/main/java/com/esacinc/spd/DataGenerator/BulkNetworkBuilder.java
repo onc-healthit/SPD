@@ -14,6 +14,7 @@ import org.hl7.fhir.r4.model.StringType;
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirNetworkContact;
 import com.esacinc.spd.util.ResourceFactory;
@@ -87,6 +88,9 @@ public class BulkNetworkBuilder {
          	
          	// Handle the network contacts
          	handleContacts(connection, nw, nwId);
+         	
+         	// Handle the network endpoints
+         	handleEndpoints(connection, nw, nwId);
          	
 			networks.add(nw);
 			
@@ -211,6 +215,24 @@ public class BulkNetworkBuilder {
 		while(resultset.next()) {
 				VhDirNetworkContact con = ResourceFactory.getNetworkContact(resultset, connection);
 				nw.addContact(con);
+		}
+	}
+	
+	/**
+	 * Handle the restrictions associated with the network 
+	 * @param connection
+	 * @param prac
+	 * @param locId
+	 * @throws SQLException
+	 */
+	private void handleEndpoints(Connection connection, VhDirNetwork net, int netId) throws SQLException {
+		String strSql = "SELECT * from vhdir_endpoint where network_id = ?"; 
+		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+		sqlStatement.setInt(1, netId);
+		ResultSet resultset = sqlStatement.executeQuery();
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("endpoint_id"), "VhDirEndpoint", null, "Network Endpoint");
+			net.addEndpoint(ref);
 		}
 	}
 }

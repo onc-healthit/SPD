@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import org.hl7.fhir.r4.model.CodeType;
@@ -14,9 +16,13 @@ import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.IntegerType;
+import org.hl7.fhir.r4.model.Location.DaysOfWeek;
+import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.TimeType;
 import org.hl7.fhir.r4.model.Address.AddressUse;
+import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
 import org.hl7.fhir.r4.model.HumanName;
@@ -25,11 +31,14 @@ import org.hl7.fhir.r4.model.HumanName.NameUse;
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirContactPointAvailableTime;
+import com.esacinc.spd.model.VhDirEhr;
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirNetworkContact;
+import com.esacinc.spd.model.VhDirNewpatientprofile;
+import com.esacinc.spd.model.VhDirNewpatients;
 
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
@@ -508,7 +517,64 @@ public class ResourceFactory {
 		}
 		return con;
 	}
+
+	public static VhDirEhr getEhr(ResultSet resultset, Connection connection ) throws SQLException {
+		VhDirEhr ehr = new VhDirEhr();
+		ehr.setId(resultset.getString("ehr_id"));
+		ehr.setUrl(new StringType("http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr"));
+		ehr.setDeveloper(new StringType(resultset.getString("developer")));
+		ehr.setProduct(new StringType(resultset.getString("product")));
+		ehr.setVersion(new StringType(resultset.getString("version")));
+		ehr.setCertificationEdition(makeCoding(resultset.getString("certification_edition"), "", "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-ehrcharacteristics", false));
+		ehr.setCertificationID(new StringType(resultset.getString("certification_id")));
+		if (connection != null) {
+			// Gather the patient access codeable concepts for this ehr
+			String strSql = "SELECT * FROM fhir_codeable_concept WHERE ehr_patient_access_id = ?";
+	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+	     	sqlStatement.setInt(1, resultset.getInt("ehr_id"));
+			ResultSet sqlResultset = sqlStatement.executeQuery();
+			while(sqlResultset.next()) {
+				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
+				ehr.addPatientAccess(cc);
+			}
+		}
+		return ehr;
+	}
+
+	public static VhDirNewpatients getNewPatients(ResultSet resultset, Connection connection ) throws SQLException {
+		VhDirNewpatients np = new VhDirNewpatients();
+		np.setUrl(new StringType("http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients"));
+		np.setId(resultset.getString("new_patients_id"));
+		np.setValue(new BooleanType(resultset.getBoolean("accepting_patient")));
+		// Note: the network_resource_reference_id points to a row in the resource_reference table. 
+		String nwrk = resultset.getString("network_resource_reference_id");
+		if (nwrk != null && !nwrk.isEmpty()) {
+			np.setReference(makeResourceReference(nwrk, "VhDirNetwork", null, "Network for a newpatients"));;
+		}
+		return np;
+	}
 	
+	public static VhDirNewpatientprofile getNewPatientprofile(ResultSet resultset) throws SQLException {
+		VhDirNewpatientprofile np = new VhDirNewpatientprofile();
+		np.setUrl(new StringType("http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatientprofile"));
+		np.setId(resultset.getString("new_patient_profile_id"));
+		np.setValue(new StringType(resultset.getString("profile_string")));
+		return np;
+	}
+	
+	public static LocationHoursOfOperationComponent getHoursOfOperation(ResultSet resultset) throws SQLException {
+		LocationHoursOfOperationComponent hrs = new LocationHoursOfOperationComponent();
+		hrs.setId(resultset.getString("available_time_id"));
+		hrs.setAllDay(resultset.getBoolean("all_day"));
+		hrs.setOpeningTime(resultset.getString("available_start_time"));
+		hrs.setClosingTime(resultset.getString("available_end_time"));
+		String dowStr = resultset.getString("days_of_week");
+		String[] dow = dowStr.split("|");
+		for (String d : dow) {
+			hrs.addDaysOfWeek(DaysOfWeek.fromCode(d));
+		}
+		return hrs;
+	}
 	///////////////   MAKE METHODS  ////////////////////////////////////////////////////////////////
     // Make methods are those methods that create resources from data parameters passed into them.
 	// They are not created from data queried from the database.

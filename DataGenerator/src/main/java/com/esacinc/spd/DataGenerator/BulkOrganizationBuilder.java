@@ -36,6 +36,7 @@ import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.util.DigitalCertificateFactory;
@@ -130,6 +131,9 @@ public class BulkOrganizationBuilder {
 			
 			// Handle contacts
          	handleContacts(connection, org, orgId);
+         	
+         	// Handle endpoints
+         	handleEndpoints(connection, org, orgId);
 			 
 			organizations.add(org);
 			}
@@ -327,6 +331,23 @@ public class BulkOrganizationBuilder {
 		}
 	}
 
+	/**
+	 * Handle the restrictions associated with the organization 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleEndpoints(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+		String strSql = "SELECT * from vhdir_endpoint where organization_id = ?"; 
+		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+		sqlStatement.setInt(1, orgId);
+		ResultSet resultset = sqlStatement.executeQuery();
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("endpoint_id"), "VhDirEndpoint", null, "Organization Endpoint");
+			//org.addEndpoint(ref);  /TODO add endpoints to VhDirOrganization
+		}
+	}
 
 
 

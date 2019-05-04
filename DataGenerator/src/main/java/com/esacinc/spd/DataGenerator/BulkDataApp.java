@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
@@ -39,9 +40,10 @@ public class BulkDataApp {
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_larged_scrubbed";
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ORGANIZATIONS = true;
+	private static boolean DO_ORGANIZATIONS = false;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
+	private static boolean DO_LOCATIONS = true;
 	
 	private static int MAX_ENTRIES = -1;  // Control how many entries we process in each section and output. -1 means ALL.
 	
@@ -49,7 +51,7 @@ public class BulkDataApp {
 		Connection connection = null;
 		
 		// Testing some geocode stuff.
-		if (!DO_ORGANIZATIONS && !DO_PRACTITIONERS && !DO_NETWORKS)
+		if (!DO_ORGANIZATIONS && !DO_PRACTITIONERS && !DO_NETWORKS && !DO_LOCATIONS)
 		{
 			try {
 				Geocoding.geocodePostalCode("46224", null); // We know this is valid;
@@ -127,7 +129,25 @@ public class BulkDataApp {
 				e.printStackTrace();
 			} 			
 		}
-		
+
+		if (DO_LOCATIONS) {
+			try{
+				// Get and write Locations
+				System.out.println("Generate Location resources...");
+				BulkLocationBuilder locBuilder = new BulkLocationBuilder();
+				List<VhDirLocation> locations = locBuilder.getLocations(connection);
+				outputLocationList(locations, "Locations.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
+
 		System.out.println("\nFHIR Resource generation complete");
 
 	}
@@ -245,4 +265,43 @@ public class BulkDataApp {
 		}
 
 	}
+	
+	private static void outputLocationList(List<VhDirLocation>locations, String filename, int prettyPrintNth) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			for (VhDirLocation loc : locations) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+				String nwJson = jsonParser.encodeResourceToString(loc);
+				writer.write(nwJson);
+				writer.write("\n");
+				
+				// String above is appropriate for ndjson output but for now here is a pretty version
+				if (cnt == prettyPrintNth) {
+					Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					JsonParser jp = new JsonParser();
+					JsonElement je = jp.parse(nwJson);
+					String prettyJsonString = gson.toJson(je);
+					System.out.println("\n------------------------------- LOCATION ------------------------------------\n");
+					System.out.println(prettyJsonString);
+				}
+				cnt++;
+			}
+			writer.close();
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing location list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing location list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
 }

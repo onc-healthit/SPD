@@ -521,7 +521,11 @@ public class ResourceFactory {
 	public static VhDirEhr getEhr(ResultSet resultset, Connection connection ) throws SQLException {
 		VhDirEhr ehr = new VhDirEhr();
 		ehr.setId(resultset.getString("ehr_id"));
-		ehr.setUrl(new StringType("http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr"));
+		String url = resultset.getString("url");
+		if (url == null || url.isEmpty()) {
+			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr";
+		}
+		ehr.setUrl(new StringType(url));
 		ehr.setDeveloper(new StringType(resultset.getString("developer")));
 		ehr.setProduct(new StringType(resultset.getString("product")));
 		ehr.setVersion(new StringType(resultset.getString("version")));
@@ -543,7 +547,11 @@ public class ResourceFactory {
 
 	public static VhDirNewpatients getNewPatients(ResultSet resultset, Connection connection ) throws SQLException {
 		VhDirNewpatients np = new VhDirNewpatients();
-		np.setUrl(new StringType("http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients"));
+		String url = resultset.getString("url");
+		if (url == null || url.isEmpty()) {
+			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients";
+		}
+		np.setUrl(new StringType(url));
 		np.setId(resultset.getString("new_patients_id"));
 		np.setValue(new BooleanType(resultset.getBoolean("accepting_patient")));
 		// Note: the network_resource_reference_id points to a row in the resource_reference table. 
@@ -556,7 +564,11 @@ public class ResourceFactory {
 	
 	public static VhDirNewpatientprofile getNewPatientprofile(ResultSet resultset) throws SQLException {
 		VhDirNewpatientprofile np = new VhDirNewpatientprofile();
-		np.setUrl(new StringType("http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatientprofile"));
+		String url = resultset.getString("url");
+		if (url == null || url.isEmpty()) {
+			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatientprofile";
+		}
+		np.setUrl(new StringType(url));
 		np.setId(resultset.getString("new_patient_profile_id"));
 		np.setValue(new StringType(resultset.getString("profile_string")));
 		return np;

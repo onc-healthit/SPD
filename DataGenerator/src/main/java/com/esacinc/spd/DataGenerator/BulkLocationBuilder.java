@@ -48,25 +48,19 @@ public class BulkLocationBuilder {
 			// set the id
 			int locId = resultSet.getInt("location_id");
 			loc.setId(resultSet.getString("location_id"));
-			 
-			handleStatus(resultSet,loc);
 			loc.setName(resultSet.getString("name"));
 			loc.addAlias(resultSet.getString("alias"));
 			loc.setDescription(resultSet.getString("description"));
 			loc.setAddress(ResourceFactory.getAddress(resultSet.getInt("address_id"), connection));
 			loc.setPhysicalType(ResourceFactory.getCodeableConcept(resultSet.getInt("physical_type_cc_id"),connection)); 
-			
-			LocationPositionComponent pos = new LocationPositionComponent();
-			pos.setLatitude(resultSet.getDouble("latitude"));
-			pos.setLongitude(resultSet.getDouble("longitude"));
-			pos.setAltitude(resultSet.getDouble("altitude"));
-			loc.setPosition(pos);
-			
 			loc.setManagingOrganization(ResourceFactory.getResourceReference(resultSet.getInt("managing_organization_id"), connection));
 			loc.setPartOf(ResourceFactory.getResourceReference(resultSet.getInt("part_of_location_id"), connection));
-			loc.setAvailabilityExceptions(resultSet.getString("availability_exceptions"));
-			
+			loc.setAvailabilityExceptions(resultSet.getString("availability_exceptions"));	
 			loc.addLocation_boundary_geojson(new StringType(resultSet.getString("location_boundary_geojson"))); // TODO we aren't modeling these
+
+			handleStatus(resultSet,loc);
+
+			handlePosition(resultSet, loc);
 			
 			handleAccessibilities(connection, loc, locId);
 			
@@ -99,6 +93,21 @@ public class BulkLocationBuilder {
 		return locations;
 	}
 
+	/**
+	 * Handles the location position
+	 * 
+	 * @param resultSet
+	 * @param loc
+	 * @throws SQLException
+	 */
+	private void handlePosition(ResultSet resultSet, VhDirLocation loc) throws SQLException{
+		LocationPositionComponent pos = new LocationPositionComponent();
+		pos.setLatitude(resultSet.getDouble("latitude"));
+		pos.setLongitude(resultSet.getDouble("longitude"));
+		pos.setAltitude(resultSet.getDouble("altitude"));
+		loc.setPosition(pos);
+	}
+	
 	/**
 	 * Handles astatus  for Locations
 	 * 

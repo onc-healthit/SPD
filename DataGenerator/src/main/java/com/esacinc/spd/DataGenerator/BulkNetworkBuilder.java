@@ -95,7 +95,7 @@ public class BulkNetworkBuilder {
 			networks.add(nw);
 			
 		}
-		
+		System.out.println("Made " + networks.size() + " networks");
 		return networks;
 	}
 

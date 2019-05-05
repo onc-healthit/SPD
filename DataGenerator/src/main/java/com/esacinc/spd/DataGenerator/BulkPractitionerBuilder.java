@@ -116,7 +116,7 @@ public class BulkPractitionerBuilder {
 			
 			practitioners.add(prac);
 		}
-		
+		System.out.println("Made " + practitioners.size() + " practitioners");
 		return practitioners;
 	}
 

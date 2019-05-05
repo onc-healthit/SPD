@@ -148,7 +148,7 @@ public class BulkDataApp {
 			}  
 		}
 
-		System.out.println("\nFHIR Resource generation complete");
+		System.out.println("\n\nFHIR Resource generation complete");
 
 	}
 

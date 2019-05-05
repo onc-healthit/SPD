@@ -141,7 +141,7 @@ public class BulkOrganizationBuilder {
 				e.printStackTrace();
 			}
 		}
-		
+		System.out.println("Made " + organizations.size() + " organizations");
 		return organizations;
 	}
 	

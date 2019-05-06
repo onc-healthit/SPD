@@ -9,36 +9,39 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.hl7.fhir.r4.model.Address.AddressUse;
+import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Period;
-import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Location.DaysOfWeek;
-import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.TimeType;
-import org.hl7.fhir.r4.model.Address.AddressUse;
-import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
+import org.hl7.fhir.r4.model.Identifier;
+import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
+import org.hl7.fhir.r4.model.IntegerType;
+import org.hl7.fhir.r4.model.Location.DaysOfWeek;
+import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
+import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.Signature;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.TimeType;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
 
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirContactPointAvailableTime;
 import com.esacinc.spd.model.VhDirEhr;
 import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirNetworkContact;
 import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
+import com.esacinc.spd.model.VhDirPrimarySource;
 
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
@@ -425,7 +428,7 @@ public class ResourceFactory {
 		cdng.setSystem(resultset.getString("coding_system"));
 		cdng.setVersion(resultset.getString("coding_version"));
 		cdng.setDisplay(resultset.getString("coding_display"));
-		cdng.setUserSelected(resultset.getBoolean("user_selected"));
+		cdng.setUserSelected(resultset.getBoolean("coding_user_selected"));
 		cc.addCoding(cdng);
 		return cc;
 	}
@@ -587,6 +590,78 @@ public class ResourceFactory {
 		}
 		return hrs;
 	}
+	
+	public static VhDirPrimarySource getPrimarySource(ResultSet resultset, Connection connection) throws SQLException {
+		VhDirPrimarySource ps = new VhDirPrimarySource();
+		int psId = resultset.getInt("primary_source_id");
+		ps.setId(resultset.getString("primary_source_id"));
+		ps.setCanPushUpdates(getCodeableConcept(resultset.getInt("can_push_updates_cc_id"),connection));
+		if (connection != null) {
+			// Gather the communication method codeable concepts for this primary source
+			String strSql = "SELECT * FROM fhir_codeable_concept WHERE primary_source_communication_method_id = ?";
+	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+	     	sqlStatement.setInt(1, psId);
+			ResultSet sqlResultset = sqlStatement.executeQuery();
+			while(sqlResultset.next()) {
+				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
+				ps.addCommunicationMethod(cc);
+			}
+			// Gather the Availalbe Push Type codeable concepts for this primary source
+			strSql = "SELECT * FROM fhir_codeable_concept WHERE primary_source_push_type_available_id = ?";
+	     	sqlStatement = connection.prepareStatement(strSql);
+	     	sqlStatement.setInt(1, psId);
+			 sqlResultset = sqlStatement.executeQuery();
+			while(sqlResultset.next()) {
+				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
+				ps.addPushTypeAvailable(cc);
+			}
+			// Gather the  Type codeable concepts for this primary source
+			strSql = "SELECT * FROM fhir_codeable_concept WHERE primary_source_type_id = ?";
+	     	sqlStatement = connection.prepareStatement(strSql);
+	     	sqlStatement.setInt(1, psId);
+			 sqlResultset = sqlStatement.executeQuery();
+			while(sqlResultset.next()) {
+				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
+				ps.addType(cc);
+			}
+
+		}
+
+		return ps;
+	}
+
+	public static VerificationResultAttestationComponent getAttestation(ResultSet resultset, Connection connection) throws SQLException {
+		VerificationResultAttestationComponent att = new VerificationResultAttestationComponent();
+		att.setId(resultset.getString("attestation_id"));
+		att.setDate(resultset.getDate("date"));
+		att.setSourceIdentityCertificate(resultset.getString("source_identity_certificate"));
+		att.setProxyIdentityCertificate(resultset.getString("proxy_identity_certificate"));
+		Signature sig = makeSignature("signatureType", "mimeType"); // TODO signatures not modeled yet
+		//TODO Signature not modeled in db yet.sig.set
+		att.setSourceSignature(sig);
+		att.setProxySignature(sig);
+		if (connection != null) {
+			att.setWho(getResourceReference(resultset.getInt("who_resource_reference_id"),connection));
+			att.setOnBehalfOf(getResourceReference(resultset.getInt("on_behalf_of_resource_reference_id"),connection));
+			att.setCommunicationMethod(getCodeableConcept(resultset.getInt("communication_method_cc_id"),connection));
+		}
+		return att;
+		
+	}
+
+	public static VerificationResultValidatorComponent getValidator(ResultSet resultset, Connection connection) throws SQLException {
+		VerificationResultValidatorComponent validator = new VerificationResultValidatorComponent();
+		validator.setId(resultset.getString("validator_id"));
+		validator.setIdentityCertificate(resultset.getString("identity_certificate"));
+		Signature sig = makeSignature("signatureType", "mimeType"); // TODO signatures not modeled yet
+		validator.setAttestationSignature(sig);
+		if (connection != null) {
+			validator.setOrganization(getResourceReference(resultset.getInt("organization_id"),connection));
+		}
+		return validator;
+		
+	}
+
 	///////////////   MAKE METHODS  ////////////////////////////////////////////////////////////////
     // Make methods are those methods that create resources from data parameters passed into them.
 	// They are not created from data queried from the database.
@@ -701,5 +776,22 @@ public class ResourceFactory {
 
 	}
 
-
+	static public Signature makeSignature(String type, String targetFormat ) {
+		Signature sig = new Signature();
+		Date inst = new Date();
+		sig.setWhen(inst);
+		List<Coding> typeList = new ArrayList<Coding>();
+		try {
+			Coding code = makeCoding(type, type, "http://hl7.org/fhir/ValueSet/signature-type", false);
+			code.setCode(type);
+			typeList.add(code);
+		}
+		catch (Exception e) {
+			// do nothing
+		}
+		sig.setType(typeList);
+		sig.setWho(makeResourceReference("1","VhDirPractitioner",null,""));
+		sig.setTargetFormat(targetFormat);
+		return sig;
+	}
 }

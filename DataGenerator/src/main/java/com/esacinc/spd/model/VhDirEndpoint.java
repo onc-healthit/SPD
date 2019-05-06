@@ -12,7 +12,7 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 
-@DatatypeDef(name="Endpoint")
+@DatatypeDef(name="vhdir-endpoint")
 public class VhDirEndpoint extends Endpoint {
 	private static final long serialVersionUID = 1L;
 

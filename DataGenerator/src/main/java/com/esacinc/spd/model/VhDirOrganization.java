@@ -20,7 +20,7 @@ import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
 import ca.uhn.fhir.util.ElementUtil;
 
-@ResourceDef(name="Organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization")
+@ResourceDef(name="vhdir-organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization")
 public class VhDirOrganization extends DomainResource {
 	private static final long serialVersionUID = 1L;
     

@@ -18,7 +18,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
 */
 
-@ResourceDef(name="Location", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location")
+@ResourceDef(name="vhdir-location", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location")
 public class VhDirLocation extends Location { 
 	private static final long serialVersionUID = 1L;
     

@@ -33,7 +33,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
 */
 
-@ResourceDef(name="Practitioner", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-Practitioner")
+@ResourceDef(name="vhdir-practitioner", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-Practitioner")
 public class VhDirPractitioner extends Practitioner { 
 	private static final long serialVersionUID = 1L;
     

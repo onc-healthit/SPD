@@ -9,10 +9,13 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
+
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
+import com.esacinc.spd.model.VhDirValidation;
 import com.esacinc.spd.util.Geocoding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -43,7 +46,8 @@ public class BulkDataApp {
 	private static boolean DO_ORGANIZATIONS = false;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
-	private static boolean DO_LOCATIONS = true;
+	private static boolean DO_LOCATIONS = false;
+	private static boolean DO_VALIDATIONS = true;
 	
 	private static int MAX_ENTRIES = -1;  // Control how many entries we process in each section and output. -1 means ALL.
 	
@@ -51,7 +55,7 @@ public class BulkDataApp {
 		Connection connection = null;
 		
 		// Testing some geocode stuff.
-		if (!DO_ORGANIZATIONS && !DO_PRACTITIONERS && !DO_NETWORKS && !DO_LOCATIONS)
+		if (!DO_ORGANIZATIONS && !DO_PRACTITIONERS && !DO_NETWORKS && !DO_LOCATIONS && !DO_VALIDATIONS)
 		{
 			try {
 				Geocoding.geocodePostalCode("46224", null); // We know this is valid;
@@ -137,6 +141,24 @@ public class BulkDataApp {
 				BulkLocationBuilder locBuilder = new BulkLocationBuilder();
 				List<VhDirLocation> locations = locBuilder.getLocations(connection);
 				outputLocationList(locations, "Locations.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
+
+		if (DO_VALIDATIONS) {
+			try{
+				// Get and write Validations
+				System.out.println("Generate Validation resources...");
+				BulkValidationBuilder valBuilder = new BulkValidationBuilder();
+				List<VhDirValidation> validations = valBuilder.getValidations(connection);
+				outputValidationList(validations, "Validations.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -299,6 +321,46 @@ public class BulkDataApp {
 		}
 		catch (NullPointerException e) {
 			System.err.println("NULL POINTER EXCEPTION writing location list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputValidationList(List<VhDirValidation>validations, String filename, int prettyPrintNth) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			for (VhDirValidation val : validations) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+				VerificationResultAttestationComponent att = val.getAttestation();
+				
+				String nwJson = jsonParser.encodeResourceToString(val);
+				writer.write(nwJson);
+				writer.write("\n");
+				
+				// String above is appropriate for ndjson output but for now here is a pretty version
+				if (cnt == prettyPrintNth) {
+					Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					JsonParser jp = new JsonParser();
+					JsonElement je = jp.parse(nwJson);
+					String prettyJsonString = gson.toJson(je);
+					System.out.println("\n------------------------------- VALIDATION ------------------------------------\n");
+					System.out.println(prettyJsonString);
+				}
+				cnt++;
+			}
+			writer.close();
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing validation list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing validation list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

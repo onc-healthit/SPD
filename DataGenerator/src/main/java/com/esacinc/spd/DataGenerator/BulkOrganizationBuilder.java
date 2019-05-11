@@ -271,7 +271,7 @@ public class BulkOrganizationBuilder {
 	}
 
 	/**
-	 * Handle the restrictions associated with the organization 
+	 * Handle the endpoint references associated with the organization 
 	 * @param connection
 	 * @param org
 	 * @param orgId
@@ -281,7 +281,7 @@ public class BulkOrganizationBuilder {
         ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_endpoint where organization_id = ?", orgId);
 		while(resultset.next()) {
 			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("endpoint_id"), "VhDirEndpoint", null, "Organization Endpoint");
-			//org.addEndpoint(ref);  /TODO add endpoints to VhDirOrganization
+			org.addEndpoint(ref);  
 		}
 	}
 

@@ -105,6 +105,14 @@ public class VhDirOrganization extends DomainResource {
     @Description(shortDefinition="The organization of which this organization forms a part", formalDefinition="The organization of which this organization forms a part." )
     protected Reference partOf;
 
+	/**
+	 * Add the endpoint for the organization
+	 */
+	@Child(name="endpoint", type = {Reference.class}, order=12, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/reference", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Technical endpoints providing access to services operated for the organization")
+	private List<Reference> endpoint;
+
     /**
      * The actual object that is the target of the reference (The organization of which this organization forms a part.)
      */
@@ -523,6 +531,23 @@ public class VhDirOrganization extends DomainResource {
       this.contact.add(t);
       return this;
     }
+
+	public List<Reference> getEndpoint() {
+		return endpoint;
+	}
+
+	public void setEndpoint(List<Reference> val) {
+		this.endpoint = val;
+	}
+	
+	public VhDirOrganization addEndpoint(Reference t) {
+	    if (t == null)
+	      return this;
+	    if (this.endpoint == null)
+	      this.endpoint = new ArrayList<Reference>();
+	    this.endpoint.add(t);
+	    return this;
+	}
 
     /**
      * @return The first repetition of repeating field {@link #contact}, creating it if it does not already exist

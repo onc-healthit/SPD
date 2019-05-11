@@ -18,12 +18,18 @@ import com.esacinc.spd.model.VhDirContactPointAvailableTime;
 import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirNetworkContact;
 
+/**
+ * This class has static public methods for return various forms of contacts or contactpoints from the database.
+ * Examples:  ContactPoint, Network contact, Telecom, Endpoint contact.
+ * While all of these have many common elements, they also have some slight differences in them.
+ * 
+ * @author dandonahue
+ *
+ */
 public class ContactFactory {
 
 	
 	public ContactFactory() { }
-
-
 
 	/**
 	 * Creates a VhDirContactPoint from the data pointed to by the current cursor in the given database query result set.
@@ -108,7 +114,13 @@ public class ContactFactory {
 		return con;
 	}
 
-	
+	/**
+	 * Get a VhDirContactPoint specific to and Endpoint contact
+	 * @param resultset
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
 	static public VhDirContactPoint getEndpointContact(ResultSet resultset, Connection connection) throws SQLException {
 		VhDirContactPoint contact = getContactPoint(resultset);
 		contact.setId(resultset.getString("endpoint_contact_id"));

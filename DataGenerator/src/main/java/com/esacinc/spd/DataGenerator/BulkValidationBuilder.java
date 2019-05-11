@@ -16,6 +16,7 @@ import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorCompo
 
 import com.esacinc.spd.model.VhDirPrimarySource;
 import com.esacinc.spd.model.VhDirValidation;
+import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkValidationBuilder {
@@ -33,9 +34,7 @@ public class BulkValidationBuilder {
 	public List<VhDirValidation> getValidations(Connection connection) throws SQLException, ParseException {
 		List<VhDirValidation> validations = new ArrayList<VhDirValidation>();
 		
-		String sql = "SELECT * FROM vhdir_validation";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
+	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_validation", null);
 		while (resultSet.next()) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirValidation val = new VhDirValidation();
@@ -100,10 +99,7 @@ public class BulkValidationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleValidationProcesses(Connection connection, VhDirValidation val, int valId) throws SQLException {
-		String strSql = "SELECT * from fhir_codeable_concept where validation_process_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, valId);
-		ResultSet resultset = sqlStatement.executeQuery();
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from fhir_codeable_concept where validation_process_id = ?", valId);
 		while(resultset.next()) {
 			CodeableConcept cc = ResourceFactory.getCodeableConcept(resultset);
 			val.addValidationProcess(cc);
@@ -134,10 +130,7 @@ public class BulkValidationBuilder {
 	 * @throws SQLException
 	 */
 	private void handlePrimarySources(Connection connection, VhDirValidation val, int valId) throws SQLException {
-		String strSql = "SELECT * from primary_source where validation_status_cc_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, valId);
-		ResultSet resultset = sqlStatement.executeQuery();
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from primary_source where validation_status_cc_id = ?", valId);
 		while(resultset.next()) {
 			VhDirPrimarySource ps = ResourceFactory.getPrimarySource(resultset,connection);
 			val.addPrimarySource(ps);
@@ -153,10 +146,7 @@ public class BulkValidationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAttestation(Connection connection, ResultSet resultset,  VhDirValidation val) throws SQLException {
-		String strSql = "SELECT * from attestation where attestation_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, resultset.getInt("attestation_id"));
-		ResultSet attset = sqlStatement.executeQuery();
+	    ResultSet attset = DatabaseUtil.runQuery(connection, "SELECT * from attestation where attestation_id = ?", resultset.getInt("attestation_id"));
 		while(attset.next()) {
 			VerificationResultAttestationComponent att = ResourceFactory.getAttestation(attset, connection);
 			val.setAttestation(att);
@@ -173,10 +163,7 @@ public class BulkValidationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleValidators(Connection connection, ResultSet resultset,  VhDirValidation val) throws SQLException {
-		String strSql = "SELECT * from validator where validation_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, resultset.getInt("validation_id"));
-		ResultSet valset = sqlStatement.executeQuery();
+	    ResultSet valset = DatabaseUtil.runQuery(connection, "SELECT * from validator where validation_id = ?", resultset.getInt("validation_id"));
 		while(valset.next()) {
 			VerificationResultValidatorComponent validator = ResourceFactory.getValidator(valset, connection);
 			val.addValidator(validator);

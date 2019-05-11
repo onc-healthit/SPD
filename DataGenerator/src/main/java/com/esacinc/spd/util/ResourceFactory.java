@@ -11,10 +11,8 @@ import java.util.Random;
 
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.BooleanType;
-import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
@@ -27,18 +25,16 @@ import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Signature;
 import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.TimeType;
+import org.hl7.fhir.r4.model.UriType;
 import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
 import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
 
 import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirContactPoint;
-import com.esacinc.spd.model.VhDirContactPointAvailableTime;
 import com.esacinc.spd.model.VhDirEhr;
 import com.esacinc.spd.model.VhDirEndpoint;
+import com.esacinc.spd.model.VhDirEndpointUseCase;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
-import com.esacinc.spd.model.VhDirNetworkContact;
 import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
 import com.esacinc.spd.model.VhDirPrimarySource;
@@ -66,10 +62,7 @@ public class ResourceFactory {
 	 */
 	static public Reference getResourceReference(int refId, Connection connection) throws SQLException{
 		Reference ref = new Reference();
-		String sqlString = "SELECT * from resource_reference where resource_reference_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(sqlString);
-		sqlStatement.setInt(1,refId);
-		ResultSet refs = sqlStatement.executeQuery();
+		ResultSet refs = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where resource_reference_id = ?", refId);
 		while(refs.next()) {
 			ref.setId(refs.getString(refId));
 			ref.setDisplay(refs.getString("display"));
@@ -97,9 +90,9 @@ public class ResourceFactory {
 		String sqlString = "SELECT * from videntifier where ridentifier_id = ?";
 		PreparedStatement sqlStatement = connection.prepareStatement(sqlString);
 		sqlStatement.setInt(1,identifierId);
-		ResultSet idResultset = sqlStatement.executeQuery();
-		while(idResultset.next()) {
-			identifier = getIdentifier(idResultset);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from videntifier where ridentifier_id = ?", identifierId);
+		while(resultset.next()) {
+			identifier = getIdentifier(resultset);
 			return identifier; // There should only be one 
 		}
 		return null;  // If we get here, there was no identifier with that id
@@ -163,12 +156,9 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public VhDirAddress getAddress(int addrId, Connection connection) throws SQLException{
-		String addrSql = "SELECT * from address where address_id = ?";
-		PreparedStatement addrStatement = connection.prepareStatement(addrSql);
-		addrStatement.setInt(1, addrId);
-		ResultSet addrResultset = addrStatement.executeQuery();
-		while(addrResultset.next()) {
-			VhDirAddress addr = getAddress(addrResultset, connection);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where address_id = ?", addrId);
+		while(resultset.next()) {
+			VhDirAddress addr = getAddress(resultset, connection);
 			return addr;
 		}	
 		return null;  // If we get here, there was no identifier with that id
@@ -255,77 +245,16 @@ public class ResourceFactory {
 	
 
 	/**
-	 * Creates a VhDirContactPoint from the identifier with the given identifierId in the database
-	 * Note:  We create VhDirContactPoint objects from rows in the database telecom table
-	 * @param addrId
-	 * @param connection
-	 * @return VhDirAddress
-	 * @throws SQLException
-	 */
-	static public VhDirContactPoint getContactPoint(int contactId, Connection connection) throws SQLException{
-		String contactSql = "SELECT * from telecom where telecom_id = ?";
-		PreparedStatement contactStatement = connection.prepareStatement(contactSql);
-		contactStatement.setInt(1, contactId);
-		ResultSet contactResultset = contactStatement.executeQuery();
-		while(contactResultset.next()) {
-			VhDirContactPoint contactPoint = getContactPoint(contactResultset);
-			return contactPoint;
-		}	
-		return null;  // If we get here, there was no contactpoint with that id
-	}
-
-	/**
-	 * Creates a VhDirContactPoint from the data pointed to by the current cursor in the given database query result set.
-	 * This assumes that the ResultSet argument is the result from a "Select * from telecom ...." sql statement 
-	 * @param addrResultset
-	 * @return VhDirContactPoint
-	 * @throws SQLException
-	 */
-	static public VhDirContactPoint getContactPoint(ResultSet objResultset) throws SQLException{
-		VhDirContactPoint contactPoint = new VhDirContactPoint();
-		// Set id
-		contactPoint.setId(objResultset.getString("telecom_id"));
-		
-		// Set system
-		String system = objResultset.getString("system");
-		if (system == null)
-			contactPoint.setSystem(ContactPointSystem.NULL);
-		else if ("email".equals(system))
-			contactPoint.setSystem(ContactPointSystem.EMAIL);
-		else if ("fax".equals(system))
-			contactPoint.setSystem(ContactPointSystem.FAX);
-		else if ("other".equals(system))
-			contactPoint.setSystem(ContactPointSystem.OTHER);
-		else if ("pager".equals(system))
-			contactPoint.setSystem(ContactPointSystem.PAGER);
-		else if ("phone".equals(system))
-			contactPoint.setSystem(ContactPointSystem.PHONE);
-		else if ("sms".equals(system))
-			contactPoint.setSystem(ContactPointSystem.SMS);
-		else if ("url".equals(system))
-			contactPoint.setSystem(ContactPointSystem.URL);
-		
-		// Set value
-		String value = objResultset.getString("value");
-		if (value != null)
-			contactPoint.setValue(value);
-		return contactPoint;
-	}
-
-	/**
 	 * Creates a HumanName resource from data in the name table of the database with the given name_id
 	 * @param name_id
 	 * @param connection
 	 * @return HumanName
 	 * @throws SQLException
 	 */
-	static public HumanName getHumanName(int name_id, Connection connection) throws SQLException{
-		String strSql = "SELECT * from name where name_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, name_id);
-		ResultSet names = sqlStatement.executeQuery();
-		while(names.next()) {
-			return getHumanName(names);  // We expect only one.
+	static public HumanName getHumanName(int nameId, Connection connection) throws SQLException{
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from name where name_id = ?", nameId);
+		while(resultset.next()) {
+			return getHumanName(resultset);  // We expect only one.
 		}
 		return null; // If we get here, there was no name with that id
 	}
@@ -368,13 +297,10 @@ public class ResourceFactory {
 		CodeableConcept comm_cc = new CodeableConcept(); // To hold all the codings
 		comm_cc.setId(commId);
 		// Now get all the codes belonging to this communication
-		String codingSql = "SELECT * from fhir_codeable_concept where communication_id = ?";
-		PreparedStatement codeStatement = connection.prepareStatement(codingSql);
-		codeStatement.setString(1, commId);
-		ResultSet codes = codeStatement.executeQuery();
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from fhir_codeable_concept where communication_id = ?", Integer.getInteger(commId));
 		// Then for each code, above, add to the codeable concept
-		while(codes.next()) {
-			Coding coding = ResourceFactory.getCommunicationProficiencyCodes(codes);
+		while(resultset.next()) {
+			Coding coding = ResourceFactory.getCommunicationProficiencyCodes(resultset);
 			comm_cc.addCoding(coding);
 		}
 		return comm_cc;
@@ -441,13 +367,10 @@ public class ResourceFactory {
 	 * @return
 	 * @throws SQLException
 	 */
-	static public CodeableConcept getCodeableConcept(int concept_id, Connection connection) throws SQLException{
-		String codingSql = "SELECT * from fhir_codeable_concept where codeable_concept_id = ?";
-		PreparedStatement codeStatement = connection.prepareStatement(codingSql);
-		codeStatement.setInt(1, concept_id);
-		ResultSet codes = codeStatement.executeQuery();
-		while(codes.next()) {
-			return getCodeableConcept(codes); // We only expect one with this query
+	static public CodeableConcept getCodeableConcept(int conceptId, Connection connection) throws SQLException{
+		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from fhir_codeable_concept where codeable_concept_id = ?", conceptId);
+		while(resultset.next()) {
+			return getCodeableConcept(resultset); // We only expect one with this query
 		}
 		return null;  // If we get here, there was no cc found.
 	}
@@ -473,15 +396,11 @@ public class ResourceFactory {
 			String strSql = "SELECT * FROM fhir_codeable_concept WHERE endpoint_payload_type_id = ?";
 	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
 	     	sqlStatement.setInt(1, Integer.valueOf(ep.getId()));
-			ResultSet sqlResultset = sqlStatement.executeQuery();
+			ResultSet sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE endpoint_payload_type_id = ?", Integer.valueOf(ep.getId()));
 			while(sqlResultset.next()) {
 				ep.addPayloadType(getCodeableConcept(sqlResultset));
 			}
-
-			strSql = "SELECT * FROM fhir_restriction WHERE endpoint_id = ?";
-			sqlStatement = connection.prepareStatement(strSql);
-			sqlStatement.setInt(1, Integer.valueOf(ep.getId()));
-			sqlResultset = sqlStatement.executeQuery();
+			sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_restriction WHERE endpoint_id = ?", Integer.valueOf(ep.getId()));
 			while(sqlResultset.next()) {
 				ep.addUsageRestriction(getRestrictionReference(sqlResultset));
 			}
@@ -491,35 +410,26 @@ public class ResourceFactory {
 	}
 
 	/**
-	 * Creates a VhDirNetworkContact resource from the data in the given resultset at the current cursor location.
-	 * Connection is needed to retrieve further data from other tables to populate the contact info
-	 * @param resultset
+	 * Return a VhDirEndpointUseCase from data in a row in the use_case table
+	 * @param ucId
 	 * @param connection
 	 * @return
 	 * @throws SQLException
 	 */
-	static public VhDirNetworkContact getNetworkContact(ResultSet resultset, Connection connection) throws SQLException{
-		VhDirNetworkContact con = new VhDirNetworkContact();
-		con.setId(resultset.getString("contact_id"));
-		con.setPurpose(getCodeableConcept(resultset.getInt("purpose_id"),connection));
-		con.setName(getHumanName(resultset.getInt("name_id"),connection));
-		if (connection != null) {
-			// Gather the telecoms for this netowrk contact
-			String strSql = "SELECT * FROM telecom WHERE organization_contact_id = ?";
-	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-	     	sqlStatement.setInt(1, resultset.getInt("name_id"));
-			ResultSet sqlResultset = sqlStatement.executeQuery();
-			while(sqlResultset.next()) {
-				VhDirContactPoint tele = ResourceFactory.getContactPoint(sqlResultset);
-				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
-				con.addTelecom(tele);
-			}
-			// Get the address for this contact
-			con.setAddress(getAddress(resultset.getInt("address_id"),connection));
+	static public VhDirEndpointUseCase getEndpointUseCase(String ucId, Connection connection) throws SQLException {
+		VhDirEndpointUseCase uc = new VhDirEndpointUseCase(); //
+		uc.setId(ucId);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from use_case where use_case_id = ?", Integer.valueOf(ucId)); 
+		while(resultset.next()) {
+			uc.setCaseType(getCodeableConcept(resultset.getInt("type_cc_id"),connection));
+			uc.setStandard(new UriType(resultset.getString("standard")));
+			// uc.setUrl (Url is handled automatically in the class definition)
+			break; // We are expecting only one.
 		}
-		return con;
+		return uc;
 	}
+
+	
 
 	public static VhDirEhr getEhr(ResultSet resultset, Connection connection ) throws SQLException {
 		VhDirEhr ehr = new VhDirEhr();
@@ -536,10 +446,7 @@ public class ResourceFactory {
 		ehr.setCertificationID(new StringType(resultset.getString("certification_id")));
 		if (connection != null) {
 			// Gather the patient access codeable concepts for this ehr
-			String strSql = "SELECT * FROM fhir_codeable_concept WHERE ehr_patient_access_id = ?";
-	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-	     	sqlStatement.setInt(1, resultset.getInt("ehr_id"));
-			ResultSet sqlResultset = sqlStatement.executeQuery();
+			ResultSet sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE ehr_patient_access_id = ?",resultset.getInt("ehr_id"));
 			while(sqlResultset.next()) {
 				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
 				ehr.addPatientAccess(cc);
@@ -583,8 +490,8 @@ public class ResourceFactory {
 		hrs.setAllDay(resultset.getBoolean("all_day"));
 		hrs.setOpeningTime(resultset.getString("available_start_time"));
 		hrs.setClosingTime(resultset.getString("available_end_time"));
-		String dowStr = resultset.getString("days_of_week");
-		String[] dow = dowStr.split("|");
+		String dowStr = resultset.getString("days_of_week"); // assume value is a semicolon-delimited list of days of the week.
+		String[] dow = dowStr.split(";");
 		for (String d : dow) {
 			hrs.addDaysOfWeek(DaysOfWeek.fromCode(d));
 		}
@@ -598,28 +505,19 @@ public class ResourceFactory {
 		ps.setCanPushUpdates(getCodeableConcept(resultset.getInt("can_push_updates_cc_id"),connection));
 		if (connection != null) {
 			// Gather the communication method codeable concepts for this primary source
-			String strSql = "SELECT * FROM fhir_codeable_concept WHERE primary_source_communication_method_id = ?";
-	     	PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-	     	sqlStatement.setInt(1, psId);
-			ResultSet sqlResultset = sqlStatement.executeQuery();
+			ResultSet sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE primary_source_communication_method_id = ?",psId);
 			while(sqlResultset.next()) {
 				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
 				ps.addCommunicationMethod(cc);
 			}
 			// Gather the Availalbe Push Type codeable concepts for this primary source
-			strSql = "SELECT * FROM fhir_codeable_concept WHERE primary_source_push_type_available_id = ?";
-	     	sqlStatement = connection.prepareStatement(strSql);
-	     	sqlStatement.setInt(1, psId);
-			 sqlResultset = sqlStatement.executeQuery();
+  		    sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE primary_source_push_type_available_id = ?",psId);
 			while(sqlResultset.next()) {
 				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
 				ps.addPushTypeAvailable(cc);
 			}
 			// Gather the  Type codeable concepts for this primary source
-			strSql = "SELECT * FROM fhir_codeable_concept WHERE primary_source_type_id = ?";
-	     	sqlStatement = connection.prepareStatement(strSql);
-	     	sqlStatement.setInt(1, psId);
-			 sqlResultset = sqlStatement.executeQuery();
+  		    sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE primary_source_type_id = ?",psId);
 			while(sqlResultset.next()) {
 				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
 				ps.addType(cc);
@@ -722,37 +620,6 @@ public class ResourceFactory {
 		return per;
 	}
 
-	/**
-	 * Generate an availableTime object from the given parameters
-	 * @param daysString, semicolon delimited string of 3-letter day names, e.g.  "mon;tue;wed;thu;fri"
-	 * @param allDay  true if this available time is all day
-	 * @param startTime if allday is false, start time, e.g. "08:00:00"
-	 * @param endTime if allday is false, start time, e.g. "17:00:00"
-	 * @return VhDirContactPointAvailableTime
-	 */
-	static public VhDirContactPointAvailableTime makeAvailableTime(String daysString, boolean allDay, String startTime, String endTime) {
-		// Set some available time - for organizations make it all day 7 days a week
-		VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
-		CodeType dayCode = null;
-		String[] days = daysString.split(";");
-		for (String d : days) {
-			dayCode = new CodeType();
-			dayCode.setSystem("http://hl7.org/fhir/days-of-week");
-			dayCode.setValue(d);
-			available.addDaysOfWeek(dayCode);
-		}
-		available.setAllDay(allDay);
-		if (!allDay) {
-			TimeType start = new TimeType();
-			start.setValue("08:00:00");
-			available.setAvailableStartTime(start);
-			TimeType end = new TimeType();
-			end.setValue("17:00:00");
-			available.setAvailableEndTime(end);
-		}
-		return available;	
-	}
-	
 
 	/**
 	 * Return a totally made up codeable concept object representing a Communication proficiency code.

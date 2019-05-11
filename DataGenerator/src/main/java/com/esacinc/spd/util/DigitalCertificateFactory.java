@@ -121,13 +121,25 @@ public class DigitalCertificateFactory {
 		cert.setType(ResourceFactory.makeCoding(type,  type, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setUse(ResourceFactory.makeCoding(use,  use, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setCertificateStandard(ResourceFactory.makeCoding(standard,  standard, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-		cert.setExpirationDate(expiration);
 		cert.setCertificate(getNthCert(nth));
 		CodeableConcept certTrust = new CodeableConcept();
 		certTrust.addCoding(ResourceFactory.makeCoding(trustFramework,  trustFramework, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setTrustFramework(certTrust);
 
+		if (expiration == null) {
+			// No expiration date provided. Just use one year from now.
+			Date expire = new Date();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(expire);
+			cal.add(Calendar.YEAR, 1);
+			expiration = cal.getTime();
+		}
+		cert.setExpirationDate(expiration);
+		
 		return cert;
 	}
+
+
+
 
 }

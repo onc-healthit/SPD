@@ -9,13 +9,16 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import org.hl7.fhir.r4.model.Endpoint;
 import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
 
+import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.model.VhDirValidation;
+import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.Geocoding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,35 +30,33 @@ import ca.uhn.fhir.parser.IParser;
 
 public class BulkDataApp {
 
-	// Database credentials...
-	public static String dbUsername = "spduser";
-	public static String dbPassword = "SpdUs3r45";
-	
-	// Which schema to read data from....
-
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_scrubbed";
-	public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small_scrubbed";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium_scrubbed";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_large";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_larged_scrubbed";
+	// Database connection and querying are handled in DatabaseUtils.java
 	
 	// Which VhDir resources to generate...
+	private static boolean DO_ALL = true;  
 	private static boolean DO_ORGANIZATIONS = false;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
-	private static boolean DO_VALIDATIONS = true;
+	private static boolean DO_VALIDATIONS = false;
+	private static boolean DO_ENDPOINTS = true;
+	private static boolean DO_GEOTEST = false;
+
+	// Which VhDir resource files to generate...
+	private static String FILE_ORGANIZATIONS = "Organization.ndjson";
+	private static String FILE_PRACTITIONERS = "Practitioner.ndjson";
+	private static String FILE_NETWORKS = "Network.ndjson";
+	private static String FILE_LOCATIONS = "Location.ndjson";
+	private static String FILE_VALIDATIONS = "Validation.ndjson";
+	private static String FILE_ENDPOINTS = "Endpoint.ndjson";
+
+	// Control how many entries we process in each section and output. -1 means ALL.
+	private static int MAX_ENTRIES = -1;  
 	
-	private static int MAX_ENTRIES = -1;  // Control how many entries we process in each section and output. -1 means ALL.
-	
-	public static void main(String[] args) {		
-		Connection connection = null;
+	public static void main(String[] args) {
 		
 		// Testing some geocode stuff.
-		if (!DO_ORGANIZATIONS && !DO_PRACTITIONERS && !DO_NETWORKS && !DO_LOCATIONS && !DO_VALIDATIONS)
+		if (DO_GEOTEST)
 		{
 			try {
 				Geocoding.geocodePostalCode("46224", null); // We know this is valid;
@@ -67,28 +68,20 @@ public class BulkDataApp {
 			}
 		}
 		
-		// Connect to the DB
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(BulkDataApp.connectionUrl,	BulkDataApp.dbUsername, BulkDataApp.dbPassword);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.err.println("\nFHIR Resource generation terminated with connection error");
-			e.printStackTrace();
+		// Open a connection to the database that we will use throughout.
+		Connection connection = DatabaseUtil.getConnection();
+		if (connection == null) {
 			return;
-		} catch (ClassNotFoundException e) {
-			System.err.println("\nFHIR Resource generation terminated, mysql driver not found");
-			e.printStackTrace();
-			return;
-		} 
+		}
 		
-		if (DO_ORGANIZATIONS) {
+		
+		if (DO_ALL || DO_ORGANIZATIONS) {
 			try{
 				// Get and write Organizations
 				System.out.println("Generate Organization resources...");
 				BulkOrganizationBuilder orgBuilder = new BulkOrganizationBuilder();
 				List<VhDirOrganization> organizations = orgBuilder.getOrganizations(connection);
-				outputOrganizationList(organizations, "Organization.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
+				outputOrganizationList(organizations, FILE_ORGANIZATIONS,0);  // last arg indicates prettyPrint nth org. Use -1 to skip
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -100,14 +93,14 @@ public class BulkDataApp {
 			}  
 		}
 		
-		if (DO_PRACTITIONERS) {
+		if (DO_ALL || DO_PRACTITIONERS) {
 			try {
 				// Get and write Practitioners
 				System.out.println("Generate Practitioner resources...");
 	
 				BulkPractitionerBuilder pracBuilder = new BulkPractitionerBuilder();
 				List<VhDirPractitioner> practitioners = pracBuilder.getPractitioners(connection);
-				outputPractitionerList(practitioners, "Practitioner.ndjson", 0); // last arg indicates prettyPrint nth prac. Use -1 to skip
+				outputPractitionerList(practitioners, FILE_PRACTITIONERS, 0); // last arg indicates prettyPrint nth prac. Use -1 to skip
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -117,14 +110,14 @@ public class BulkDataApp {
 			} 			
 		}
 		
-		if (DO_NETWORKS) {
+		if (DO_ALL || DO_NETWORKS) {
 			try {
 				// Get and write Networks
 				System.out.println("Generate Network resources...");
 	
 				BulkNetworkBuilder nwBuilder = new BulkNetworkBuilder();
 				List<VhDirNetwork> networks = nwBuilder.getNetworks(connection);
-				outputNetworkList(networks, "Network.ndjson", 0); // last arg indicates prettyPrint nth network. Use -1 to skip
+				outputNetworkList(networks, FILE_NETWORKS, 0); // last arg indicates prettyPrint nth network. Use -1 to skip
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -134,13 +127,13 @@ public class BulkDataApp {
 			} 			
 		}
 
-		if (DO_LOCATIONS) {
+		if (DO_ALL || DO_LOCATIONS) {
 			try{
 				// Get and write Locations
 				System.out.println("Generate Location resources...");
 				BulkLocationBuilder locBuilder = new BulkLocationBuilder();
 				List<VhDirLocation> locations = locBuilder.getLocations(connection);
-				outputLocationList(locations, "Locations.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
+				outputLocationList(locations, FILE_LOCATIONS,0);  // last arg indicates prettyPrint nth org. Use -1 to skip
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -152,13 +145,31 @@ public class BulkDataApp {
 			}  
 		}
 
-		if (DO_VALIDATIONS) {
+		if (DO_ALL || DO_VALIDATIONS) {
 			try{
 				// Get and write Validations
 				System.out.println("Generate Validation resources...");
 				BulkValidationBuilder valBuilder = new BulkValidationBuilder();
 				List<VhDirValidation> validations = valBuilder.getValidations(connection);
-				outputValidationList(validations, "Validations.ndjson",0);  // last arg indicates prettyPrint nth org. Use -1 to skip
+				outputValidationList(validations, FILE_VALIDATIONS,0);  // last arg indicates prettyPrint nth org. Use -1 to skip
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}
+
+		if (DO_ALL || DO_ENDPOINTS) {
+			try{
+				// Get and write Endpoints
+				System.out.println("Generate Endpoint resources...");
+				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
+				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
+				outputEndpointList(endpoints, FILE_ENDPOINTS,0);  // last arg indicates prettyPrint nth org. Use -1 to skip
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -336,7 +347,6 @@ public class BulkDataApp {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
 					break;
 				}
-				VerificationResultAttestationComponent att = val.getAttestation();
 				
 				String nwJson = jsonParser.encodeResourceToString(val);
 				writer.write(nwJson);
@@ -361,6 +371,45 @@ public class BulkDataApp {
 		}
 		catch (NullPointerException e) {
 			System.err.println("NULL POINTER EXCEPTION writing validation list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputEndpointList(List<VhDirEndpoint>endpoints, String filename, int prettyPrintNth) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			for (VhDirEndpoint ep : endpoints) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+				
+				String nwJson = jsonParser.encodeResourceToString(ep);
+				writer.write(nwJson);
+				writer.write("\n");
+				
+				// String above is appropriate for ndjson output but for now here is a pretty version
+				if (cnt == prettyPrintNth) {
+					Gson gson = new GsonBuilder().setPrettyPrinting().create();
+					JsonParser jp = new JsonParser();
+					JsonElement je = jp.parse(nwJson);
+					String prettyJsonString = gson.toJson(je);
+					System.out.println("\n------------------------------- ENDPOINT ------------------------------------\n");
+					System.out.println(prettyJsonString);
+				}
+				cnt++;
+			}
+			writer.close();
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing endpoint list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing endpoint list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

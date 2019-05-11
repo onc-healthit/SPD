@@ -39,6 +39,8 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.util.ContactFactory;
+import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
 import com.esacinc.spd.util.Geocoding;
 import com.esacinc.spd.util.ResourceFactory;
@@ -63,9 +65,7 @@ public class BulkOrganizationBuilder {
 		List<VhDirOrganization> organizations = new ArrayList<VhDirOrganization>();
 		
 		int certCount = 0;
-		String sql = "SELECT * FROM vhdir_organization";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization", null);
 		while (resultSet.next()) {
 			VhDirOrganization org = new VhDirOrganization();
 			try {
@@ -81,13 +81,8 @@ public class BulkOrganizationBuilder {
 			
 			// Add a digital certificate to the first 3 organizations
 			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
-				// Figure the date one year from now, use that as an expiration date
-				Date expire = new Date();
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(expire);
-				cal.add(Calendar.YEAR, 1);
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-				org.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", cal.getTime()));
+				org.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", null));
 			}
 						
 			// Handle the identifiers
@@ -154,12 +149,9 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleIdentifiers(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String idSql = "SELECT * from identifier where organization_id = ?";
-		PreparedStatement idStatement = connection.prepareStatement(idSql);
-		idStatement.setInt(1, orgId);
-		ResultSet idResultset = idStatement.executeQuery();
-		while(idResultset.next()) {
-				VhDirIdentifier identifier = ResourceFactory.getIdentifier(idResultset);
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from identifier where organization_id = ?", orgId);
+		while(resultset.next()) {
+				VhDirIdentifier identifier = ResourceFactory.getIdentifier(resultset);
 				org.addIdentifier(identifier);
 		}
 	}
@@ -173,15 +165,10 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String addrSql = "SELECT * from address where organization_id = ?";
-		PreparedStatement addrStatement = connection.prepareStatement(addrSql);
-		addrStatement.setInt(1, orgId);
-		ResultSet addrResultset = addrStatement.executeQuery();
-		while(addrResultset.next()) {
-			while(addrResultset.next()) {
-				VhDirAddress addr = ResourceFactory.getAddress(addrResultset, connection);
-				org.addAddress(addr);
-			}
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where organization_id = ?", orgId);
+		while(resultset.next()) {
+			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
+			org.addAddress(addr);
 		}
 	}
 	
@@ -194,14 +181,12 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleTelecoms(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String addrSql = "SELECT * from telecom where organization_id = ?";
-		PreparedStatement telecomStatement = connection.prepareStatement(addrSql);
-		telecomStatement.setInt(1, orgId);
-		ResultSet telecomResultset = telecomStatement.executeQuery();
-		while(telecomResultset.next()) {
-			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where organization_id = ?", orgId);
+		while(resultset.next()) {
+			VhDirContactPoint tele = ContactFactory.getContactPoint(resultset);
+			tele.setId(resultset.getString("telecom_id"));
 			// Add a 24x7 available time for this telecom contact point
-			tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat;sun", true, null, null));
+			tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat;sun", true, null, null));
 			org.addTelecom(tele);
 		}
 	}
@@ -215,60 +200,21 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleContacts(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String contactSql = "SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, " +
+     	ResultSet resultset = DatabaseUtil.runQuery(connection, 
+     			"SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, n.period_start, n.period_end, " +
 				"oc.organization_contact_id " +
      			"FROM name as n, organization_contact as oc " +
-     			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?";
-     	PreparedStatement contactStatement = connection.prepareStatement(contactSql);
-     	contactStatement.setInt(1, orgId);
-		ResultSet contactResultset = contactStatement.executeQuery();
-		while(contactResultset.next()) {
+     			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?", 
+     			orgId);
+		while(resultset.next()) {
 			OrganizationContactComponent occ = new OrganizationContactComponent();
 			
 			// Set id
-			int orgContactId = contactResultset.getInt("organization_contact_id");
-			occ.setId(contactResultset.getString("organization_contact_id"));
+			int orgContactId = resultset.getInt("organization_contact_id");
+			occ.setId(resultset.getString("organization_contact_id"));
 			
 			// Set name
-			HumanName name = new HumanName();
-			String nameId = contactResultset.getString("name_id");
-			if (nameId != null)
-				name.setId(nameId);
-			
-			String family = contactResultset.getString("family");
-			if (family != null)
-				name.setFamily(family);
-			
-			String prefix = contactResultset.getString("prefix");
-			if (prefix != null)
-				name.addPrefix(prefix);
-			
-			String given = contactResultset.getString("given");
-			if (given != null)
-				name.addGiven(given);
-			
-			String suffix = contactResultset.getString("suffix");
-			if (suffix != null)
-				name.addSuffix(suffix);
-			
-			// Set name use
-			String use = contactResultset.getString("use");
-			if ("official".equals(use))
-				name.setUse(NameUse.OFFICIAL);
-			if ("official".equals(use))
-				name.setUse(NameUse.ANONYMOUS);
-			if ("official".equals(use))
-				name.setUse(NameUse.MAIDEN);
-			if ("official".equals(use))
-				name.setUse(NameUse.NICKNAME);
-			if ("official".equals(use))
-				name.setUse(NameUse.OLD);
-			if ("official".equals(use))
-				name.setUse(NameUse.TEMP);
-			if ("official".equals(use))
-				name.setUse(NameUse.USUAL);
-			
-			occ.setName(name);
+			occ.setName(ResourceFactory.getHumanName(resultset));
 			
 			// Handle telecoms for contacts
 			handleContactTelecoms(connection, occ, orgContactId);
@@ -286,22 +232,19 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAliases(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String aliasSql = "SELECT * FROM organization_alias WHERE organization_id = ?";
-     	PreparedStatement aliasStatement = connection.prepareStatement(aliasSql);
-     	aliasStatement.setInt(1, orgId);
-		ResultSet aliasResultset = aliasStatement.executeQuery();
-		while(aliasResultset.next()) {
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * FROM organization_alias WHERE organization_id = ?", orgId);
+		while(resultset.next()) {
 			VhDirAlias alias = new VhDirAlias();
 			
 			// Set id
-			alias.setId(aliasResultset.getString("organization_alias_id"));
+			alias.setId(resultset.getString("organization_alias_id"));
 			
 			// Handle type
 			
 			// Handle period
 			
 			// Handle value
-			String value = aliasResultset.getString("value");
+			String value = resultset.getString("value");
 			if (value != null)
 				alias.setValue(value);
 			
@@ -317,16 +260,12 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleContactTelecoms(Connection connection, OrganizationContactComponent occ,
-			int orgContactId) throws SQLException {
-		String contactSql = "SELECT * FROM telecom WHERE organization_contact_id = ?";
-     	PreparedStatement telecomStatement = connection.prepareStatement(contactSql);
-     	telecomStatement.setInt(1, orgContactId);
-		ResultSet telecomResultset = telecomStatement.executeQuery();
-		while(telecomResultset.next()) {
-			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset); 
+	private void handleContactTelecoms(Connection connection, OrganizationContactComponent occ, int orgContactId) throws SQLException {
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE organization_contact_id = ?", orgContactId);
+		while(resultset.next()) {
+			VhDirContactPoint tele = ContactFactory.getContactPoint(resultset); 
 			// Add weekday, normal business hours availablility for this contact
-			tele.addAvailableTime(ResourceFactory.makeAvailableTime("mon;tue;wed;thu;fri", false, "08:00:00", "17:00:00"));
+			tele.addAvailableTime(ContactFactory.makeAvailableTime("mon;tue;wed;thu;fri", false, "08:00:00", "17:00:00"));
 			occ.addTelecom(tele);
 		}
 	}
@@ -339,10 +278,7 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleEndpoints(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String strSql = "SELECT * from vhdir_endpoint where organization_id = ?"; 
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, orgId);
-		ResultSet resultset = sqlStatement.executeQuery();
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_endpoint where organization_id = ?", orgId);
 		while(resultset.next()) {
 			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("endpoint_id"), "VhDirEndpoint", null, "Organization Endpoint");
 			//org.addEndpoint(ref);  /TODO add endpoints to VhDirOrganization

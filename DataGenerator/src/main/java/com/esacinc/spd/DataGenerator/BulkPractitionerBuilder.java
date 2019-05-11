@@ -42,6 +42,8 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirPractitioner;
+import com.esacinc.spd.util.ContactFactory;
+import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
 import com.esacinc.spd.util.Geocoding;
 import com.esacinc.spd.util.ResourceFactory;
@@ -66,9 +68,7 @@ public class BulkPractitionerBuilder {
 		List<VhDirPractitioner> practitioners = new ArrayList<VhDirPractitioner>();
 		
 		int certCount = 0;
-		String sql = "SELECT * FROM vhdir_practitioner";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner", null);
 		while (resultSet.next()) {
 			VhDirPractitioner prac = new VhDirPractitioner();
 		
@@ -80,13 +80,8 @@ public class BulkPractitionerBuilder {
 			
 			// Add a digital certificate to the first 3 organizations
 			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
-				// Figure the date one year from now, use that as an expiration date
-				Date expire = new Date();
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(expire);
-				cal.add(Calendar.YEAR, 1);
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-				prac.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", cal.getTime()));
+				prac.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", null));
 			}
 						
 			// Handle the identifiers
@@ -173,12 +168,9 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleIdentifiers(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-		String idSql = "SELECT * from identifier where practitioner_id = ?";
-		PreparedStatement idStatement = connection.prepareStatement(idSql);
-		idStatement.setInt(1, pracId);
-		ResultSet idResultset = idStatement.executeQuery();
-		while(idResultset.next()) {
-			VhDirIdentifier identifier = ResourceFactory.getIdentifier(idResultset);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from identifier where practitioner_id = ?", pracId);
+		while(resultset.next()) {
+			VhDirIdentifier identifier = ResourceFactory.getIdentifier(resultset);
 			prac.addIdentifier(identifier);
 		}
 	}
@@ -192,12 +184,9 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-		String addrSql = "SELECT * from address where practitioner_id = ?";
-		PreparedStatement addrStatement = connection.prepareStatement(addrSql);
-		addrStatement.setInt(1, pracId);
-		ResultSet addrResultset = addrStatement.executeQuery();
-		while(addrResultset.next()) {
-			VhDirAddress addr = ResourceFactory.getAddress(addrResultset, connection);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where practitioner_id = ?", pracId);
+		while(resultset.next()) {
+			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
 			prac.addAddress(addr);
 		}
 	}
@@ -211,14 +200,12 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleTelecoms(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-		String addrSql = "SELECT * from telecom where practitioner_id = ?";
-		PreparedStatement telecomStatement = connection.prepareStatement(addrSql);
-		telecomStatement.setInt(1, pracId);
-		ResultSet telecomResultset = telecomStatement.executeQuery();
-		while(telecomResultset.next()) {
-				VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where practitioner_id = ?", pracId);
+		while(resultset.next()) {
+				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset);
+				tele.setId(resultset.getString("telecom_id"));
 				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
 				prac.addTelecom(tele);
 		}
 	}
@@ -233,12 +220,9 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleNames(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-		String addrSql = "SELECT * from name where practitioner_id = ?";
-		PreparedStatement nameStatement = connection.prepareStatement(addrSql);
-		nameStatement.setInt(1, pracId);
-		ResultSet names = nameStatement.executeQuery();
-		while(names.next()) {
-			HumanName name = ResourceFactory.getHumanName(names);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from name where practitioner_id = ?", pracId);
+		while(resultset.next()) {
+			HumanName name = ResourceFactory.getHumanName(resultset);
 			prac.addName(name);
 		}
 	}
@@ -252,12 +236,10 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleRestrictions(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-		String resSql = "SELECT * from vhdir_restriction where practitioner_id = ?"; //TODO this might need to use the resource_reference table. Is it modeled?
-		PreparedStatement resStatement = connection.prepareStatement(resSql);
-		resStatement.setInt(1, pracId);
-		ResultSet restrictions = resStatement.executeQuery();
-		while(restrictions.next()) {
-			Reference ref = ResourceFactory.getRestrictionReference(restrictions);
+		//TODO this might need to use the resource_reference table. Is it modeled?
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_restriction where practitioner_id = ?", pracId);
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.getRestrictionReference(resultset);
 			prac.addUsageRestriction(ref);
 		}
 	}
@@ -272,16 +254,13 @@ public class BulkPractitionerBuilder {
 	private void handleCommunications(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
 		// A communication is a codeable concept. Such codeable concepts can have multiple codings in it.
 		// First, query the db for all the communications for this practioner
-		String commSql = "SELECT * from communication where practitioner_id = ?";
-		PreparedStatement commStatement = connection.prepareStatement(commSql);
-		commStatement.setInt(1, pracId);
-		ResultSet comms = commStatement.executeQuery();
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from communication where practitioner_id = ?", pracId);
 		// Then, for each communication in the result set above, go and get all the codings for that communication...
 		int cnt = 0;
-		while (comms.next())   
+		while (resultset.next())   
 		{	
 			cnt++;
-			CodeableConcept comm_cc = ResourceFactory.getCommunicationProficiency(comms.getString("communication_id"), connection); // To hold all the codings
+			CodeableConcept comm_cc = ResourceFactory.getCommunicationProficiency(resultset.getString("communication_id"), connection); // To hold all the codings
 			prac.addCommunication(comm_cc);
 		}
 		// If we didn't find any communications in the db, let's just make one up for now

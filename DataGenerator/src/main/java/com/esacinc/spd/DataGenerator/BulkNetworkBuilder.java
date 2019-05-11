@@ -17,6 +17,8 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirNetworkContact;
+import com.esacinc.spd.util.ContactFactory;
+import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkNetworkBuilder {
@@ -34,9 +36,7 @@ public class BulkNetworkBuilder {
 	public List<VhDirNetwork> getNetworks(Connection connection) throws SQLException, ParseException {
 		List<VhDirNetwork> networks = new ArrayList<VhDirNetwork>();
 		
-		String sql = "SELECT * FROM vhdir_network";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
+        ResultSet resultSet = DatabaseUtil.runQuery(connection,  "SELECT * FROM vhdir_network", null);
 		while (resultSet.next()) {
 			VhDirNetwork nw = new VhDirNetwork();
 		
@@ -110,12 +110,9 @@ public class BulkNetworkBuilder {
 	 * @throws SQLException
 	 */
 	private void handleIdentifiers(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
-		String idSql = "SELECT * from identifier where network_id = ?";
-		PreparedStatement idStatement = connection.prepareStatement(idSql);
-		idStatement.setInt(1, nwId);
-		ResultSet idResultset = idStatement.executeQuery();
-		while(idResultset.next()) {
-			VhDirIdentifier identifier = ResourceFactory.getIdentifier(idResultset);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from identifier where network_id = ?", nwId);
+		while(resultset.next()) {
+			VhDirIdentifier identifier = ResourceFactory.getIdentifier(resultset);
 			nw.addIdentifier(identifier);
 		}
 	}
@@ -129,12 +126,9 @@ public class BulkNetworkBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
-		String addrSql = "SELECT * from address where network_id = ?";
-		PreparedStatement addrStatement = connection.prepareStatement(addrSql);
-		addrStatement.setInt(1, nwId);
-		ResultSet addrResultset = addrStatement.executeQuery();
-		while(addrResultset.next()) {
-			VhDirAddress addr = ResourceFactory.getAddress(addrResultset, connection);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from address where network_id = ?", nwId);
+		while(resultset.next()) {
+			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
 			nw.addAddress(addr);
 		}
 	}
@@ -148,10 +142,7 @@ public class BulkNetworkBuilder {
 	 * @throws SQLException
 	 */
 	private void handleTypes(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
-		String strSql = "SELECT * from fhir_codeable_concept where network_type_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, nwId);
-		ResultSet resultset = sqlStatement.executeQuery();
+	    ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from fhir_codeable_concept where network_type_id = ?", nwId);
 		while(resultset.next()) {
 				nw.addType(ResourceFactory.getCodeableConcept(resultset));
 		}
@@ -168,12 +159,10 @@ public class BulkNetworkBuilder {
 	 * @throws SQLException
 	 */
 	private void handleRestrictions(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
-		String resSql = "SELECT * from vhdir_restriction where network_id = ?"; //TODO this might need to use the resource_reference table. Is it modeled?
-		PreparedStatement resStatement = connection.prepareStatement(resSql);
-		resStatement.setInt(1, nwId);
-		ResultSet restrictions = resStatement.executeQuery();
-		while(restrictions.next()) {
-			Reference ref = ResourceFactory.getRestrictionReference(restrictions);
+		//TODO this might need to use the resource_reference table. Is it modeled?
+	    ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from vhdir_restriction where network_id = ?", nwId);
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.getRestrictionReference(resultset);
 			nw.addUsageRestriction(ref);
 		}
 	}
@@ -188,15 +177,10 @@ public class BulkNetworkBuilder {
 	 * @throws SQLException
 	 */
 	private void handleLocationReferences(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
-		String addrSql = "SELECT * from resource_reference where reference = ?";
-		PreparedStatement telecomStatement = connection.prepareStatement(addrSql);
-		telecomStatement.setInt(1, nwId);
-		ResultSet telecomResultset = telecomStatement.executeQuery();
-		while(telecomResultset.next()) {
-				VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
-				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
-				nw.addTelecom(tele);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where network_location_id = ?", nwId);
+		while(resultset.next()) {
+				Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+				nw.addLocationReference(ref);
 		}
 	}
 
@@ -208,12 +192,9 @@ public class BulkNetworkBuilder {
 	 * @throws SQLException
 	 */
 	private void handleContacts(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
-		String strSql = "SELECT * from contact where network_id = ?";
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, nwId);
-		ResultSet resultset = sqlStatement.executeQuery();
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from contact where network_id = ?", nwId);
 		while(resultset.next()) {
-				VhDirNetworkContact con = ResourceFactory.getNetworkContact(resultset, connection);
+				VhDirNetworkContact con = ContactFactory.getNetworkContact(resultset, connection);
 				nw.addContact(con);
 		}
 	}
@@ -225,11 +206,8 @@ public class BulkNetworkBuilder {
 	 * @param locId
 	 * @throws SQLException
 	 */
-	private void handleEndpoints(Connection connection, VhDirNetwork net, int netId) throws SQLException {
-		String strSql = "SELECT * from vhdir_endpoint where network_id = ?"; 
-		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
-		sqlStatement.setInt(1, netId);
-		ResultSet resultset = sqlStatement.executeQuery();
+	private void handleEndpoints(Connection connection, VhDirNetwork net, int nwId) throws SQLException {
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_endpoint where network_id = ?", nwId);
 		while(resultset.next()) {
 			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("endpoint_id"), "VhDirEndpoint", null, "Network Endpoint");
 			net.addEndpoint(ref);

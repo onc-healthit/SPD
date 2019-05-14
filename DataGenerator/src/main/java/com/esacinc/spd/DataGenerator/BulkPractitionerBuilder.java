@@ -227,7 +227,6 @@ public class BulkPractitionerBuilder {
 		}
 	}
 	
-	//TODO following is not complete at all!
 	/**
 	 * Handle the restrictions associated with the practitioner 
 	 * @param connection
@@ -236,10 +235,9 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleRestrictions(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-		//TODO this might need to use the resource_reference table. Is it modeled?
-	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_restriction where practitioner_id = ?", pracId);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where practitioner_restriction_id = ?", pracId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getRestrictionReference(resultset);
+			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
 			prac.addUsageRestriction(ref);
 		}
 	}

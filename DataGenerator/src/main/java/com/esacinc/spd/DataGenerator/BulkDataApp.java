@@ -33,13 +33,13 @@ public class BulkDataApp {
 	// Database connection and querying are handled in DatabaseUtils.java
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ALL = true;  
-	private static boolean DO_ORGANIZATIONS = false;
-	private static boolean DO_PRACTITIONERS = false;
+	private static boolean DO_ALL = false;  
+	private static boolean DO_ORGANIZATIONS = true;
+	private static boolean DO_PRACTITIONERS = true;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
-	private static boolean DO_ENDPOINTS = true;
+	private static boolean DO_ENDPOINTS = false;
 	private static boolean DO_GEOTEST = false;
 
 	// Which VhDir resource files to generate...

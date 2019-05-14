@@ -201,10 +201,9 @@ public class BulkEndpointBuilder {
 	 * @throws SQLException
 	 */
 	private void handleRestrictions(Connection connection, VhDirEndpoint ep, int epId) throws SQLException {
-		//TODO this might need to use the resource_reference table. Is it modeled?
-		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_restriction where location_id = ?", epId);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where endpoint_restriction_id = ?", epId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getRestrictionReference(resultset);
+			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
 			ep.addUsageRestriction(ref);
 		}
 	}

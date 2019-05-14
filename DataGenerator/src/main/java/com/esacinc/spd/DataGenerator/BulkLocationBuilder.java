@@ -244,7 +244,6 @@ public class BulkLocationBuilder {
 	
 	
 	
-	//TODO following is not complete at all!
 	/**
 	 * Handle the restrictions associated with the practitioner 
 	 * @param connection
@@ -253,10 +252,9 @@ public class BulkLocationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleRestrictions(Connection connection, VhDirLocation loc, int locId) throws SQLException {
-		//TODO this might need to use the resource_reference table. Is it modeled?
-		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from vhdir_restriction where location_id = ?", locId);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where location_restriction_id = ?", locId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getRestrictionReference(resultset);
+			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
 			loc.addUsageRestriction(ref);
 		}
 	}

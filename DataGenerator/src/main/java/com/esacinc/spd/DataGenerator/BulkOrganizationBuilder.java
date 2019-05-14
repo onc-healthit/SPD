@@ -39,6 +39,7 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
@@ -129,7 +130,10 @@ public class BulkOrganizationBuilder {
          	
          	// Handle endpoints
          	handleEndpoints(connection, org, orgId);
-			 
+
+            // Handle the restrictions
+         	handleRestrictions(connection, org, orgId);
+
 			organizations.add(org);
 			}
 			catch (Exception e) {
@@ -285,6 +289,20 @@ public class BulkOrganizationBuilder {
 		}
 	}
 
+	/**
+	 * Handle the restrictions associated with the organization 
+	 * @param connection
+	 * @param prac
+	 * @param pracId
+	 * @throws SQLException
+	 */
+	private void handleRestrictions(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where organization_restriction_id = ?", orgId);
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			org.addUsageRestriction(ref);
+		}
+	}
 
 
 }

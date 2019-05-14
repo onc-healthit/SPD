@@ -113,6 +113,14 @@ public class VhDirOrganization extends DomainResource {
 	@Description(shortDefinition="Technical endpoints providing access to services operated for the organization")
 	private List<Reference> endpoint;
 
+	/**
+	 * Add the usage restriction
+	 */
+	@Child(name="usageRestriction", type = {Reference.class}, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/usage-restriction", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Restriction")
+	private List<Reference>usageRestriction;
+
     /**
      * The actual object that is the target of the reference (The organization of which this organization forms a part.)
      */
@@ -546,6 +554,23 @@ public class VhDirOrganization extends DomainResource {
 	    if (this.endpoint == null)
 	      this.endpoint = new ArrayList<Reference>();
 	    this.endpoint.add(t);
+	    return this;
+	}
+
+	public List<Reference> getUsageRestriction() {
+		return usageRestriction;
+	}
+
+	public void setUsageRestriction(List<Reference> val) {
+		this.usageRestriction = val;
+	}
+	
+	public VhDirOrganization addUsageRestriction(Reference t) {
+	    if (t == null)
+	      return this;
+	    if (this.usageRestriction == null)
+	      this.usageRestriction = new ArrayList<Reference>();
+	    this.usageRestriction.add(t);
 	    return this;
 	}
 

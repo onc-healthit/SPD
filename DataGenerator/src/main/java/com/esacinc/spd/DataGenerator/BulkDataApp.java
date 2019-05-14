@@ -4,13 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
-
-import org.hl7.fhir.r4.model.Endpoint;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
 
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirLocation;
@@ -18,6 +14,11 @@ import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.model.VhDirValidation;
+//import com.esacinc.spd.model.VhDirCareTeam;
+//import com.esacinc.spd.model.VhDirHealthcareService;
+//import com.esacinc.spd.model.VhDirOrganizationAffiliation;
+//import com.esacinc.spd.model.VhDirPractitionerRole;
+//import com.esacinc.spd.model.VhDirRestriction;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.Geocoding;
 import com.google.gson.Gson;
@@ -40,6 +41,15 @@ public class BulkDataApp {
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
 	private static boolean DO_ENDPOINTS = false;
+	
+	// TODO
+	private static boolean DO_CARETEAMS = false;
+	private static boolean DO_HEALTHCARESERVICES = false;
+	private static boolean DO_INSURANCEPLANS = false;
+	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
+	private static boolean DO_PRACTITIONERROLES = false;
+	private static boolean DO_RESTRICTIONS = false;
+
 	private static boolean DO_GEOTEST = false;
 
 	// Which VhDir resource files to generate...
@@ -49,6 +59,12 @@ public class BulkDataApp {
 	private static String FILE_LOCATIONS = "Location.ndjson";
 	private static String FILE_VALIDATIONS = "Validation.ndjson";
 	private static String FILE_ENDPOINTS = "Endpoint.ndjson";
+	private static String FILE_CARETEAMS = "Careteam.ndjson";
+	private static String FILE_HEALTHCARESERVICES = "HealthcareService.ndjson";
+	private static String FILE_INSURANCEPLANS = "InsurancePlan.ndjson";
+	private static String FILE_ORGANIZATIONAFFILIATIONS = "OrganizationAffiliation.ndjson";
+	private static String FILE_PRACTITIONERROLES = "PractitionerRole.ndjson";
+	private static String FILE_RESTRICTIONS = "Restriction.ndjson";
 
 	// Which VhDir resource pretty-printed files to generate...
 	// (Set to null or "" to not generate a file.)
@@ -58,6 +74,12 @@ public class BulkDataApp {
 	private static String FILE_LOCATIONS_PP = "Location_PP.json";
 	private static String FILE_VALIDATIONS_PP = "Validation_PP.json";
 	private static String FILE_ENDPOINTS_PP = "Endpoint_PP.json";
+	private static String FILE_CARETEAMS_PP = "Careteam_PP.json";
+	private static String FILE_HEALTHCARESERVICES_PP = "HealthcareService_PP.json";
+	private static String FILE_INSURANCEPLANS_PP = "InsurancePlan_PP.json";
+	private static String FILE_ORGANIZATIONAFFILIATIONS_PP = "OrganizationAffiliation_PP.json";
+	private static String FILE_PRACTITIONERROLES_PP = "PractitionerRole_PP.json";
+	private static String FILE_RESTRICTIONS_PP = "Restriction_PP.json";
 	private static int    MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
 	private static int    PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
@@ -190,6 +212,126 @@ public class BulkDataApp {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}  
+		}
+
+		if (DO_ALL || DO_CARETEAMS) {
+			/*
+			try{
+				// Get and write Careteams
+				System.out.println("Generate Careteam resources...");
+				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
+				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
+				outputEndpointList(endpoints);  
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		**/ 
+		}
+
+		if (DO_ALL || DO_HEALTHCARESERVICES) {
+			/*
+			try{
+				// Get and write HeathcareServices
+				System.out.println("Generate Healthcare_Service resources...");
+				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
+				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
+				outputEndpointList(endpoints);  
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			*/ 
+		}
+
+		if (DO_ALL || DO_INSURANCEPLANS) {
+			/*
+			try{
+				// Get and write Insurance Planes
+				System.out.println("Generate Insurance_Plan resources...");
+				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
+				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
+				outputEndpointList(endpoints);  
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			 */ 
+		}
+
+		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
+			/*
+			try{
+				// Get and write Organization Affiliations
+				System.out.println("Generate Organization_Affiliation resources...");
+				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
+				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
+				outputEndpointList(endpoints);  
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			*/ 
+		}
+
+		if (DO_ALL || DO_PRACTITIONERROLES) {
+			/*
+			try{
+				// Get and write Practitioner Roles
+				System.out.println("Generate Practitioner_Role resources...");
+				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
+				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
+				outputEndpointList(endpoints);  
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			*/ 
+		}
+
+		if (DO_ALL || DO_RESTRICTIONS) {
+			/*
+			try{
+				// Get and write Restrictions
+				System.out.println("Generate Restriction resources...");
+				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
+				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
+				outputEndpointList(endpoints);  
+			}	
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			*/ 
 		}
 
 		System.out.println("\n\nFHIR Resource generation complete");

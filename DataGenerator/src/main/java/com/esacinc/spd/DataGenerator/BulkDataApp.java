@@ -19,7 +19,6 @@ import com.esacinc.spd.model.VhDirValidation;
 //import com.esacinc.spd.model.VhDirOrganizationAffiliation;
 //import com.esacinc.spd.model.VhDirPractitionerRole;
 //import com.esacinc.spd.model.VhDirRestriction;
-
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.Geocoding;
 import com.google.gson.Gson;

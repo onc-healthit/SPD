@@ -14,7 +14,8 @@ import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.model.VhDirValidation;
-//import com.esacinc.spd.model.VhDirCareTeam;
+import com.esacinc.spd.model.VhDirCareTeam;
+//import com.esacinc.spd.model.VhDirInsurancePlan;
 //import com.esacinc.spd.model.VhDirHealthcareService;
 //import com.esacinc.spd.model.VhDirOrganizationAffiliation;
 //import com.esacinc.spd.model.VhDirPractitionerRole;
@@ -35,15 +36,15 @@ public class BulkDataApp {
 	
 	// Which VhDir resources to generate...
 	private static boolean DO_ALL = false;  
-	private static boolean DO_ORGANIZATIONS = true;
-	private static boolean DO_PRACTITIONERS = true;
+	private static boolean DO_ORGANIZATIONS = false;
+	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
 	private static boolean DO_ENDPOINTS = false;
+	private static boolean DO_CARETEAMS = true;
 	
 	// TODO
-	private static boolean DO_CARETEAMS = false;
 	private static boolean DO_HEALTHCARESERVICES = false;
 	private static boolean DO_INSURANCEPLANS = false;
 	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
@@ -68,7 +69,7 @@ public class BulkDataApp {
 
 	// Which VhDir resource pretty-printed files to generate...
 	// (Set to null or "" to not generate a file.)
-	private static String FILE_ORGANIZATIONS_PP = "Organization_PP.json";
+	private static String FILE_ORGANIZATIONS_PP = "Organization_PP2.json";
 	private static String FILE_PRACTITIONERS_PP = "Practitioner_PP.json";
 	private static String FILE_NETWORKS_PP = "Network_PP.json";
 	private static String FILE_LOCATIONS_PP = "Location_PP.json";
@@ -215,13 +216,12 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_CARETEAMS) {
-			/*
 			try{
 				// Get and write Careteams
 				System.out.println("Generate Careteam resources...");
-				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
-				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
-				outputEndpointList(endpoints);  
+				BulkCareTeamBuilder ctBuilder = new BulkCareTeamBuilder();
+				List<VhDirCareTeam> careteams = ctBuilder.getCareTeams(connection);
+				outputCareTeamList(careteams);  
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -231,7 +231,6 @@ public class BulkDataApp {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-		**/ 
 		}
 
 		if (DO_ALL || DO_HEALTHCARESERVICES) {
@@ -239,9 +238,9 @@ public class BulkDataApp {
 			try{
 				// Get and write HeathcareServices
 				System.out.println("Generate Healthcare_Service resources...");
-				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
-				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
-				outputEndpointList(endpoints);  
+				BulkHeathcareServiceBuilder hsBuilder = new BulkHeathcareServiceBuilder();
+				List<VhDirHeathcareService> services = hsBuilder.getEndpoints(connection);
+				outputServicesList(services);  
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -259,9 +258,9 @@ public class BulkDataApp {
 			try{
 				// Get and write Insurance Planes
 				System.out.println("Generate Insurance_Plan resources...");
-				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
-				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
-				outputEndpointList(endpoints);  
+				BulkInsurancePlanBuilder epBuilder = new BulkInsurancePlanBuilder();
+				List<VhDirInsurancePlan> plans = epBuilder.getInsurancePlans(connection);
+				outputInsurancePlanList(plans);  
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -279,9 +278,9 @@ public class BulkDataApp {
 			try{
 				// Get and write Organization Affiliations
 				System.out.println("Generate Organization_Affiliation resources...");
-				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
-				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
-				outputEndpointList(endpoints);  
+				BulkOrganizationAffiliationBuilder affBuilder = new BulkOrganizationAffiliationBuilder();
+				List<VhDirOrganizationAffiliation> affiliations = affBuilder.getOrganizationAffiliations(connection);
+				outputAffiliationList(affiliations);  
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -299,9 +298,9 @@ public class BulkDataApp {
 			try{
 				// Get and write Practitioner Roles
 				System.out.println("Generate Practitioner_Role resources...");
-				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
-				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
-				outputEndpointList(endpoints);  
+				BulkPractitionerRoleBuilder prBuilder = new BulkPractitionerRoleBuilder();
+				List<VhDirPractitionerRole> roles = prBuilder.getPractitionerRoles(connection);
+				outputRoleList(roles);  
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -319,9 +318,9 @@ public class BulkDataApp {
 			try{
 				// Get and write Restrictions
 				System.out.println("Generate Restriction resources...");
-				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
-				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
-				outputEndpointList(endpoints);  
+				BulkRestrictionBuilder resBuilder = new BulkRestrictionBuilder();
+				List<VhDirRestriction> restrictions = epBuilder.getEndpoints(connection);
+				outputEndpointList(restrictions);  
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -578,6 +577,46 @@ public class BulkDataApp {
 		}
 		catch (NullPointerException e) {
 			System.err.println("NULL POINTER EXCEPTION writing endpoint list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputCareTeamList(List<VhDirCareTeam>careteams) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS));
+			BufferedWriter pp_writer = null;
+			if (FILE_CARETEAMS_PP != null &&  !FILE_CARETEAMS_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS_PP));
+			}
+			for (VhDirCareTeam ct : careteams) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+
+				String nwJson = jsonParser.encodeResourceToString(ct);
+				writer.write(nwJson);
+				writer.write("\n");
+
+				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
+				maybePrettyPrintToConsole(prettyJson, cnt, "CARETEAM");
+				
+				cnt++;
+			}
+			writer.close();
+			if (pp_writer != null) {
+				pp_writer.close();
+			}
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing careteam list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing careteam list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

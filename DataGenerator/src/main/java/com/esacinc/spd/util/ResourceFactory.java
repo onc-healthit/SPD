@@ -11,6 +11,7 @@ import java.util.Random;
 
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
@@ -37,6 +38,7 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
+import com.esacinc.spd.model.VhDirNote;
 import com.esacinc.spd.model.VhDirPrimarySource;
 
 /**
@@ -64,7 +66,7 @@ public class ResourceFactory {
 		Reference ref = new Reference();
 		ResultSet refs = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where resource_reference_id = ?", refId);
 		while(refs.next()) {
-			ref.setId(refs.getString(refId));
+			ref.setId(refs.getString("resource_reference_id"));
 			ref.setDisplay(refs.getString("display"));
 			ref.setReference(refs.getString("reference"));
 			// If the reference points to an identifier, go get it from the db....
@@ -87,10 +89,10 @@ public class ResourceFactory {
 	 */
 	static public VhDirIdentifier getIdentifier(int identifierId, Connection connection) throws SQLException{
 		VhDirIdentifier identifier = new VhDirIdentifier();
-		String sqlString = "SELECT * from videntifier where ridentifier_id = ?";
+		String sqlString = "SELECT * from identifier where ridentifier_id = ?";
 		PreparedStatement sqlStatement = connection.prepareStatement(sqlString);
 		sqlStatement.setInt(1,identifierId);
-		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from videntifier where ridentifier_id = ?", identifierId);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from identifier where identifier_id = ?", identifierId);
 		while(resultset.next()) {
 			identifier = getIdentifier(resultset);
 			return identifier; // There should only be one 
@@ -558,6 +560,29 @@ public class ResourceFactory {
 		}
 		return validator;
 		
+	}
+
+	public static VhDirNote getNote(ResultSet resultset) throws SQLException {
+		VhDirNote note = new VhDirNote();
+		// TODO The 'note' model maintains a practitioner_id pointing to a VhDirPractitioner. This should really be a resource reference
+		note.setId(resultset.getString("note_id"));
+		note.setAuthor(makeResourceReference(resultset.getString("practitioner_id"),"VhDirPractioner", null, "Author"));
+		note.setTime(resultset.getDate("time"));
+		note.setText(resultset.getString("text"));
+		return note;
+	}
+
+
+	public static CareTeamParticipantComponent getParticipantComponent(ResultSet resultset, Connection connection) throws SQLException {
+		CareTeamParticipantComponent par = new CareTeamParticipantComponent();
+		par.setId(resultset.getString("participant_id"));
+		par.setPeriod(makePeriod(resultset.getDate("period_start"),resultset.getDate("period_end")));
+		par.setMember(getResourceReference(resultset.getInt("member"),connection));
+		ResultSet codeableconcepts = DatabaseUtil.runQuery(connection,"Select * from fhir_codeable_concept where careteam_participant_role_id = ?", resultset.getInt("participant_id"));
+		while (codeableconcepts.next()) {
+			par.addRole(getCodeableConcept(codeableconcepts));
+		}
+		return par;
 	}
 
 	///////////////   MAKE METHODS  ////////////////////////////////////////////////////////////////

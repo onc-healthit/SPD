@@ -83,7 +83,7 @@ public class BulkOrganizationBuilder {
 			// Add a digital certificate to the first 3 organizations
 			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-				org.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", null));
+				org.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null));
 			}
 						
 			// Handle the identifiers
@@ -98,7 +98,7 @@ public class BulkOrganizationBuilder {
 			
 			// TODO Hard coded type as provider for now
 			CodeableConcept typeConcept = new CodeableConcept();
-            typeConcept.addCoding(ResourceFactory.makeCoding("prov", "prov", "http://terminology.hl7.org/CodeSystem/organization-type", false));
+            typeConcept.addCoding(ResourceFactory.makeCoding("prov", "Healthcare Provider", "http://terminology.hl7.org/CodeSystem/organization-type", false));
             org.addType(typeConcept);
 					
             // Handle the name

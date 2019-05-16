@@ -81,7 +81,7 @@ public class BulkPractitionerBuilder {
 			// Add a digital certificate to the first 3 organizations
 			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-				prac.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", null));
+				prac.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null));
 			}
 						
 			// Handle the identifiers

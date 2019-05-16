@@ -1,9 +1,9 @@
 {
-  "resourceType": "vhdir-practitioner",
+  "resourceType": "vhdir-organization",
   "id": "1",
   "meta": {
     "profile": [
-      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-Practitioner"
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
   },
   "extension": [
@@ -16,7 +16,7 @@
             "valueCoding": {
               "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate",
               "code": "role",
-              "display": "Role based",
+              "display": "role",
               "userSelected": false
             }
           },
@@ -25,7 +25,7 @@
             "valueCoding": {
               "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate",
               "code": "auth",
-              "display": "Authentication",
+              "display": "auth",
               "userSelected": false
             }
           },
@@ -33,14 +33,10 @@
             "url": "certificateStandard",
             "valueCoding": {
               "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate",
-              "code": "x.509v3",
-              "display": "x.509v3",
+              "code": "x.509.v3",
+              "display": "x.509.v3",
               "userSelected": false
             }
-          },
-          {
-            "url": "expirationDate",
-            "valueDate": "2020-05-15"
           },
           {
             "url": "certificate",
@@ -58,6 +54,10 @@
                 }
               ]
             }
+          },
+          {
+            "url": "expirationDate",
+            "valueDate": "2020-05-14"
           }
         ]
       }
@@ -65,38 +65,33 @@
   ],
   "identifier": [
     {
-      "id": "58",
-      "extension": [
-        {
-          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
-          "valueCode": "active"
-        }
-      ],
+      "id": "1200",
       "use": "official",
       "system": "http://hl7.org/fhir/sid/us-npi",
-      "value": "1295889665"
+      "value": "9999999995"
     }
   ],
   "active": true,
-  "name": [
+  "type": [
     {
-      "id": "21",
-      "family": "\u0027ANDERSON",
-      "given": [
-        "VERA ROSE"
-      ],
-      "prefix": [
-        "MRS."
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "prov",
+          "userSelected": false
+        }
       ]
     }
   ],
+  "name": "KADRICH \u0026 WEITZEL - SHAKIR DR",
   "telecom": [
     {
-      "id": "101",
+      "id": "5",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueExtension": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -127,31 +122,27 @@
                 "valueCode": "sat"
               },
               {
+                "url": "daysOfWeek",
+                "valueCode": "sun"
+              },
+              {
                 "url": "allDay",
-                "valueBoolean": false
-              },
-              {
-                "url": "availableStartTime",
-                "valueTime": "08:00:00"
-              },
-              {
-                "url": "availableEndTime",
-                "valueTime": "17:00:00"
+                "valueBoolean": true
               }
             ]
           }
         }
       ],
       "system": "phone",
-      "value": "7603763662",
+      "value": "8025559399",
       "rank": 0
     },
     {
-      "id": "103",
+      "id": "15883",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueExtension": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -182,29 +173,76 @@
                 "valueCode": "sat"
               },
               {
+                "url": "daysOfWeek",
+                "valueCode": "sun"
+              },
+              {
                 "url": "allDay",
-                "valueBoolean": false
-              },
-              {
-                "url": "availableStartTime",
-                "valueTime": "08:00:00"
-              },
-              {
-                "url": "availableEndTime",
-                "valueTime": "17:00:00"
+                "valueBoolean": true
               }
             ]
           }
         }
       ],
       "system": "phone",
-      "value": "7603793412",
+      "value": "8025550802",
+      "rank": 0
+    },
+    {
+      "id": "15884",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "valueExtension": {
+            "extension": [
+              {
+                "url": "daysOfWeek",
+                "valueCode": "sun"
+              },
+              {
+                "url": "daysOfWeek",
+                "valueCode": "mon"
+              },
+              {
+                "url": "daysOfWeek",
+                "valueCode": "tue"
+              },
+              {
+                "url": "daysOfWeek",
+                "valueCode": "wed"
+              },
+              {
+                "url": "daysOfWeek",
+                "valueCode": "thu"
+              },
+              {
+                "url": "daysOfWeek",
+                "valueCode": "fri"
+              },
+              {
+                "url": "daysOfWeek",
+                "valueCode": "sat"
+              },
+              {
+                "url": "daysOfWeek",
+                "valueCode": "sun"
+              },
+              {
+                "url": "allDay",
+                "valueBoolean": true
+              }
+            ]
+          }
+        }
+      ],
+      "system": "phone",
+      "value": "8025550793",
       "rank": 0
     }
   ],
   "address": [
     {
-      "id": "41",
+      "id": "1",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -212,11 +250,11 @@
             "extension": [
               {
                 "url": "latitude",
-                "valueDecimal": 35.755005
+                "valueDecimal": 40.009147
               },
               {
                 "url": "longitude",
-                "valueDecimal": -118.404723
+                "valueDecimal": -76.367132
               }
             ]
           }
@@ -224,14 +262,14 @@
       ],
       "use": "billing",
       "line": [
-        "PO BOX 347"
+        "6068 ROBBLEE RAMP"
       ],
-      "state": "CA",
-      "postalCode": "932380347",
+      "state": "PA",
+      "postalCode": "176034609",
       "country": "US"
     },
     {
-      "id": "42",
+      "id": "2",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -239,11 +277,11 @@
             "extension": [
               {
                 "url": "latitude",
-                "valueDecimal": 35.668987
+                "valueDecimal": 40.009147
               },
               {
                 "url": "longitude",
-                "valueDecimal": -118.457002
+                "valueDecimal": -76.367132
               }
             ]
           }
@@ -251,27 +289,23 @@
       ],
       "use": "work",
       "line": [
-        "2731 NUGGET AVE"
+        "6068 ROBBLEE RAMP"
       ],
-      "state": "CA",
-      "postalCode": "932402632",
+      "state": "PA",
+      "postalCode": "176034609",
       "country": "US"
     }
   ],
-  "gender": "female",
-  "communication": [
+  "contact": [
     {
-      "id": "x5377",
-      "coding": [
-        {
-          "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
-          "version": "0.2.0",
-          "code": "50",
-          "display": "Functional Native Proficiency",
-          "userSelected": true
-        }
-      ],
-      "text": "Just made something up"
+      "id": "1",
+      "name": {
+        "id": "1",
+        "family": "PALATNIK",
+        "given": [
+          "SOLVEIG"
+        ]
+      }
     }
   ]
 }

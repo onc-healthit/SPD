@@ -37,12 +37,12 @@ public class BulkDataApp {
 	// Which VhDir resources to generate...
 	private static boolean DO_ALL = false;  
 	private static boolean DO_ORGANIZATIONS = false;
-	private static boolean DO_PRACTITIONERS = false;
+	private static boolean DO_PRACTITIONERS = true;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
 	private static boolean DO_ENDPOINTS = false;
-	private static boolean DO_CARETEAMS = true;
+	private static boolean DO_CARETEAMS = false;
 	
 	// TODO
 	private static boolean DO_HEALTHCARESERVICES = false;
@@ -85,7 +85,7 @@ public class BulkDataApp {
 	private static int    PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
 	// Control how many entries we process in each section and output. -1 means ALL.
-	private static int MAX_ENTRIES = -1;  
+	private static int MAX_ENTRIES = 1;  
 	
 	public static void main(String[] args) {
 		

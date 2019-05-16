@@ -118,14 +118,10 @@ public class DigitalCertificateFactory {
 	
 	static public VhDirDigitalCertificate makeDigitalCertificate(int nth, String type, String use, String trustFramework, String standard, Date expiration) {
 		VhDirDigitalCertificate cert = new VhDirDigitalCertificate();
-		cert.setType(ResourceFactory.makeCoding(type,  type, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-		cert.setUse(ResourceFactory.makeCoding(use,  use, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
+		// Note: order of .set calls is important:  type, use, standard, certificate, exp date, framework.
+		cert.setType(ResourceFactory.makeCoding(type,  "Role based", "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
+		cert.setUse(ResourceFactory.makeCoding(use,  "Authentication", "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setCertificateStandard(ResourceFactory.makeCoding(standard,  standard, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-		cert.setCertificate(getNthCert(nth));
-		CodeableConcept certTrust = new CodeableConcept();
-		certTrust.addCoding(ResourceFactory.makeCoding(trustFramework,  trustFramework, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
-		cert.setTrustFramework(certTrust);
-
 		if (expiration == null) {
 			// No expiration date provided. Just use one year from now.
 			Date expire = new Date();
@@ -135,6 +131,11 @@ public class DigitalCertificateFactory {
 			expiration = cal.getTime();
 		}
 		cert.setExpirationDate(expiration);
+		cert.setCertificate(getNthCert(nth));
+		CodeableConcept certTrust = new CodeableConcept();
+		certTrust.addCoding(ResourceFactory.makeCoding(trustFramework,  trustFramework, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
+		cert.setTrustFramework(certTrust);
+
 		
 		return cert;
 	}

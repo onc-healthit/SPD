@@ -71,7 +71,7 @@ public class BulkEndpointBuilder {
 			int certCount = 0;
 			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-				ep.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", null));
+				ep.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null));
 			}
 
 			// Handle the status code

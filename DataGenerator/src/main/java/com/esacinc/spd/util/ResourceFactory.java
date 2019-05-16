@@ -15,6 +15,7 @@ import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityComponent;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier;
@@ -583,6 +584,14 @@ public class ResourceFactory {
 			par.addRole(getCodeableConcept(codeableconcepts));
 		}
 		return par;
+	}
+
+	public static HealthcareServiceEligibilityComponent getEligibility(ResultSet resultset, Connection connection) throws SQLException {
+		HealthcareServiceEligibilityComponent ec = new HealthcareServiceEligibilityComponent();
+		ec.setId(resultset.getString("eligibility_id"));
+		ec.setCode(getCodeableConcept(resultset.getInt("code_cc_id"),connection));
+		ec.setComment(resultset.getString("comment"));
+		return ec;
 	}
 
 	///////////////   MAKE METHODS  ////////////////////////////////////////////////////////////////

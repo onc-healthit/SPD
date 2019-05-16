@@ -7,11 +7,18 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.TimeType;
+import org.hl7.fhir.r4.model.CareTeam.CareTeamStatus;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
+import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
+import org.hl7.fhir.r4.model.HealthcareService.DaysOfWeek;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
+import org.hl7.fhir.r4.model.Period;
 
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirContactPointAvailableTime;
@@ -130,6 +137,55 @@ public class ContactFactory {
 		return contact;
 	}
 
+	/**
+	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * @param resultset
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	static public HealthcareServiceAvailableTimeComponent getAvailableTime(ResultSet resultset) throws SQLException {
+		HealthcareServiceAvailableTimeComponent at =new HealthcareServiceAvailableTimeComponent();
+		at.setId(resultset.getString("available_time_id"));
+		at.setAllDay(resultset.getBoolean("all_day"));
+		if (!at.getAllDay()) {
+			at.setAvailableStartTime(resultset.getString("available_start_time"));
+			at.setAvailableEndTime(resultset.getString("available_end_time"));
+		}
+		String daysString = resultset.getString("days_of_week");
+		if (daysString != null && !daysString.isEmpty()) {
+			String[] days = daysString.split(";");
+			for (String d : days) {
+				try {
+					at.addDaysOfWeek(DaysOfWeek.fromCode(d));
+				}
+				catch (Exception e){
+					// Bad day value. Don't do anything.
+					System.err.println("Bad Day of Week value: " + d + " in getAvailableTime");
+					System.err.println("   " + e.getMessage());
+				}
+			}
+		}
+		return at;
+	}
+
+	/**
+	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * @param resultset
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	static public HealthcareServiceNotAvailableComponent getNotAvailableTime(ResultSet resultset) throws SQLException {
+		HealthcareServiceNotAvailableComponent nat =new HealthcareServiceNotAvailableComponent();
+		nat.setId(resultset.getString("unavailable_time_id"));
+		nat.setDescription(resultset.getString("description"));
+		Period per = ResourceFactory.makePeriod(resultset.getDate("during_start_time"), resultset.getDate("during_end_time"));
+		nat.setDuring(per);
+		return nat;
+	}
+
+	
 	/**
 	 * Generate an availableTime object from the given parameters
 	 * @param daysString, semicolon delimited string of 3-letter day names, e.g.  "mon;tue;wed;thu;fri"

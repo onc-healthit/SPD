@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.esacinc.spd.model.VhDirEndpoint;
+import com.esacinc.spd.model.VhDirHealthcareService;
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
@@ -37,15 +38,15 @@ public class BulkDataApp {
 	// Which VhDir resources to generate...
 	private static boolean DO_ALL = false;  
 	private static boolean DO_ORGANIZATIONS = false;
-	private static boolean DO_PRACTITIONERS = true;
+	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
 	private static boolean DO_ENDPOINTS = false;
 	private static boolean DO_CARETEAMS = false;
+	private static boolean DO_HEALTHCARESERVICES = true;
 	
 	// TODO
-	private static boolean DO_HEALTHCARESERVICES = false;
 	private static boolean DO_INSURANCEPLANS = false;
 	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
 	private static boolean DO_PRACTITIONERROLES = false;
@@ -234,12 +235,11 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_HEALTHCARESERVICES) {
-			/*
 			try{
 				// Get and write HeathcareServices
 				System.out.println("Generate Healthcare_Service resources...");
-				BulkHeathcareServiceBuilder hsBuilder = new BulkHeathcareServiceBuilder();
-				List<VhDirHeathcareService> services = hsBuilder.getEndpoints(connection);
+				BulkHealthcareServiceBuilder hsBuilder = new BulkHealthcareServiceBuilder();
+				List<VhDirHealthcareService> services = hsBuilder.getHealthcareServices(connection);
 				outputServicesList(services);  
 			}	
 			catch (SQLException e) {
@@ -250,7 +250,6 @@ public class BulkDataApp {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-			*/ 
 		}
 
 		if (DO_ALL || DO_INSURANCEPLANS) {
@@ -617,6 +616,46 @@ public class BulkDataApp {
 		}
 		catch (NullPointerException e) {
 			System.err.println("NULL POINTER EXCEPTION writing careteam list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputServicesList(List<VhDirHealthcareService>services) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS));
+			BufferedWriter pp_writer = null;
+			if (FILE_CARETEAMS_PP != null &&  !FILE_CARETEAMS_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS_PP));
+			}
+			for (VhDirHealthcareService ct : services) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+
+				String nwJson = jsonParser.encodeResourceToString(ct);
+				writer.write(nwJson);
+				writer.write("\n");
+
+				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
+				maybePrettyPrintToConsole(prettyJson, cnt, "HEALTHCARE SERVICE");
+				
+				cnt++;
+			}
+			writer.close();
+			if (pp_writer != null) {
+				pp_writer.close();
+			}
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing healtchare service list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing healthcare service list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

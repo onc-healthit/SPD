@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.hl7.fhir.r4.model.Address.AddressType;
 import org.hl7.fhir.r4.model.Address.AddressUse;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
@@ -118,19 +119,13 @@ public class ResourceFactory {
 		// Set id
 		identifier.setId(idResultset.getString("identifier_id"));
 		
-	    
-	    // Handle use
-	    String use = idResultset.getString("use");
-	    if ("usual".equals(use))
-	        identifier.setUse(IdentifierUse.USUAL);
-	    if ("official".equals(use))
-	    	identifier.setUse(IdentifierUse.OFFICIAL);
-	    if ("temp".equals(use))
-	    	identifier.setUse(IdentifierUse.TEMP);
-	    if ("secondary".equals(use))
-	    	identifier.setUse(IdentifierUse.SECONDARY);
-	    if ("old".equals(use))
-	    	identifier.setUse(IdentifierUse.OLD);
+		// Handle use
+	    try {
+	    	identifier.setUse(IdentifierUse.fromCode(idResultset.getString("use")));
+	    }
+	    catch (Exception e) {
+	    	identifier.setUse(IdentifierUse.NULL);
+	    }
 	    
 	    // Handle system
 	    String system = idResultset.getString("system");
@@ -183,21 +178,23 @@ public class ResourceFactory {
 		addr.setId(addrResultset.getString("address_id"));
 		
 		// Set use
-		String use = addrResultset.getString("use");
-		if ("home".equals(use))
-			addr.setUse(AddressUse.HOME);
-		if ("work".equals(use))
-			addr.setUse(AddressUse.WORK);
-		if ("temp".equals(use))
-			addr.setUse(AddressUse.TEMP);
-		if ("old".equals(use))
-			addr.setUse(AddressUse.OLD);
-		if ("billing".equals(use))
-			addr.setUse(AddressUse.BILLING);
+		try {
+			addr.setUse(AddressUse.fromCode(addrResultset.getString("use")));
+		}
+		catch (Exception e) {
+			addr.setUse(AddressUse.NULL);
+		}
 		
 		// Set Type
+		try {
+			addr.setType(AddressType.fromCode(addrResultset.getString("type")));
+		}
+		catch (Exception e) {
+			addr.setType(AddressType.NULL);
+		}
 		
-		// Set Text
+		// Set text
+		addr.setText(addrResultset.getString("text"));
 		
 		// Set Line
 		String line1 = addrResultset.getString("line1");
@@ -244,6 +241,9 @@ public class ResourceFactory {
 		if (country != null) {
 			addr.setCountry(country);
 		}
+		
+		addr.setPeriod(makePeriod(addrResultset.getDate("period_start"), addrResultset.getDate("period_end")));
+		
 		return addr;
 	}
 	

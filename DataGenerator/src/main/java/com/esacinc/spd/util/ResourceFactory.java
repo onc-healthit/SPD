@@ -143,7 +143,7 @@ public class ResourceFactory {
 		// Handle identifier status
 		String status = idResultset.getString("identifier_status_value_code");
 		try {
-			identifier.setStatus(IdentifierStatus.fromCode(status+"xx"));
+			identifier.setStatus(IdentifierStatus.fromCode(status));
 		}
 		catch (Exception e) {
 			identifier.setStatus(IdentifierStatus.UNKNOWN);

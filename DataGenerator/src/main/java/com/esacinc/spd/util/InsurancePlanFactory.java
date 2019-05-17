@@ -48,38 +48,6 @@ public class InsurancePlanFactory {
 		return cov;
 	}
 
-	public static CoverageBenefitComponent getCoverageBenefit(ResultSet benResultSet, Connection connection) throws SQLException {
-		CoverageBenefitComponent ben = new CoverageBenefitComponent();
-		ben.setId(benResultSet.getString("benefit_id"));
-		ben.setType(ResourceFactory.getCodeableConcept(benResultSet.getInt("type_cc_id"),connection));
-		ben.setRequirement(benResultSet.getString("requirement"));
-		ResultSet limitResultSet = DatabaseUtil.runQuery(connection,"select * from limit where benefit_id = ?", benResultSet.getInt("benefit_id"));
-		while (limitResultSet.next()) {
-			ben.addLimit(getCoverageLimit(limitResultSet,connection));
-		}
-		return ben;
-	}
-	
-	public static CoverageBenefitLimitComponent getCoverageLimit(ResultSet limitResultSet, Connection connection) throws SQLException {
-		CoverageBenefitLimitComponent lim = new CoverageBenefitLimitComponent();
-		lim.setId(limitResultSet.getString("limit_id"));
-		Quantity q = new Quantity();
-		String dbVal = limitResultSet.getString("value");
-		// assume dbVal is of the form  "double units";
-		if (dbVal != null && ! dbVal.isEmpty()) {
-			String[] tokens = dbVal.split(" ");
-			if (tokens.length > 0) {
-				q.setValue(new Double(tokens[0]));
-			}
-			if (tokens.length > 1) {
-				q.setUnit(tokens[1]);
-			}
-			lim.setValue(q);
-		}
-		lim.setCode(ResourceFactory.getCodeableConcept(limitResultSet.getInt("code_cc_id"), connection));
-		return lim;
-	}
-	
 	public static InsurancePlanPlanComponent getPlan(ResultSet resultset, Connection connection) throws SQLException {
 		InsurancePlanPlanComponent plan = new InsurancePlanPlanComponent();
 		int planId = resultset.getInt("plan_id");
@@ -117,7 +85,42 @@ public class InsurancePlanFactory {
 		return plan;
 	}
 
-	public static InsurancePlanPlanGeneralCostComponent getGeneralCost(ResultSet costResultSet, Connection connection) throws SQLException {
+	//----------------------------------------------------------------------------------------------------------------------
+	
+	protected static CoverageBenefitComponent getCoverageBenefit(ResultSet benResultSet, Connection connection) throws SQLException {
+		CoverageBenefitComponent ben = new CoverageBenefitComponent();
+		ben.setId(benResultSet.getString("benefit_id"));
+		ben.setType(ResourceFactory.getCodeableConcept(benResultSet.getInt("type_cc_id"),connection));
+		ben.setRequirement(benResultSet.getString("requirement"));
+		ResultSet limitResultSet = DatabaseUtil.runQuery(connection,"select * from limit where benefit_id = ?", benResultSet.getInt("benefit_id"));
+		while (limitResultSet.next()) {
+			ben.addLimit(getCoverageLimit(limitResultSet,connection));
+		}
+		return ben;
+	}
+	
+	protected static CoverageBenefitLimitComponent getCoverageLimit(ResultSet limitResultSet, Connection connection) throws SQLException {
+		CoverageBenefitLimitComponent lim = new CoverageBenefitLimitComponent();
+		lim.setId(limitResultSet.getString("limit_id"));
+		Quantity q = new Quantity();
+		String dbVal = limitResultSet.getString("value");
+		// assume dbVal is of the form  "double units";
+		if (dbVal != null && ! dbVal.isEmpty()) {
+			String[] tokens = dbVal.split(" ");
+			if (tokens.length > 0) {
+				q.setValue(new Double(tokens[0]));
+			}
+			if (tokens.length > 1) {
+				q.setUnit(tokens[1]);
+			}
+			lim.setValue(q);
+		}
+		lim.setCode(ResourceFactory.getCodeableConcept(limitResultSet.getInt("code_cc_id"), connection));
+		return lim;
+	}
+	
+
+	protected static InsurancePlanPlanGeneralCostComponent getGeneralCost(ResultSet costResultSet, Connection connection) throws SQLException {
 		InsurancePlanPlanGeneralCostComponent cost = new InsurancePlanPlanGeneralCostComponent();
 		cost.setId(costResultSet.getString("general_cost_id"));
 		cost.setType(ResourceFactory.getCodeableConcept(costResultSet.getInt("type_cc_id"),connection));
@@ -131,7 +134,7 @@ public class InsurancePlanFactory {
 		return cost;
 	}
 
-	public static InsurancePlanPlanSpecificCostComponent getSpecificCost(ResultSet scResultSet, Connection connection) throws SQLException {
+	protected static InsurancePlanPlanSpecificCostComponent getSpecificCost(ResultSet scResultSet, Connection connection) throws SQLException {
 		InsurancePlanPlanSpecificCostComponent cost = new InsurancePlanPlanSpecificCostComponent();
 		cost.setId(scResultSet.getString("specific_cost_id"));
 		cost.setCategory(ResourceFactory.getCodeableConcept(scResultSet.getInt("category_cc_id"),connection));
@@ -148,7 +151,7 @@ public class InsurancePlanFactory {
 		return cost;
 	}
 
-	public static PlanBenefitCostComponent getBenefitCost(ResultSet benCostResultSet, Connection connection) throws SQLException {
+	protected static PlanBenefitCostComponent getBenefitCost(ResultSet benCostResultSet, Connection connection) throws SQLException {
 		PlanBenefitCostComponent benCost = new PlanBenefitCostComponent();
 		benCost.setId(benCostResultSet.getString("cost_benefit_individual_cost_id"));
 		benCost.setType(ResourceFactory.getCodeableConcept(benCostResultSet.getInt("type_cc_id"),connection));

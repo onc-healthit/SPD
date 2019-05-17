@@ -170,16 +170,16 @@ public class BulkOrganizationBuilder {
 	private void handleContacts(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
      	ResultSet resultset = DatabaseUtil.runQuery(connection, 
      			"SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, n.period_start, n.period_end, " +
-				"oc.organization_contact_id " +
-     			"FROM name as n, organization_contact as oc " +
+				"oc.contact_id " +
+     			"FROM name as n, contact as oc " +
      			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?", 
      			orgId);
 		while(resultset.next()) {
 			OrganizationContactComponent occ = new OrganizationContactComponent();
 			
 			// Set id
-			int orgContactId = resultset.getInt("organization_contact_id");
-			occ.setId(resultset.getString("organization_contact_id"));
+			int orgContactId = resultset.getInt("contact_id");
+			occ.setId(resultset.getString("contact_id"));
 			
 			// Set name
 			occ.setName(ResourceFactory.getHumanName(resultset));
@@ -224,7 +224,7 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleContactTelecoms(Connection connection, OrganizationContactComponent occ, int orgContactId) throws SQLException {
-        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE organization_contact_id = ?", orgContactId);
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", orgContactId);
 		while(resultset.next()) {
 			VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection); 
 			// Add weekday, normal business hours availablility for this contact

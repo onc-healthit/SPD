@@ -112,7 +112,7 @@ public class ContactFactory {
 		con.setName(ResourceFactory.getHumanName(resultset.getInt("name_id"),connection));
 		if (connection != null) {
 			// Gather the telecoms for this netowrk contact
-			ResultSet tcresultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE organization_contact_id = ?", resultset.getInt("name_id"));
+			ResultSet tcresultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", resultset.getInt("name_id"));
 			while(tcresultset.next()) {
 				VhDirContactPoint tele = getContactPoint(tcresultset, connection);
 				tele.setId(tcresultset.getString("telecom_id"));

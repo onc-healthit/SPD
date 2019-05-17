@@ -115,20 +115,6 @@ public class ResourceFactory {
 		// Set id
 		identifier.setId(idResultset.getString("identifier_id"));
 		
-		// Handle identifier status
-		String status = idResultset.getString("identifier_status_value_code");
-		if ("active".equals(status))
-			identifier.setStatus(IdentifierStatus.ACTIVE);
-	    if ("inactive".equals(status))
-	    	identifier.setStatus(IdentifierStatus.INACTIVE);
-	    if ("issuedinerror".equals(status))
-	    	identifier.setStatus(IdentifierStatus.ISSUEDINERROR);
-	    if ("revoked".equals(status))
-	    	identifier.setStatus(IdentifierStatus.REVOKED);
-	    if ("pending".equals(status))
-	    	identifier.setStatus(IdentifierStatus.PENDING);
-	    if ("unknown".equals(status))
-	    	identifier.setStatus(IdentifierStatus.UNKNOWN);
 	    
 	    // Handle use
 	    String use = idResultset.getString("use");
@@ -150,6 +136,16 @@ public class ResourceFactory {
 	    // Handle value
 	    String value = idResultset.getString("value");
 	    identifier.setValue(value);
+	    
+		// Handle identifier status
+		String status = idResultset.getString("identifier_status_value_code");
+		try {
+			identifier.setStatus(IdentifierStatus.fromCode(status+"xx"));
+		}
+		catch (Exception e) {
+			identifier.setStatus(IdentifierStatus.UNKNOWN);
+		}
+
 		return identifier;
 	}
 	

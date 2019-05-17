@@ -49,9 +49,10 @@ public class VhDirOrganization extends Organization {
     /**
      * Add the overridden alias
      */
-    //@Child(name= "_alias", type = {VhDirAlias_lite.class}, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
-	//@Description(shortDefinition="Alias for the organization")
-	//private List<VhDirAlias_lite> _alias;
+    @Child(name= "orgAlias", type = {VhDirAlias.class}, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Alias for the organization")
+	private List<VhDirAlias> orgAlias;
     
 
 	/**
@@ -127,21 +128,21 @@ public class VhDirOrganization extends Organization {
 */
 
 	
-	 /*   
-    public VhDirOrganization set_alias(List<VhDirAlias_lite> theAlias) { 
-      this._alias = theAlias;
-      return this;
-    }
+	   
+    public void setOrgAlias(List<VhDirAlias> theAlias) { 
+      this.orgAlias = theAlias;
+     }
 
-    public boolean has_alias() { 
-      if (this.alias == null)
+    public boolean hasOrgAlias() { 
+      if (this.orgAlias == null)
         return false;
-      for (VhDirAlias_lite item : this._alias)
+      for (VhDirAlias item : this.orgAlias)
         if (!item.isEmpty())
           return true;
       return false;
     }
 
+    /*
      public VhDirAlias_lite add_aliasElement() {//2 
     	VhDirAlias_lite t = new VhDirAlias_lite();
       if (this._alias == null)
@@ -149,14 +150,14 @@ public class VhDirOrganization extends Organization {
       this._alias.add(t);
       return t;
     }
-
-     public VhDirOrganization add_alias(VhDirAlias_lite value) { //1
-      if (this._alias == null)
-        this._alias = new ArrayList<VhDirAlias_lite>();
-      this._alias.add(value);
+*/
+     public VhDirOrganization addOrgAlias(VhDirAlias value) { //1
+      if (this.orgAlias == null)
+        this.orgAlias = new ArrayList<VhDirAlias>();
+      this.orgAlias.add(value);
       return this;
     }
-    */
+   
     
 	public List<Reference> getUsageRestriction() {
 		return usageRestriction;

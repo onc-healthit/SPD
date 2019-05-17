@@ -67,7 +67,7 @@ public class VhDirDigitalCertificate extends Extension {
 		return this.type;
 	}
 	
-
+/*
 	public void setType(Coding val) {
 		this.type = val;
 	}
@@ -111,8 +111,8 @@ public class VhDirDigitalCertificate extends Extension {
 	public void setTrustFramework(CodeableConcept val) {
 		this.trustFramework = val;
 	}
+	*/
 	
-	/*
 	public VhDirDigitalCertificate setType(Coding type) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
@@ -172,7 +172,7 @@ public class VhDirDigitalCertificate extends Extension {
 		this.extension.add(ext);
 		return this;
     }
-*/
+
     /**
      * It is important to override the isEmpty() method, adding a check for any
      * newly added fields. 

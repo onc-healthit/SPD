@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirAlias;
-import com.esacinc.spd.model.VhDirAlias_lite;
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirIdentifier;
@@ -40,6 +38,7 @@ public class BulkOrganizationBuilder {
 	public List<VhDirOrganization> getOrganizations(Connection connection) throws SQLException, ParseException {
 		List<VhDirOrganization> organizations = new ArrayList<VhDirOrganization>();
 		
+	
 		int cnt = 0;
 		int certCount = 0;
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization", null);
@@ -202,7 +201,7 @@ public class BulkOrganizationBuilder {
 	private void handleAliases(Connection connection, ResultSet resultSet, VhDirOrganization org, int orgId) throws SQLException {
         ResultSet aliasResults = DatabaseUtil.runQuery(connection, "SELECT * FROM organization_alias WHERE organization_id = ?", 3);
         while(aliasResults.next()) {
-			VhDirAlias_lite alias = new VhDirAlias_lite();
+			VhDirAlias alias = new VhDirAlias();
 			
 			// Set id
 			alias.setId(aliasResults.getString("organization_alias_id"));
@@ -210,7 +209,7 @@ public class BulkOrganizationBuilder {
 			alias.setType(ResourceFactory.getCodeableConcept(aliasResults.getInt("alias_type_cc_id"), connection));
 			alias.setValue(new StringType(aliasResults.getString("value")));
 			//TODO   figure out why this wont work:
-			//org.add_alias(alias);
+			org.addOrgAlias(alias);
 			org.addAlias(aliasResults.getString("value")); // Add base profile alias type
 		}
 	}

@@ -1,58 +1,27 @@
 package com.esacinc.spd.DataGenerator;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-import org.hl7.fhir.r4.model.Address.AddressUse;
-import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.HumanName;
-import org.hl7.fhir.r4.model.HumanName.NameUse;
-import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
-import org.hl7.fhir.r4.model.Organization;
-import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.TimeType;
 
 import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirAlias;
 import com.esacinc.spd.model.VhDirContactPoint;
-import com.esacinc.spd.model.VhDirContactPointAvailableTime;
-import com.esacinc.spd.model.VhDirDigitalCertificate;
-import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirOrganization_MH;
-import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirPractitioner;
-import com.esacinc.spd.model.VhDirQualification;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.Geocoding;
 import com.esacinc.spd.util.ResourceFactory;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class BulkPractitionerBuilder {
 	

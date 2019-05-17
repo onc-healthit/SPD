@@ -33,9 +33,9 @@ public class BulkValidationBuilder {
 	 */
 	public List<VhDirValidation> getValidations(Connection connection) throws SQLException, ParseException {
 		List<VhDirValidation> validations = new ArrayList<VhDirValidation>();
-		
+		int cnt = 0;
 	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_validation", null);
-		while (resultSet.next()) {
+		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirValidation val = new VhDirValidation();
 		
@@ -64,6 +64,8 @@ public class BulkValidationBuilder {
 			handleValidators(connection, resultSet, val);
 			
 			validations.add(val);
+			
+			cnt++;
 		}
 		System.out.println("Made " + validations.size() + " validations");
 		return validations;

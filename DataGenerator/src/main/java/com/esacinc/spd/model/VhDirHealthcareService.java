@@ -41,13 +41,6 @@ public class VhDirHealthcareService extends HealthcareService {
     @Description(shortDefinition="Whether the location is accepting new patients", formalDefinition="Whether the location is accepting new patients" )
     protected List<VhDirNewpatients> newpatients;
 
-	/**
-     * A list of new patient profile strings
-     */
-    @Child(name = "newpatientprofile", type = {Element.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
-	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatientprofile", definedLocally=false, isModifier=false)
-    @Description(shortDefinition="Type of new patients accepted", formalDefinition="Type of new patients accepted" )
-    protected List<VhDirNewpatientprofile> newpatientprofile;
 
 	public void setUsageRestriction(List<Reference> val) {
 		this.usageRestriction = val;

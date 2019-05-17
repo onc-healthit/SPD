@@ -36,8 +36,9 @@ public class BulkCareTeamBuilder {
 	public List<VhDirCareTeam> getCareTeams(Connection connection) throws SQLException, ParseException {
 		List<VhDirCareTeam> careteams = new ArrayList<VhDirCareTeam>();
 		
+		int cnt = 0;
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_careteam", null);
-		while (resultSet.next()) {
+		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
 			VhDirCareTeam ct = new VhDirCareTeam();
 		
 			// set the id
@@ -88,6 +89,8 @@ public class BulkCareTeamBuilder {
          	handleEndpoints(connection, ct, ctId);
 			
 			careteams.add(ct);
+			
+			cnt++;
 		}
 		System.out.println("Made " + careteams.size() + " care teams");
 		return careteams;
@@ -155,7 +158,7 @@ public class BulkCareTeamBuilder {
 	private void handleTelecoms(Connection connection, VhDirCareTeam ct, int ctId) throws SQLException {
 	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where careteam_id = ?", ctId);
 		while(resultset.next()) {
-				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset);
+				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
 				tele.setId(resultset.getString("telecom_id"));
 				// Add 9:00-4:30 any day, available time for this telecom contact point
 				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));

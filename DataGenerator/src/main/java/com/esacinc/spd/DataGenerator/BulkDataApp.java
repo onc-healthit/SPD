@@ -36,15 +36,15 @@ public class BulkDataApp {
 	// Database connection and querying are handled in DatabaseUtils.java
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ALL = false;  
-	private static boolean DO_ORGANIZATIONS = false;
+	private static boolean DO_ALL = true;  
+	private static boolean DO_ORGANIZATIONS = true;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
 	private static boolean DO_ENDPOINTS = false;
 	private static boolean DO_CARETEAMS = false;
-	private static boolean DO_HEALTHCARESERVICES = true;
+	private static boolean DO_HEALTHCARESERVICES = false;
 	
 	// TODO
 	private static boolean DO_INSURANCEPLANS = false;
@@ -70,8 +70,8 @@ public class BulkDataApp {
 
 	// Which VhDir resource pretty-printed files to generate...
 	// (Set to null or "" to not generate a file.)
-	private static String FILE_ORGANIZATIONS_PP = "Organization_PP2.json";
-	private static String FILE_PRACTITIONERS_PP = "Practitioner_PP.json";
+	private static String FILE_ORGANIZATIONS_PP = "Organization_PP.json";
+	private static String FILE_PRACTITIONERS_PP = "Practitioner_PP2.json";
 	private static String FILE_NETWORKS_PP = "Network_PP.json";
 	private static String FILE_LOCATIONS_PP = "Location_PP.json";
 	private static String FILE_VALIDATIONS_PP = "Validation_PP.json";
@@ -86,7 +86,7 @@ public class BulkDataApp {
 	private static int    PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
 	// Control how many entries we process in each section and output. -1 means ALL.
-	private static int MAX_ENTRIES = 1;  
+	public static int MAX_ENTRIES = 1;  
 	
 	public static void main(String[] args) {
 		
@@ -626,10 +626,10 @@ public class BulkDataApp {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_HEALTHCARESERVICES));
 			BufferedWriter pp_writer = null;
-			if (FILE_CARETEAMS_PP != null &&  !FILE_CARETEAMS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS_PP));
+			if (FILE_HEALTHCARESERVICES_PP != null &&  !FILE_HEALTHCARESERVICES_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_HEALTHCARESERVICES_PP));
 			}
 			for (VhDirHealthcareService ct : services) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {

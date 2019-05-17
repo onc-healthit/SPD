@@ -52,7 +52,7 @@ public class ContactFactory {
 	 * @return VhDirContactPoint
 	 * @throws SQLException
 	 */
-	static public VhDirContactPoint getContactPoint(ResultSet resultset) throws SQLException{
+	static public VhDirContactPoint getContactPoint(ResultSet resultset, Connection connection) throws SQLException{
 		VhDirContactPoint contact = new VhDirContactPoint();
 		try {
 			contact.setSystem(ContactPointSystem.fromCode(resultset.getString("system")));
@@ -71,6 +71,11 @@ public class ContactFactory {
 			contact.setUse(ContactPointUse.NULL);
 		}
 		contact.setRank(resultset.getInt("rank"));
+		
+		contact.setViaintermediary(ResourceFactory.getResourceReference(resultset.getInt("contactpoint_intermediary"),connection));
+		
+		// Leave it up to the calling method to add available time(s)
+		
 		return contact;
 	}
 
@@ -85,7 +90,7 @@ public class ContactFactory {
 	static public VhDirContactPoint getTelecomContactPoint(int contactId, Connection connection) throws SQLException{
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where telecom_id = ?", contactId);
 		while(resultset.next()) {
-			VhDirContactPoint contactPoint = getContactPoint(resultset);
+			VhDirContactPoint contactPoint = getContactPoint(resultset, connection);
 			contactPoint.setId(resultset.getString("telecom_id"));
 			return contactPoint; // Only expecting one
 		}	
@@ -109,7 +114,7 @@ public class ContactFactory {
 			// Gather the telecoms for this netowrk contact
 			ResultSet tcresultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE organization_contact_id = ?", resultset.getInt("name_id"));
 			while(tcresultset.next()) {
-				VhDirContactPoint tele = getContactPoint(tcresultset);
+				VhDirContactPoint tele = getContactPoint(tcresultset, connection);
 				tele.setId(tcresultset.getString("telecom_id"));
 				// Add 9:00-4:30 any day, available time for this telecom contact point
 				tele.addAvailableTime(makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
@@ -129,7 +134,7 @@ public class ContactFactory {
 	 * @throws SQLException
 	 */
 	static public VhDirContactPoint getEndpointContact(ResultSet resultset, Connection connection) throws SQLException {
-		VhDirContactPoint contact = getContactPoint(resultset);
+		VhDirContactPoint contact = getContactPoint(resultset, connection);
 		contact.setId(resultset.getString("endpoint_contact_id"));
 		contact.setViaintermediary(ResourceFactory.getResourceReference(resultset.getInt("via_intermediary"), connection));
 		// Add 9:00-4:30 any day, available time for this contact point
@@ -145,27 +150,12 @@ public class ContactFactory {
 	 * @throws SQLException
 	 */
 	static public HealthcareServiceAvailableTimeComponent getAvailableTime(ResultSet resultset) throws SQLException {
-		HealthcareServiceAvailableTimeComponent at =new HealthcareServiceAvailableTimeComponent();
+		HealthcareServiceAvailableTimeComponent at = _makeAvailableTime(resultset.getString("days_of_week"),
+				                                                        resultset.getBoolean("all_day"),
+				                                                        resultset.getString("available_start_time"),
+				                                                        resultset.getString("available_end_time"));
+		// makeAvailableTime only sets the data elements, not the id.
 		at.setId(resultset.getString("available_time_id"));
-		at.setAllDay(resultset.getBoolean("all_day"));
-		if (!at.getAllDay()) {
-			at.setAvailableStartTime(resultset.getString("available_start_time"));
-			at.setAvailableEndTime(resultset.getString("available_end_time"));
-		}
-		String daysString = resultset.getString("days_of_week");
-		if (daysString != null && !daysString.isEmpty()) {
-			String[] days = daysString.split(";");
-			for (String d : days) {
-				try {
-					at.addDaysOfWeek(DaysOfWeek.fromCode(d));
-				}
-				catch (Exception e){
-					// Bad day value. Don't do anything.
-					System.err.println("Bad Day of Week value: " + d + " in getAvailableTime");
-					System.err.println("   " + e.getMessage());
-				}
-			}
-		}
 		return at;
 	}
 
@@ -185,7 +175,38 @@ public class ContactFactory {
 		return nat;
 	}
 
-	
+
+	/**
+	 * Generate an availableTime object from the given parameters
+	 * @param daysString, semicolon delimited string of 3-letter day names, e.g.  "mon;tue;wed;thu;fri"
+	 * @param allDay  true if this available time is all day
+	 * @param startTime if allday is false, start time, e.g. "08:00:00"
+	 * @param endTime if allday is false, start time, e.g. "17:00:00"
+	 * @return VhDirContactPointAvailableTime
+	 */
+	static public HealthcareServiceAvailableTimeComponent _makeAvailableTime(String daysString, boolean allDay, String startTime, String endTime) {
+		HealthcareServiceAvailableTimeComponent at =new HealthcareServiceAvailableTimeComponent();
+		at.setAllDay(allDay);
+		if (!at.getAllDay()) {
+			at.setAvailableStartTime(startTime);
+			at.setAvailableEndTime(endTime);
+		}
+		if (daysString != null && !daysString.isEmpty()) {
+			String[] days = daysString.split(";");
+			for (String d : days) {
+				try {
+					at.addDaysOfWeek(DaysOfWeek.fromCode(d));
+				}
+				catch (Exception e){
+					// Bad day value. Don't do anything.
+					System.err.println("Bad Day of Week value: " + d + " in getAvailableTime");
+					System.err.println("   " + e.getMessage());
+				}
+			}
+		}
+		return at;
+	}
+
 	/**
 	 * Generate an availableTime object from the given parameters
 	 * @param daysString, semicolon delimited string of 3-letter day names, e.g.  "mon;tue;wed;thu;fri"

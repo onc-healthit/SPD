@@ -1,36 +1,20 @@
 package com.esacinc.spd.DataGenerator;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
 import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
-import org.hl7.fhir.r4.model.Location.LocationPositionComponent;
-import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.UrlType;
-import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
-import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
-import org.hl7.fhir.r4.model.Endpoint;
 
 import com.esacinc.spd.model.VhDirContactPoint;
-import com.esacinc.spd.model.VhDirEhr;
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirEndpointUseCase;
 import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirNewpatientprofile;
-import com.esacinc.spd.model.VhDirNewpatients;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
@@ -49,9 +33,10 @@ public class BulkEndpointBuilder {
 	 * @throws ParseException
 	 */
 	public List<VhDirEndpoint> getEndpoints(Connection connection) throws SQLException, ParseException {
+		int cnt = 0;
 		List<VhDirEndpoint> endpoints = new ArrayList<VhDirEndpoint>();
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_endpoint", null);
-		while (resultSet.next()) {
+		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirEndpoint ep = new VhDirEndpoint();
 		
@@ -93,6 +78,8 @@ public class BulkEndpointBuilder {
          	handleRestrictions(connection, ep, epId);
 
          	endpoints.add(ep);
+         	
+         	cnt++;
 		}
 
 		System.out.println("Made " + endpoints.size() + " endpoints");

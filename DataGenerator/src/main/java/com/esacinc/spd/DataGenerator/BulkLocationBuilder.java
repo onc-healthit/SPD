@@ -38,9 +38,10 @@ public class BulkLocationBuilder {
 	 * @throws ParseException
 	 */
 	public List<VhDirLocation> getLocations(Connection connection) throws SQLException, ParseException {
+		int cnt = 0;
 		List<VhDirLocation> locations = new ArrayList<VhDirLocation>();
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_location", null);
-		while (resultSet.next()) {
+		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirLocation loc = new VhDirLocation();
 		
@@ -87,6 +88,8 @@ public class BulkLocationBuilder {
          	handleEndpoints(connection, loc, locId);
 
 			locations.add(loc);
+			
+			cnt++;
 		}
 		System.out.println("Made " + locations.size() + " locations");
 		return locations;
@@ -234,7 +237,7 @@ public class BulkLocationBuilder {
 	private void handleTelecoms(Connection connection, VhDirLocation loc, int locId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from telecom where location_id = ?", locId);
 		while(resultset.next()) {
-				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset);
+				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
 				tele.setId(resultset.getString("telecom_id"));
 				// Add 9:00-4:30 any day, available time for this telecom contact point
 				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));

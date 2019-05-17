@@ -12,14 +12,14 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="ContactPoint")
+@DatatypeDef(name="VhDirContactPoint")
 public class VhDirContactPoint extends ContactPoint {
 	private static final long serialVersionUID = 1L;
     
 	/**
 	 * Add the contactpoint-viaintermediary extension
 	 */
-	@Child(name="viaintermediary", type = {VhDirOrganization.class})
+	@Child(name="viaintermediary", type = {Reference.class})
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-viaintermediary", definedLocally=false, isModifier=false)
     @Description(shortDefinition="intermediary for contact")
     protected Reference viaintermediary;

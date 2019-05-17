@@ -26,6 +26,7 @@ import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.HumanName;
 import org.hl7.fhir.r4.model.HumanName.NameUse;
 import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
+import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
 import org.hl7.fhir.r4.model.Organization;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
@@ -39,9 +40,10 @@ import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirOrganization_MH;
 import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
 import com.esacinc.spd.model.VhDirPractitioner;
+import com.esacinc.spd.model.VhDirQualification;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
@@ -66,10 +68,10 @@ public class BulkPractitionerBuilder {
 	 */
 	public List<VhDirPractitioner> getPractitioners(Connection connection) throws SQLException, ParseException {
 		List<VhDirPractitioner> practitioners = new ArrayList<VhDirPractitioner>();
-		
+		int cnt = 0;
 		int certCount = 0;
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner", null);
-		while (resultSet.next()) {
+		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
 			VhDirPractitioner prac = new VhDirPractitioner();
 		
 			// set the id
@@ -86,6 +88,9 @@ public class BulkPractitionerBuilder {
 						
 			// Handle the identifiers
 			handleIdentifiers(connection, prac, pracId);
+			
+			// Handle the qualifications
+			handleQualifications(connection, prac, pracId);
 			
 			// Handle the gender
 			handleGender(prac, resultSet.getString("gender"));
@@ -110,6 +115,8 @@ public class BulkPractitionerBuilder {
          	handleCommunications(connection, prac, pracId);
 			
 			practitioners.add(prac);
+			
+			cnt++;
 		}
 		System.out.println("Made " + practitioners.size() + " practitioners");
 		return practitioners;
@@ -174,7 +181,23 @@ public class BulkPractitionerBuilder {
 			prac.addIdentifier(identifier);
 		}
 	}
-	
+
+	/**
+	 * Handles all the elements of the qualifications for Practitioners
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleQualifications(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from qualification where practitioner_id = ?", pracId);
+		while(resultset.next()) {
+			PractitionerQualificationComponent qu = ResourceFactory.getQualification(resultset, connection);
+			prac.addQualification(qu);
+		}
+	}
+
 	/**
 	 * Handles the addresses for the passed in practitioner ID
 	 * 
@@ -202,7 +225,7 @@ public class BulkPractitionerBuilder {
 	private void handleTelecoms(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
 	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where practitioner_id = ?", pracId);
 		while(resultset.next()) {
-				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset);
+				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
 				tele.setId(resultset.getString("telecom_id"));
 				// Add 9:00-4:30 any day, available time for this telecom contact point
 				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));

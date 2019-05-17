@@ -13,6 +13,7 @@ import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityCompo
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
 import org.hl7.fhir.r4.model.Reference;
 
+
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirHealthcareService;
 import com.esacinc.spd.model.VhDirIdentifier;
@@ -34,9 +35,10 @@ public class BulkHealthcareServiceBuilder {
 	 * @throws ParseException
 	 */
 	public List<VhDirHealthcareService> getHealthcareServices(Connection connection) throws SQLException, ParseException {
+		int cnt = 0;
 		List<VhDirHealthcareService> healthcareservices = new ArrayList<VhDirHealthcareService>();
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_healthcare_service", null);
-		while (resultSet.next()) {
+		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
 			//System.out.println("Creating healthcareservice for id " + resultSet.getInt("healthcare_service_id"));
 			VhDirHealthcareService hs = new VhDirHealthcareService();
 		
@@ -92,6 +94,8 @@ public class BulkHealthcareServiceBuilder {
          	handleEndpoints(connection, hs, hsId);
 
 			healthcareservices.add(hs);
+			
+			cnt++;
 		}
 		System.out.println("Made " + healthcareservices.size() + " healthcareservices");
 		return healthcareservices;
@@ -354,7 +358,7 @@ public class BulkHealthcareServiceBuilder {
 	private void handleTelecoms(Connection connection, VhDirHealthcareService hs, int hsId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from telecom where healthcare_service_id = ?", hsId);
 		while(resultset.next()) {
-				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset);
+				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
 				tele.setId(resultset.getString("telecom_id"));
 				// Add 9:00-4:30 any day, available time for this telecom contact point
 				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));

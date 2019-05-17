@@ -34,10 +34,11 @@ public class BulkNetworkBuilder {
 	 * @throws ParseException
 	 */
 	public List<VhDirNetwork> getNetworks(Connection connection) throws SQLException, ParseException {
+		int cnt = 0;
 		List<VhDirNetwork> networks = new ArrayList<VhDirNetwork>();
 		
         ResultSet resultSet = DatabaseUtil.runQuery(connection,  "SELECT * FROM vhdir_network", null);
-		while (resultSet.next()) {
+		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
 			VhDirNetwork nw = new VhDirNetwork();
 		
 			// set the id
@@ -93,6 +94,8 @@ public class BulkNetworkBuilder {
          	handleEndpoints(connection, nw, nwId);
          	
 			networks.add(nw);
+			
+			cnt++;
 			
 		}
 		System.out.println("Made " + networks.size() + " networks");

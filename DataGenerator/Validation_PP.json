@@ -20,6 +20,15 @@
   },
   "status": "?",
   "statusDate": "2018-10-30T00:00:00-06:00",
+  "validationType": {
+    "id": "2",
+    "coding": [
+      {
+        "userSelected": false
+      }
+    ],
+    "text": "random referral method code"
+  },
   "attestation": {
     "id": "1",
     "who": {
@@ -49,7 +58,7 @@
           "userSelected": false
         }
       ],
-      "when": "2019-05-13T11:59:02.539-06:00",
+      "when": "2019-05-17T11:26:00.222-06:00",
       "who": {
         "reference": "1",
         "type": "VhDirPractitioner"
@@ -65,7 +74,7 @@
           "userSelected": false
         }
       ],
-      "when": "2019-05-13T11:59:02.539-06:00",
+      "when": "2019-05-17T11:26:00.222-06:00",
       "who": {
         "reference": "1",
         "type": "VhDirPractitioner"

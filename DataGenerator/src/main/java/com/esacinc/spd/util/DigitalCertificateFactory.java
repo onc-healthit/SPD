@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.DateType;
+import org.hl7.fhir.r4.model.StringType;
 
 import com.esacinc.spd.model.VhDirDigitalCertificate;
 
@@ -130,13 +132,11 @@ public class DigitalCertificateFactory {
 			cal.add(Calendar.YEAR, 1);
 			expiration = cal.getTime();
 		}
-		cert.setExpirationDate(expiration);
-		cert.setCertificate(getNthCert(nth));
+		cert.setExpirationDate(new DateType(expiration));
+		cert.setCertificate(new StringType(getNthCert(nth)));
 		CodeableConcept certTrust = new CodeableConcept();
 		certTrust.addCoding(ResourceFactory.makeCoding(trustFramework,  trustFramework, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setTrustFramework(certTrust);
-
-		
 		return cert;
 	}
 

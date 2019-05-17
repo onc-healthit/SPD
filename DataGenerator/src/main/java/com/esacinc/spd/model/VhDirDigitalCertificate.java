@@ -3,21 +3,115 @@ package com.esacinc.spd.model;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.hl7.fhir.instance.model.api.ICompositeType;
+import org.hl7.fhir.r4.model.Attachment;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateType;
+import org.hl7.fhir.r4.model.Element;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.Type;
 
+import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
+import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="DigitalCertificate")
-public class VhDirDigitalCertificate extends Type implements ICompositeType {
+@DatatypeDef(name="VhDirDigitalCertificate")
+public class VhDirDigitalCertificate extends Extension {
 	private static final long serialVersionUID = 1L;
-    
+
+	/**
+	 * Add the type
+	 */
+	@Child(name="type", type = {Coding.class}, order=1, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Description(shortDefinition="Type")
+	private Coding type;
+
+	/**
+	 * Add the use
+	 */
+	@Child(name="use", type = {Coding.class}, order=2, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Description(shortDefinition="Use")
+	private Coding use;
+
+	/**
+	 * Add the standard
+	 */
+	@Child(name="certificateStandard", type = {Coding.class}, order=3, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Description(shortDefinition="certificateStandard")
+	private Coding certificateStandard;
+
+	/**
+	 * Add the cert
+	 */
+	@Child(name="certificate", type = {StringType.class}, order=4, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Description(shortDefinition="Certificate")
+	private StringType certificate;
+
+	/**
+	 * Add the expiration date
+	 */
+	@Child(name="expirationDate", type = {DateType.class}, order=5, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Description(shortDefinition="Expiration Date")
+	private DateType expirationDate;
+
+	/**
+	 * Add the expiration date
+	 */
+	@Child(name="trustFramework", type = {CodeableConcept.class}, order=6, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Description(shortDefinition="trustFramework Date")
+	private CodeableConcept trustFramework;
+
+	public Coding getType() {
+		return this.type;
+	}
+	
+
+	public void setType(Coding val) {
+		this.type = val;
+	}
+	
+	public Coding getUse() {
+		return this.use;
+	}
+	
+	public void setUse(Coding val) {
+		this.use = val;
+	}
+
+	public DateType getExpirationDate() {
+		return this.expirationDate;
+	}
+	
+	public void setExpirationDate(DateType val) {
+		this.expirationDate = val;
+	}
+
+	public Coding getCertificateStandard() {
+		return this.certificateStandard;
+	}
+	
+	public void setCertificateStandard(Coding val) {
+		this.certificateStandard = val;
+	}
+
+	public StringType getCertificate() {
+		return this.certificate;
+	}
+	
+	public void setCertificate(StringType val) {
+		this.certificate = val;
+	}
+
+	public CodeableConcept getTrustFramework() {
+		return this.trustFramework;
+	}
+	
+	public void setTrustFramework(CodeableConcept val) {
+		this.trustFramework = val;
+	}
+	
+	/*
 	public VhDirDigitalCertificate setType(Coding type) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
@@ -77,8 +171,8 @@ public class VhDirDigitalCertificate extends Type implements ICompositeType {
 		this.extension.add(ext);
 		return this;
     }
-
-	/**
+*/
+    /**
      * It is important to override the isEmpty() method, adding a check for any
      * newly added fields. 
      */
@@ -95,9 +189,5 @@ public class VhDirDigitalCertificate extends Type implements ICompositeType {
         return retVal;
 	}
 
-	@Override
-	protected Type typedCopy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 }

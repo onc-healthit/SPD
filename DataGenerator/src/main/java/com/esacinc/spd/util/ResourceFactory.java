@@ -23,6 +23,7 @@ import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Location.DaysOfWeek;
 import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
+import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Signature;
@@ -41,6 +42,7 @@ import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
 import com.esacinc.spd.model.VhDirNote;
 import com.esacinc.spd.model.VhDirPrimarySource;
+import com.esacinc.spd.model.VhDirQualification;
 
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
@@ -436,12 +438,12 @@ public class ResourceFactory {
 
 	public static VhDirEhr getEhr(ResultSet resultset, Connection connection ) throws SQLException {
 		VhDirEhr ehr = new VhDirEhr();
-		ehr.setId(resultset.getString("ehr_id"));
+		ehr.setId(resultset.getString("vhdir_ehr_id"));
 		String url = resultset.getString("url");
 		if (url == null || url.isEmpty()) {
 			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr";
 		}
-		ehr.setUrl(new StringType(url));
+		ehr.setUrl(url);
 		ehr.setDeveloper(new StringType(resultset.getString("developer")));
 		ehr.setProduct(new StringType(resultset.getString("product")));
 		ehr.setVersion(new StringType(resultset.getString("version")));
@@ -449,7 +451,7 @@ public class ResourceFactory {
 		ehr.setCertificationID(new StringType(resultset.getString("certification_id")));
 		if (connection != null) {
 			// Gather the patient access codeable concepts for this ehr
-			ResultSet sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE ehr_patient_access_id = ?",resultset.getInt("ehr_id"));
+			ResultSet sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE ehr_patient_acces_id = ?",resultset.getInt("vhdir_ehr_id"));
 			while(sqlResultset.next()) {
 				CodeableConcept cc = ResourceFactory.getCodeableConcept(sqlResultset);
 				ehr.addPatientAccess(cc);
@@ -464,13 +466,13 @@ public class ResourceFactory {
 		if (url == null || url.isEmpty()) {
 			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients";
 		}
-		np.setUrl(new StringType(url));
+		np.setUrl(url);
 		np.setId(resultset.getString("new_patients_id"));
-		np.setValue(new BooleanType(resultset.getBoolean("accepting_patient")));
+		np.setAcceptingPatients(new BooleanType(resultset.getBoolean("accepting_patient")));
 		// Note: the network_resource_reference_id points to a row in the resource_reference table. 
 		String nwrk = resultset.getString("network_resource_reference_id");
 		if (nwrk != null && !nwrk.isEmpty()) {
-			np.setReference(makeResourceReference(nwrk, "VhDirNetwork", null, "Network for a newpatients"));;
+			np.setNetwork(makeResourceReference(nwrk, "VhDirNetwork", null, "Network for a newpatients"));;
 		}
 		return np;
 	}
@@ -481,7 +483,7 @@ public class ResourceFactory {
 		if (url == null || url.isEmpty()) {
 			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatientprofile";
 		}
-		np.setUrl(new StringType(url));
+		np.setUrl(url);
 		np.setId(resultset.getString("new_patient_profile_id"));
 		np.setValue(new StringType(resultset.getString("profile_string")));
 		return np;
@@ -529,6 +531,21 @@ public class ResourceFactory {
 		}
 
 		return ps;
+	}
+
+	public static PractitionerQualificationComponent getQualification(ResultSet resultset, Connection connection) throws SQLException {
+		PractitionerQualificationComponent qu = new PractitionerQualificationComponent();
+		qu.setCode(getCodeableConcept(resultset.getInt("code_cc_id"),connection));
+		qu.setPeriod(makePeriod(resultset.getDate("period_start"),resultset.getDate("period_end")));
+		qu.setIssuer(getResourceReference(resultset.getInt("issuing_organization_id"),connection));
+	    ResultSet identifierResults = DatabaseUtil.runQuery(connection, "SELECT * from identifier where qualification_id = ?", resultset.getInt("qualification_id"));
+		while(identifierResults.next()) {
+			VhDirIdentifier identifier = getIdentifier(identifierResults.getInt("identifier_id"), connection);
+			qu.addIdentifier(identifier);
+		}
+
+		// TODO add qualification history
+		return qu;
 	}
 
 	public static VerificationResultAttestationComponent getAttestation(ResultSet resultset, Connection connection) throws SQLException {

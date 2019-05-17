@@ -1,31 +1,57 @@
 package com.esacinc.spd.DataGenerator;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import org.hl7.fhir.r4.model.Address.AddressUse;
+import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Extension;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
+import org.hl7.fhir.r4.model.HumanName;
+import org.hl7.fhir.r4.model.HumanName.NameUse;
+import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
 import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.TimeType;
 
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirAlias;
-import com.esacinc.spd.model.VhDirAlias_lite;
 import com.esacinc.spd.model.VhDirContactPoint;
+import com.esacinc.spd.model.VhDirContactPointAvailableTime;
 import com.esacinc.spd.model.VhDirDigitalCertificate;
+import com.esacinc.spd.model.VhDirEndpoint;
+import com.esacinc.spd.model.VhDirGeoLocation;
 import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirNetwork;
+import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
+import com.esacinc.spd.model.VhDirOrganization_MH;
+import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
+import com.esacinc.spd.util.Geocoding;
 import com.esacinc.spd.util.ResourceFactory;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-public class BulkOrganizationBuilder {
+public class BulkOrganizationBuilder_MH {
 	
 	
 	/**
@@ -37,36 +63,39 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 * @throws ParseException
 	 */
-	public List<VhDirOrganization> getOrganizations(Connection connection) throws SQLException, ParseException {
-		List<VhDirOrganization> organizations = new ArrayList<VhDirOrganization>();
-		
+	public List<VhDirOrganization_MH> getOrganizations(Connection connection) throws SQLException, ParseException {
+		List<VhDirOrganization_MH> organizations = new ArrayList<VhDirOrganization_MH>();
 		int cnt = 0;
 		int certCount = 0;
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization", null);
 		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
-			VhDirOrganization org = new VhDirOrganization();
+			VhDirOrganization_MH org = new VhDirOrganization_MH();
 			try {
 			// set the id
 			int orgId = resultSet.getInt("organization_id");
 			org.setId(resultSet.getString("organization_id"));
-						 					
+			 					
 			// Handle description
-			org.setDescription(resultSet.getString("description"));
+			String description = resultSet.getString("description");
+			if (description != null) {
+				org.setDescription(description);
+			}
 			
 			// Add a digital certificate to the first 3 organizations
 			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-				System.out.println("Adding a cert");
-				VhDirDigitalCertificate cert = DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null);
-				org.addDigitalcertficate(cert);
+				org.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null));
 			}
-			
-			
+						
 			// Handle the identifiers
 			handleIdentifiers(connection, org, orgId);
 			
-			// 
-			org.setActive(resultSet.getBoolean("active"));
+			// TODO Hard coded active for now
+			int active = resultSet.getInt("active");
+			if (active == 1)
+				org.setActive(true);
+			else
+				org.setActive(false);
 			
 			// TODO Hard coded type as provider for now
 			CodeableConcept typeConcept = new CodeableConcept();
@@ -74,10 +103,13 @@ public class BulkOrganizationBuilder {
             org.addType(typeConcept);
 					
             // Handle the name
-            org.setDescription(resultSet.getString("name"));
+         	String name = resultSet.getString("name");
+         	if (name != null) {
+         		org.setName(name);
+         	}
          			
 			// Handle aliases
-         	handleAliases(connection, resultSet, org, orgId);
+         	// TODO handleAliases(connection, org, orgId);
 			
             // Handle the telecoms
          	handleTelecoms(connection, org, orgId);
@@ -86,7 +118,13 @@ public class BulkOrganizationBuilder {
          	handleAddresses(connection, org, orgId);
 			
 			// Handle the partOf association reference
-         	org.setPartOf(ResourceFactory.getResourceReference(resultSet.getInt("partOf_organization_id"), connection));
+         	String partOfId = resultSet.getString("partOf_organization_id");
+         	if (partOfId != null) {
+	         	Reference partOf = new Reference();
+	         	partOf.setId(partOfId);
+	         	partOf.setReference("urn:uuid:" + partOfId);
+	         	org.setPartOf(partOf);
+         	}
 			
 			// Handle contacts
          	handleContacts(connection, org, orgId);
@@ -95,7 +133,7 @@ public class BulkOrganizationBuilder {
          	handleEndpoints(connection, org, orgId);
 
             // Handle the restrictions
-         	handleRestrictions(connection, org, orgId);
+         	//handleRestrictions(connection, org, orgId);
 
 			organizations.add(org);
 			}
@@ -116,7 +154,7 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleIdentifiers(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	private void handleIdentifiers(Connection connection, VhDirOrganization_MH org, int orgId) throws SQLException {
         ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from identifier where organization_id = ?", orgId);
 		while(resultset.next()) {
 				VhDirIdentifier identifier = ResourceFactory.getIdentifier(resultset);
@@ -132,7 +170,7 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleAddresses(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	private void handleAddresses(Connection connection, VhDirOrganization_MH org, int orgId) throws SQLException {
         ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where organization_id = ?", orgId);
 		while(resultset.next()) {
 			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
@@ -148,7 +186,7 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleTelecoms(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	private void handleTelecoms(Connection connection, VhDirOrganization_MH org, int orgId) throws SQLException {
         ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where organization_id = ?", orgId);
 		while(resultset.next()) {
 			VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
@@ -167,7 +205,7 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleContacts(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	private void handleContacts(Connection connection, VhDirOrganization_MH org, int orgId) throws SQLException {
      	ResultSet resultset = DatabaseUtil.runQuery(connection, 
      			"SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, n.period_start, n.period_end, " +
 				"oc.organization_contact_id " +
@@ -199,19 +237,24 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleAliases(Connection connection, ResultSet resultSet, VhDirOrganization org, int orgId) throws SQLException {
-        ResultSet aliasResults = DatabaseUtil.runQuery(connection, "SELECT * FROM organization_alias WHERE organization_id = ?", 3);
-        while(aliasResults.next()) {
-			VhDirAlias_lite alias = new VhDirAlias_lite();
+	private void handleAliases(Connection connection, VhDirOrganization_MH org, int orgId) throws SQLException {
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * FROM organization_alias WHERE organization_id = ?", orgId);
+		while(resultset.next()) {
+			VhDirAlias alias = new VhDirAlias();
 			
 			// Set id
-			alias.setId(aliasResults.getString("organization_alias_id"));
-			alias.setPeriod(ResourceFactory.makePeriod(aliasResults.getDate("period_start"), aliasResults.getDate("period_end")));
-			alias.setType(ResourceFactory.getCodeableConcept(aliasResults.getInt("alias_type_cc_id"), connection));
-			alias.setValue(new StringType(aliasResults.getString("value")));
-			//TODO   figure out why this wont work:
-			//org.add_alias(alias);
-			org.addAlias(aliasResults.getString("value")); // Add base profile alias type
+			alias.setId(resultset.getString("organization_alias_id"));
+			
+			// Handle type
+			
+			// Handle period
+			
+			// Handle value
+			String value = resultset.getString("value");
+			if (value != null)
+				alias.setValue(value);
+			
+			org.addAlias(alias);
 		}
 	}
 	
@@ -240,7 +283,7 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleEndpoints(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	private void handleEndpoints(Connection connection, VhDirOrganization_MH org, int orgId) throws SQLException {
         ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_endpoint where organization_id = ?", orgId);
 		while(resultset.next()) {
 			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("endpoint_id"), "VhDirEndpoint", null, "Organization Endpoint");
@@ -255,13 +298,14 @@ public class BulkOrganizationBuilder {
 	 * @param pracId
 	 * @throws SQLException
 	 */
-	private void handleRestrictions(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	private void handleRestrictions(Connection connection, VhDirOrganization_MH org, int orgId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where organization_restriction_id = ?", orgId);
 		while(resultset.next()) {
 			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
-			//org.addUsageRestriction(ref);
+			org.addUsageRestriction(ref);
 		}
 	}
+
 
 
 }

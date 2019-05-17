@@ -3,58 +3,52 @@ package com.esacinc.spd.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Configuration;
-import org.hl7.fhir.r4.model.Element;
-import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.Type;
-import org.hl7.fhir.r4.model.api.ICompositeType;
-import org.hl7.fhir.utilities.Utilities;
 
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
-import ca.uhn.fhir.model.api.annotation.Extension;
 
 @DatatypeDef(name="VhDirEhr")
-public class VhDirEhr extends Type {
+public class VhDirEhr extends Extension {
 	private static final long serialVersionUID = 1L;
 
 	/**
      * Developer
      */
-    @Child(name = "developer", type = {StringType.class}, order=1, min=1, max=1, modifier=false, summary=true)
+    @Child(name = "developer", type = {StringType.class},  min=1, max=1, modifier=false, summary=true)
     @Description(shortDefinition="Developer", formalDefinition="Developer" )
     protected StringType developer;
 
 	/**
      * Product
      */
-    @Child(name = "product", type = {StringType.class}, order=1, min=1, max=1, modifier=false, summary=true)
+    @Child(name = "product", type = {StringType.class},  min=1, max=1, modifier=false, summary=true)
     @Description(shortDefinition="Product", formalDefinition="Product" )
     protected StringType product;
     
 	/**
      * Version
      */
-    @Child(name = "version", type = {StringType.class}, order=1, min=1, max=1, modifier=false, summary=true)
+    @Child(name = "version", type = {StringType.class},  min=1, max=1, modifier=false, summary=true)
     @Description(shortDefinition="Version", formalDefinition="Version" )
     protected StringType version;
    
 	/**
      * Certification Edition
      */
-    @Child(name = "certificationEdition", type = {Coding.class}, order=1, min=1, max=1, modifier=false, summary=true)
+    @Child(name = "certificationEdition", type = {Coding.class},  min=1, max=1, modifier=false, summary=true)
     @Description(shortDefinition="Certification Edition", formalDefinition="Certification Edition" )
     protected Coding certificationEdition;
 
 	/**
      * Certification ID
      */
-    @Child(name = "certificationID", type = {StringType.class}, order=1, min=1, max=1, modifier=false, summary=true)
+    @Child(name = "certificationID", type = {StringType.class},  min=1, max=1, modifier=false, summary=true)
     @Description(shortDefinition="Certification ID", formalDefinition="Certification ID" )
     protected StringType certificationID;
 
@@ -62,16 +56,10 @@ public class VhDirEhr extends Type {
 	/**
      * Patient Access
      */
-    @Child(name = "patientAccess", type = {CodeableConcept.class}, order=1, min=1, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+    @Child(name = "patientAccess", type = {CodeableConcept.class}, min=1, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
     @Description(shortDefinition="Certification Edition", formalDefinition="Certification Edition" )
     protected List<CodeableConcept> patientAccess;
 
-	/**
-     * A URL to the definition
-     */
-    @Child(name = "url", type = {StringType.class}, order=1, min=1, max=1, modifier=false, summary=true)
-    @Description(shortDefinition="Definition url", formalDefinition="Definition url" )
-    protected StringType url;
 
     public StringType getDeveloper() {
     	return this.developer;
@@ -130,14 +118,7 @@ public class VhDirEhr extends Type {
 	    return this;
 	}
 
-    public StringType getUrl() {
-    	return this.url;
-    }
-    
-    public void setUrl(StringType val) {
-    	this.url = val;
-    }
-
+  
 	@Override
 	public VhDirEhr copy() {
 		// TODO Auto-generated method stub
@@ -146,7 +127,7 @@ public class VhDirEhr extends Type {
 
 
 	@Override
-	protected Type typedCopy() {
+	protected VhDirEhr typedCopy() {
 		// TODO Auto-generated method stub
 		return null;
 	}

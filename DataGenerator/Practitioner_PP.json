@@ -9,7 +9,7 @@
   "extension": [
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate",
-      "valueDigitalCertificate": {
+      "valueVhDirDigitalCertificate": {
         "extension": [
           {
             "url": "type",
@@ -40,7 +40,7 @@
           },
           {
             "url": "expirationDate",
-            "valueDate": "2020-05-15"
+            "valueDate": "2020-05-17"
           },
           {
             "url": "certificate",
@@ -69,7 +69,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
-          "valueCode": "active"
+          "valueCode": "unknown"
         }
       ],
       "use": "official",
@@ -259,9 +259,26 @@
     }
   ],
   "gender": "female",
+  "qualification": [
+    {
+      "code": {
+        "id": "1",
+        "coding": [
+          {
+            "userSelected": false
+          }
+        ],
+        "text": "communication_method"
+      },
+      "issuer": {
+        "id": "1",
+        "type": "vhdir_organization"
+      }
+    }
+  ],
   "communication": [
     {
-      "id": "x5377",
+      "id": "x8849",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",

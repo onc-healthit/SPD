@@ -229,7 +229,7 @@ public class BulkPractitionerBuilder {
 	private void handleRestrictions(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where practitioner_restriction_id = ?", pracId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			prac.addUsageRestriction(ref);
 		}
 	}

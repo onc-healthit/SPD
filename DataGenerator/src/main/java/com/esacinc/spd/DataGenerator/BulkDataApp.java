@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirHealthcareService;
+import com.esacinc.spd.model.VhDirInsurancePlan;
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
@@ -37,7 +38,7 @@ public class BulkDataApp {
 	
 	// Which VhDir resources to generate...
 	private static boolean DO_ALL = false;  
-	private static boolean DO_ORGANIZATIONS = true;
+	private static boolean DO_ORGANIZATIONS = false;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
@@ -45,9 +46,8 @@ public class BulkDataApp {
 	private static boolean DO_ENDPOINTS = false;
 	private static boolean DO_CARETEAMS = false;
 	private static boolean DO_HEALTHCARESERVICES = false;
-	
+	private static boolean DO_INSURANCEPLANS = true;
 	// TODO
-	private static boolean DO_INSURANCEPLANS = false;
 	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
 	private static boolean DO_PRACTITIONERROLES = false;
 	private static boolean DO_RESTRICTIONS = false;
@@ -71,7 +71,7 @@ public class BulkDataApp {
 	// Which VhDir resource pretty-printed files to generate...
 	// (Set to null or "" to not generate a file.)
 	private static String FILE_ORGANIZATIONS_PP = "Organization_PP.json";
-	private static String FILE_PRACTITIONERS_PP = "Practitioner_PP2.json";
+	private static String FILE_PRACTITIONERS_PP = "Practitioner_PP.json";
 	private static String FILE_NETWORKS_PP = "Network_PP.json";
 	private static String FILE_LOCATIONS_PP = "Location_PP.json";
 	private static String FILE_VALIDATIONS_PP = "Validation_PP.json";
@@ -86,7 +86,7 @@ public class BulkDataApp {
 	private static int    PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
 	// Control how many entries we process in each section and output. -1 means ALL.
-	public static int MAX_ENTRIES = 1;  
+	public static int MAX_ENTRIES = 10;  
 	
 	public static void main(String[] args) {
 		
@@ -253,7 +253,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_INSURANCEPLANS) {
-			/*
 			try{
 				// Get and write Insurance Planes
 				System.out.println("Generate Insurance_Plan resources...");
@@ -269,7 +268,6 @@ public class BulkDataApp {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-			 */ 
 		}
 
 		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
@@ -642,6 +640,46 @@ public class BulkDataApp {
 
 				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
 				maybePrettyPrintToConsole(prettyJson, cnt, "HEALTHCARE SERVICE");
+				
+				cnt++;
+			}
+			writer.close();
+			if (pp_writer != null) {
+				pp_writer.close();
+			}
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing healtchare service list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing healthcare service list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputInsurancePlanList(List<VhDirInsurancePlan>plans) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_INSURANCEPLANS));
+			BufferedWriter pp_writer = null;
+			if (FILE_INSURANCEPLANS_PP != null &&  !FILE_INSURANCEPLANS_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_INSURANCEPLANS_PP));
+			}
+			for (VhDirInsurancePlan plan : plans) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+
+				String nwJson = jsonParser.encodeResourceToString(plan);
+				writer.write(nwJson);
+				writer.write("\n");
+
+				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
+				maybePrettyPrintToConsole(prettyJson, cnt, "INSURANCE PLAN");
 				
 				cnt++;
 			}

@@ -1,7 +1,6 @@
 package com.esacinc.spd.DataGenerator;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -12,11 +11,9 @@ import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 
 import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirContactPoint;
+import com.esacinc.spd.model.VhDirContact;
 import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
-import com.esacinc.spd.model.VhDirNetworkContact;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ResourceFactory;
@@ -163,7 +160,7 @@ public class BulkNetworkBuilder {
 	private void handleRestrictions(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where network_restriction_id = ?", nwId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			nw.addUsageRestriction(ref);
 		}
 	}
@@ -180,7 +177,7 @@ public class BulkNetworkBuilder {
 	private void handleLocationReferences(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
 	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where network_location_id = ?", nwId);
 		while(resultset.next()) {
-				Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+				Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 				nw.addLocationReference(ref);
 		}
 	}
@@ -195,7 +192,7 @@ public class BulkNetworkBuilder {
 	private void handleContacts(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
 	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from contact where network_id = ?", nwId);
 		while(resultset.next()) {
-				VhDirNetworkContact con = ContactFactory.getNetworkContact(resultset, connection);
+				VhDirContact con = ContactFactory.getContact(resultset, connection);
 				nw.addContact(con);
 		}
 	}

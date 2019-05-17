@@ -12,7 +12,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
-          "valueCode": "active"
+          "valueCode": "unknown"
         }
       ],
       "use": "official",

@@ -257,7 +257,7 @@ public class BulkLocationBuilder {
 	private void handleRestrictions(Connection connection, VhDirLocation loc, int locId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where location_restriction_id = ?", locId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			loc.addUsageRestriction(ref);
 		}
 	}

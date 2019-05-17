@@ -178,7 +178,7 @@ public class BulkCareTeamBuilder {
 	private void handleRestrictions(Connection connection, VhDirCareTeam ct, int ctId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where careteam_restriction_id = ?", ctId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			ct.addUsageRestriction(ref);
 		}
 	}

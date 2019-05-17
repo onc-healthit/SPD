@@ -1,29 +1,22 @@
 package com.esacinc.spd.util;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
 
-import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.CodeType;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.TimeType;
-import org.hl7.fhir.r4.model.CareTeam.CareTeamStatus;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
-import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.HealthcareService.DaysOfWeek;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
+import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanContactComponent;
 import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.TimeType;
 
+import com.esacinc.spd.model.VhDirContact;
 import com.esacinc.spd.model.VhDirContactPoint;
 import com.esacinc.spd.model.VhDirContactPointAvailableTime;
-import com.esacinc.spd.model.VhDirDigitalCertificate;
-import com.esacinc.spd.model.VhDirNetworkContact;
 
 /**
  * This class has static public methods for return various forms of contacts or contactpoints from the database.
@@ -98,15 +91,36 @@ public class ContactFactory {
 	}
 
 	/**
-	 * Creates a VhDirNetworkContact resource from the data in the given resultset at the current cursor location.
+	 * Creates a VhDirContact resource from the data in the given resultset at the current cursor location.
 	 * Connection is needed to retrieve further data from other tables to populate the contact info
 	 * @param resultset
 	 * @param connection
 	 * @return
 	 * @throws SQLException
 	 */
-	static public VhDirNetworkContact getNetworkContact(ResultSet resultset, Connection connection) throws SQLException{
-		VhDirNetworkContact con = new VhDirNetworkContact();
+	static public VhDirContact getContact(ResultSet resultset, Connection connection) throws SQLException{
+		VhDirContact con = new VhDirContact();
+		con.setId(resultset.getString("contact_id"));
+		con.setPurpose(ResourceFactory.getCodeableConcept(resultset.getInt("purpose_id"),connection));
+		con.setName(ResourceFactory.getHumanName(resultset.getInt("name_id"),connection));
+		if (connection != null) {
+			// Gather the telecoms for this netowrk contact
+			ResultSet tcresultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", resultset.getInt("name_id"));
+			while(tcresultset.next()) {
+				VhDirContactPoint tele = getContactPoint(tcresultset, connection);
+				tele.setId(tcresultset.getString("telecom_id"));
+				// Add 9:00-4:30 any day, available time for this telecom contact point
+				tele.addAvailableTime(makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				con.addTelecom(tele);
+			}
+			// Get the address for this contact
+			con.setAddress(ResourceFactory.getAddress(tcresultset.getInt("address_id"),connection));
+		}
+		return con;
+	}
+
+	static public InsurancePlanContactComponent getInsurancePlanContact(ResultSet resultset, Connection connection) throws SQLException{
+		InsurancePlanContactComponent con = new InsurancePlanContactComponent();
 		con.setId(resultset.getString("contact_id"));
 		con.setPurpose(ResourceFactory.getCodeableConcept(resultset.getInt("purpose_id"),connection));
 		con.setName(ResourceFactory.getHumanName(resultset.getInt("name_id"),connection));

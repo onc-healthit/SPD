@@ -23,8 +23,8 @@ import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Location.DaysOfWeek;
 import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
-import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
 import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Signature;
 import org.hl7.fhir.r4.model.StringType;
@@ -42,7 +42,6 @@ import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
 import com.esacinc.spd.model.VhDirNote;
 import com.esacinc.spd.model.VhDirPrimarySource;
-import com.esacinc.spd.model.VhDirQualification;
 
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
@@ -66,23 +65,27 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public Reference getResourceReference(int refId, Connection connection) throws SQLException{
-		Reference ref = new Reference();
 		ResultSet refs = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where resource_reference_id = ?", refId);
 		while(refs.next()) {
-			ref.setId(refs.getString("resource_reference_id"));
-			ref.setDisplay(refs.getString("display"));
-			ref.setReference(refs.getString("reference"));
-			// If the reference points to an identifier, go get it from the db....
-			String identifierId = refs.getString("reference");
-			if (identifierId != null && !identifierId.isEmpty()) {
-				ref.setIdentifier(getIdentifier(Integer.valueOf(ref.getReference()), connection));
-			}
-			ref.setType(refs.getString("type"));	
-			return ref;
+			return getResourceReference(refs,connection); // We only expect one in this case
 		}
 		return null;  // If we get here, there was no reference with that id
 	}
-	
+
+	static public Reference getResourceReference(ResultSet resulset, Connection connection) throws SQLException{
+		Reference ref = new Reference();
+		ref.setId(resulset.getString("resource_reference_id"));
+		ref.setDisplay(resulset.getString("display"));
+		ref.setReference(resulset.getString("reference"));
+		// If the reference points to an identifier, go get it from the db....
+		String identifierId = resulset.getString("reference");
+		if (identifierId != null && !identifierId.isEmpty()) {
+			ref.setIdentifier(getIdentifier(Integer.valueOf(ref.getReference()), connection));
+		}
+		ref.setType(resulset.getString("type"));	
+		return ref;
+	}
+
 	/**
 	 * Creates a VhDirIdentifier from the identifier with the given identifierId in the database
 	 * @param identifierId
@@ -606,6 +609,7 @@ public class ResourceFactory {
 		ec.setComment(resultset.getString("comment"));
 		return ec;
 	}
+
 
 	///////////////   MAKE METHODS  ////////////////////////////////////////////////////////////////
     // Make methods are those methods that create resources from data parameters passed into them.

@@ -190,7 +190,7 @@ public class BulkEndpointBuilder {
 	private void handleRestrictions(Connection connection, VhDirEndpoint ep, int epId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where endpoint_restriction_id = ?", epId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			ep.addUsageRestriction(ref);
 		}
 	}

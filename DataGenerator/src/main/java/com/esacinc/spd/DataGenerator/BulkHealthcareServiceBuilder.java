@@ -132,7 +132,7 @@ public class BulkHealthcareServiceBuilder {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from fhir_codeable_concept where healthcare_service_type_id = ?", hsId);
 		while(resultset.next()) {
 			CodeableConcept cc = ResourceFactory.getCodeableConcept(resultset);
-			hs.addCategory(cc);
+			hs.addType(cc);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class BulkHealthcareServiceBuilder {
 	private void handleLocations(Connection connection, VhDirHealthcareService hs, int hsId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from resource_reference where healthcare_service_location_id = ?", hsId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			hs.addLocation(ref);
 		}
 	}
@@ -179,7 +179,7 @@ public class BulkHealthcareServiceBuilder {
 	private void handleCoverageAreas(Connection connection, VhDirHealthcareService hs, int hsId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from resource_reference where healthcare_service_coverageArea_id = ?", hsId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			hs.addCoverageArea(ref);
 		}
 	}
@@ -378,7 +378,7 @@ public class BulkHealthcareServiceBuilder {
 	private void handleRestrictions(Connection connection, VhDirHealthcareService hs, int hsId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where healthcare_service_restriction_id = ?", hsId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
 			hs.addUsageRestriction(ref);
 		}
 	}

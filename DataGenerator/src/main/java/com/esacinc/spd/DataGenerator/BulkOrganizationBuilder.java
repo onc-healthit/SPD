@@ -208,7 +208,6 @@ public class BulkOrganizationBuilder {
 			alias.setPeriod(ResourceFactory.makePeriod(aliasResults.getDate("period_start"), aliasResults.getDate("period_end")));
 			alias.setType(ResourceFactory.getCodeableConcept(aliasResults.getInt("alias_type_cc_id"), connection));
 			alias.setValue(new StringType(aliasResults.getString("value")));
-			//TODO   figure out why this wont work:
 			org.addOrgAlias(alias);
 			org.addAlias(aliasResults.getString("value")); // Add base profile alias type
 		}
@@ -257,8 +256,8 @@ public class BulkOrganizationBuilder {
 	private void handleRestrictions(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where organization_restriction_id = ?", orgId);
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset.getInt("resource_reference_id"),connection);
-			//org.addUsageRestriction(ref);
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
+			org.addUsageRestriction(ref);
 		}
 	}
 

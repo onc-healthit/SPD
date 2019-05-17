@@ -9,7 +9,7 @@ import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 
 @DatatypeDef(name="OrganizationContactComponent")
-public class VhDirNetworkContact extends OrganizationContactComponent {
+public class VhDirContact extends OrganizationContactComponent {
 	private static final long serialVersionUID = 1L;
     
 	

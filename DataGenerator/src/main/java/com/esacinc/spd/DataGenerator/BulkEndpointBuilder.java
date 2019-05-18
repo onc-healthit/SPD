@@ -11,7 +11,7 @@ import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
 
-import com.esacinc.spd.model.VhDirContactPoint;
+import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirEndpointUseCase;
 import com.esacinc.spd.model.VhDirIdentifier;
@@ -162,7 +162,8 @@ public class BulkEndpointBuilder {
 	}
 	
 	/**
-	 * Handles the contact for the endpoint id passed in
+	 * Handles the contact for the endpoint id passed in.
+	 * Note that VhDirEndpoints have a telecom, but it is called a contact, unlike all the other profiles in the IG
 	 * 
 	 * @param connection
 	 * @param ep
@@ -170,11 +171,15 @@ public class BulkEndpointBuilder {
 	 * @throws SQLException
 	 */
 	private void handleContact(Connection connection, VhDirEndpoint ep, int epId) throws SQLException {
-		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from endpoint_contact where endpoint_contact_id = ?", epId);
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where telecom_id = ?", epId);
 		while(resultset.next()) {
-				VhDirContactPoint contact = ContactFactory.getEndpointContact(resultset, connection);
-				ep.addContact(contact);
-				return; // We expect only one.
+			VhDirTelecom contact = ContactFactory.getTelecom(resultset, connection);
+			if (!contact.hasAvailableTime()) {
+				// Add  any day, any time available time for this telecom contact point
+				contact.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", true, "", ""));
+			}
+			ep.addContact(contact);
+			return; // We expect only one.
 		}
 	}
 	

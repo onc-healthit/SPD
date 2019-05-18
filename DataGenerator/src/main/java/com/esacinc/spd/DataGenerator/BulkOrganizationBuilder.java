@@ -14,7 +14,7 @@ import org.hl7.fhir.r4.model.StringType;
 
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirAlias;
-import com.esacinc.spd.model.VhDirContactPoint;
+import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirOrganization;
@@ -150,10 +150,11 @@ public class BulkOrganizationBuilder {
 	private void handleTelecoms(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
         ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where organization_id = ?", orgId);
 		while(resultset.next()) {
-			VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
-			tele.setId(resultset.getString("telecom_id"));
-			// Add a 24x7 available time for this telecom contact point
-			tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat;sun", true, null, null));
+			VhDirTelecom tele = ContactFactory.getTelecom(resultset,connection);
+			if (!tele.hasAvailableTime()) {
+				// Add a 24x7 available time for this telecom contact point
+				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat;sun", true, null, null));
+			}
 			org.addTelecom(tele);
 		}
 	}
@@ -174,18 +175,7 @@ public class BulkOrganizationBuilder {
      			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?", 
      			orgId);
 		while(resultset.next()) {
-			OrganizationContactComponent occ = new OrganizationContactComponent();
-			
-			// Set id
-			int orgContactId = resultset.getInt("contact_id");
-			occ.setId(resultset.getString("contact_id"));
-			
-			// Set name
-			occ.setName(ResourceFactory.getHumanName(resultset));
-			
-			// Handle telecoms for contacts
-			handleContactTelecoms(connection, occ, orgContactId);
-			
+			OrganizationContactComponent occ = ContactFactory.getOrganizationContact(resultset, connection);
 			org.addContact(occ);
 		}
 	}
@@ -213,23 +203,6 @@ public class BulkOrganizationBuilder {
 		}
 	}
 	
-	/**
-	 * Gets the telecoms for the contacts for an organization given the organization contact ID
-	 * 
-	 * @param connection
-	 * @param org
-	 * @param orgId
-	 * @throws SQLException
-	 */
-	private void handleContactTelecoms(Connection connection, OrganizationContactComponent occ, int orgContactId) throws SQLException {
-        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", orgContactId);
-		while(resultset.next()) {
-			VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection); 
-			// Add weekday, normal business hours availablility for this contact
-			tele.addAvailableTime(ContactFactory.makeAvailableTime("mon;tue;wed;thu;fri", false, "08:00:00", "17:00:00"));
-			occ.addTelecom(tele);
-		}
-	}
 
 	/**
 	 * Handle the endpoint references associated with the organization 

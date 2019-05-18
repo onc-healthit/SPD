@@ -40,7 +40,7 @@
           },
           {
             "url": "expirationDate",
-            "valueDate": "2020-05-17"
+            "valueDate": "2020-05-18"
           },
           {
             "url": "certificate",
@@ -69,7 +69,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
-          "valueCode": "unknown"
+          "valueCode": "active"
         }
       ],
       "use": "official",
@@ -278,7 +278,7 @@
   ],
   "communication": [
     {
-      "id": "x8849",
+      "id": "x6711",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",

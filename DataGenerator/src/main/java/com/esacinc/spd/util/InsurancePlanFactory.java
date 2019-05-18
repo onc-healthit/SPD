@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import org.hl7.fhir.r4.model.InsurancePlan.CoverageBenefitComponent;
 import org.hl7.fhir.r4.model.InsurancePlan.CoverageBenefitLimitComponent;
+import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanContactComponent;
 import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanCoverageComponent;
 import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanPlanComponent;
 import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanPlanGeneralCostComponent;
@@ -17,17 +18,55 @@ import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 
 import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirTelecom;
 
 /**
  * This class has static public methods for return various data associated with Insurance Plans from the database.
  * Since there is so much structure and data around Insurance Plans, a separate factory class was indicated.
  * 
+ * The Insurance Plan data hierarchy is complex and full of lists of things.  The hierarchy is presented below,
+ * with each item representing a list of items where an item is either a resource reference, component, or codeable concept.
+ * Many of the component type are already modeled as HAPI FHIR components, so it is just a matter of populating instnaces of
+ * them from the appropriate database tables.
+ * 
+ * In the hierarchy below, only the list items are shown. 
+ * 
+ * If class methods to gather the various items in the hierarch are not present in this class, then they can be found in
+ * the BulkInsurancePlanBuilder class.
+ * 
+ * 		Insurance Plan                      (VhDirInsurancePlan resource)
+ * 			Usage Restrictions              (VhDirRestriction resource references)
+ * 			Identifiers                     (VhDirIdentifier components)
+ * 			Plan Types                      (CodeableConcepts)
+ * 			Plan Aliases                    (Strings)
+ * 			Coverage Areas                  (VhDirLocation resource references)
+ * 			Contacts                        (InsurancePlanContactComponent components  - HAPI)
+ * 			Endpoints                       (VhDirEndpoint resource references)
+ * 			Networks                        (VhDirNetwork resource references)
+ * 			Coverages                       (InsurancePlanCoverageComponent components - HAPI)
+ * 				Coverage Networks           (VhDirNetwork resource references)
+ * 				Coverage Benefits           (CoverageBenefitComponent components - HAPI)
+ * 					Limits                  (CoverageBenefitLimitComponent components - HAPI)
+ * 			Plans                           (InsurancePlanPlanComponent components - HAPI)
+ * 				Identifiers                 (VhDirIdentifier components)
+ * 				Coverage Areas              (VhDirLocation resource references)
+ *              Networks                    (VhDirNetwork resource references)
+ *              General Costs               (InsurancePlanPlanGeneralCostComponent components - HAPI)
+ * 				Specific Costs              (InsurancePlanPlanSpecificCostComponent components - HAPI)
+ * 					Cost Benefits           (PlanBenefitComponent components - HAPI)
+ * 						Costs               (PlanBenefitCostComponent components - HAPI)
+ *							Cost Qualifiers (CodeableConcepts)
+ *
+ *
  * @author dandonahue
  *
  */
 public class InsurancePlanFactory {
 
-	
+	//----------------------------------------------------------------------------------------------------------------------
+	// Public methods
+	//----------------------------------------------------------------------------------------------------------------------
+
 	public InsurancePlanFactory() { }
 
 	public static InsurancePlanCoverageComponent getCoverage(ResultSet resultset, Connection connection) throws SQLException {
@@ -85,8 +124,42 @@ public class InsurancePlanFactory {
 		return plan;
 	}
 
+
+	/**
+	 * Note that this is virtually the same method as ContactFactory.getContact except this method
+	 * populates and returns a HAPI InsurancePlanContactComponent
+	 *  
+	 * @param resultset
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	static public InsurancePlanContactComponent getInsurancePlanContact(ResultSet resultset, Connection connection) throws SQLException{
+		InsurancePlanContactComponent con = new InsurancePlanContactComponent();
+		con.setId(resultset.getString("contact_id"));
+		con.setPurpose(ResourceFactory.getCodeableConcept(resultset.getInt("purpose_id"),connection));
+		con.setName(ResourceFactory.getHumanName(resultset.getInt("name_id"),connection));
+		if (connection != null) {
+			// Gather the telecom contact points for this contact
+			ResultSet tcresultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", resultset.getInt("name_id"));
+			while(tcresultset.next()) {
+				VhDirTelecom tele = ContactFactory.getTelecom(tcresultset, connection);
+				if (!tele.hasAvailableTime()) {
+					// Add 9:00-4:30 any day, available time for this telecom contact point
+					tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				}
+				con.addTelecom(tele);
+			}
+			// Get the address for this contact
+			con.setAddress(ResourceFactory.getAddress(tcresultset.getInt("address_id"),connection));
+		}
+		return con;
+	}
+
 	//----------------------------------------------------------------------------------------------------------------------
-	
+	// Protected and Private methods
+	//----------------------------------------------------------------------------------------------------------------------
+
 	protected static CoverageBenefitComponent getCoverageBenefit(ResultSet benResultSet, Connection connection) throws SQLException {
 		CoverageBenefitComponent ben = new CoverageBenefitComponent();
 		ben.setId(benResultSet.getString("benefit_id"));

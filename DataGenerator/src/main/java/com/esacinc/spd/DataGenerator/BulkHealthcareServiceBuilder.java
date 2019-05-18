@@ -14,7 +14,7 @@ import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComp
 import org.hl7.fhir.r4.model.Reference;
 
 
-import com.esacinc.spd.model.VhDirContactPoint;
+import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.model.VhDirHealthcareService;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirNewpatients;
@@ -292,7 +292,7 @@ public class BulkHealthcareServiceBuilder {
 	private void handleAvailableTimes(Connection connection, VhDirHealthcareService hs, int hsId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from available_time where healthcare_service_id = ?", hsId);
 		while(resultset.next()) {
-			HealthcareServiceAvailableTimeComponent at = ContactFactory.getAvailableTime(resultset);
+			HealthcareServiceAvailableTimeComponent at = ContactFactory.getHealthCareServiceAvailableTime(resultset);
 			hs.addAvailableTime(at);
 		}
 	}
@@ -358,10 +358,12 @@ public class BulkHealthcareServiceBuilder {
 	private void handleTelecoms(Connection connection, VhDirHealthcareService hs, int hsId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from telecom where healthcare_service_id = ?", hsId);
 		while(resultset.next()) {
-				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
+				VhDirTelecom tele = ContactFactory.getTelecom(resultset,connection);
 				tele.setId(resultset.getString("telecom_id"));
-				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				if (!tele.hasAvailableTime()) {
+					// Add 9:00-4:30 any day, available time for this telecom contact point
+					tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				}
 				hs.addTelecom(tele);
 		}
 	}

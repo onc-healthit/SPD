@@ -10,19 +10,37 @@ import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.HealthcareService.DaysOfWeek;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanContactComponent;
+import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.TimeType;
 
+import com.esacinc.spd.model.VhDirAvailableTime;
 import com.esacinc.spd.model.VhDirContact;
-import com.esacinc.spd.model.VhDirContactPoint;
-import com.esacinc.spd.model.VhDirContactPointAvailableTime;
+import com.esacinc.spd.model.VhDirTelecom;
 
 /**
- * This class has static public methods for return various forms of contacts or contactpoints from the database.
- * Examples:  ContactPoint, Network contact, Telecom, Endpoint contact.
- * While all of these have many common elements, they also have some slight differences in them.
+ * This class has static public methods for contacts and telecoms (extended from HAPI contactPoints) from the database.
+ * Contacts have a list of telecoms
+ * Telecoms can have a list of available times
+ *           
+ * In the VhDir IG,  endpoints have a list of "contacts", but they are really telecoms.
  * 
+ * The VhDir IG profiles almost all have either a list of contacts (which in turn have a list of telecoms), 
+ * or just a list of telecoms:
+ * 
+ *     VhDir Care Team - telecoms
+ *     VhDir Endpoint  - telecoms (but they are called contacts, for some reason)
+ *     VhDir Healthcare Service - telecoms
+ *     VhDir Insurance Plan - contacts
+ *     VhDir Location - telecoms
+ *     VhDir Network - telecoms
+ *     VhDir Organization - telecoms
+ *     VhDir Organization Affiliation - telecoms
+ *     VhDir Practitioner - telecoms
+ *     VhDir Practitioner Role - telecoms 
+ *     VhDir Restriction - n/a
+ *     VhDir Validation - n/a
+ *     
  * @author dandonahue
  *
  */
@@ -31,8 +49,12 @@ public class ContactFactory {
 	
 	public ContactFactory() { }
 
+	//-------------------------------------------------------------------------------------------------------------
+	// TELECOMS
+	//-------------------------------------------------------------------------------------------------------------
+
 	/**
-	 * Creates a VhDirContactPoint from the data pointed to by the current cursor in the given database query result set.
+	 * Creates a VhDirTelecom from the data pointed to by the current cursor in the given database query result set.
 	 * This assumes that the ResultSet argument is the result from one of the two sql statements 
 	 *        "Select * from endpoint_contact ...."
 	 *        "Select * from telecom ...."
@@ -45,51 +67,78 @@ public class ContactFactory {
 	 * @return VhDirContactPoint
 	 * @throws SQLException
 	 */
-	static public VhDirContactPoint getContactPoint(ResultSet resultset, Connection connection) throws SQLException{
-		VhDirContactPoint contact = new VhDirContactPoint();
+	static public VhDirTelecom getTelecom(ResultSet resultset, Connection connection) throws SQLException{
+		VhDirTelecom telecom = new VhDirTelecom();
+		// id - string
+		telecom.setId(resultset.getString("telecom_id"));
+		
+		// System - code
 		try {
-			contact.setSystem(ContactPointSystem.fromCode(resultset.getString("system")));
+			telecom.setSystem(ContactPointSystem.fromCode(resultset.getString("system")));
 		}
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
-			contact.setSystem(ContactPointSystem.NULL);
+			telecom.setSystem(ContactPointSystem.NULL);
 		}
-		contact.setPeriod(ResourceFactory.makePeriod(resultset.getDate("period_start"), resultset.getDate("period_end")));
-		contact.setValue(resultset.getString("value"));
+
+		// Value - string
+		telecom.setValue(resultset.getString("value"));
+
+		// Use - code 
 		try {
-			contact.setUse(ContactPointUse.fromCode(resultset.getString("use")));
+			telecom.setUse(ContactPointUse.fromCode(resultset.getString("use")));
 		}
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
-			contact.setUse(ContactPointUse.NULL);
+			telecom.setUse(ContactPointUse.NULL);
 		}
-		contact.setRank(resultset.getInt("rank"));
+
+		// Rank - int
+		telecom.setRank(resultset.getInt("rank"));
+
+		// Period - period
+		telecom.setPeriod(ResourceFactory.makePeriod(resultset.getDate("period_start"), resultset.getDate("period_end")));
 		
-		contact.setViaintermediary(ResourceFactory.getResourceReference(resultset.getInt("contactpoint_intermediary"),connection));
+		// viaIntermediary - resource reference (extension)
+		telecom.setViaintermediary(ResourceFactory.getResourceReference(resultset.getInt("contactpoint_intermediary"),connection));
 		
-		// Leave it up to the calling method to add available time(s)
-		
-		return contact;
+		// Available times -  list of VhDirAvailableTime (extension)
+		if (connection != null) {
+			ResultSet timesResultset = DatabaseUtil.runQuery(connection,"select * from available_time where telecom_id = ?", resultset.getInt("telecom_id"));
+			while (timesResultset.next()) {
+				VhDirAvailableTime available = makeAvailableTime(timesResultset.getString("days_of_week"),
+						timesResultset.getBoolean("all_day"),
+						timesResultset.getString("available_start_time"),
+						timesResultset.getString("available_end_time"));
+				available.setId(timesResultset.getString("available_time_id"));
+				telecom.addAvailableTime(available);
+			}
+		}
+		return telecom;
 	}
+	
 
 	/**
-	 * Creates a VhDirContactPoint from the identifier with the given identifierId in the database
-	 * Note:  We create VhDirContactPoint objects from rows in the database telecom table
+	 * Creates a VhDirTelecom from the identifier with the given identifierId in the database
+	 * Note:  We create VhDirTelecom objects from rows in the database telecom table
 	 * @param addrId
 	 * @param connection
-	 * @return VhDirAddress
+	 * @return VhDirTelecom
 	 * @throws SQLException
 	 */
-	static public VhDirContactPoint getTelecomContactPoint(int contactId, Connection connection) throws SQLException{
-		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where telecom_id = ?", contactId);
+	static public VhDirTelecom getTelecom(int telecomId, Connection connection) throws SQLException{
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where telecom_id = ?", telecomId);
 		while(resultset.next()) {
-			VhDirContactPoint contactPoint = getContactPoint(resultset, connection);
-			contactPoint.setId(resultset.getString("telecom_id"));
-			return contactPoint; // Only expecting one
+			VhDirTelecom telecom = getTelecom(resultset, connection);
+			return telecom; // Only expecting one
 		}	
 		return null;  // If we get here, there was no row in the telecom table with that id
 	}
 
+	//-------------------------------------------------------------------------------------------------------------
+    // CONTACTS
+	//-------------------------------------------------------------------------------------------------------------
+	
 	/**
 	 * Creates a VhDirContact resource from the data in the given resultset at the current cursor location.
 	 * Connection is needed to retrieve further data from other tables to populate the contact info
@@ -107,53 +156,90 @@ public class ContactFactory {
 			// Gather the telecoms for this netowrk contact
 			ResultSet tcresultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", resultset.getInt("name_id"));
 			while(tcresultset.next()) {
-				VhDirContactPoint tele = getContactPoint(tcresultset, connection);
-				tele.setId(tcresultset.getString("telecom_id"));
-				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
-				con.addTelecom(tele);
-			}
-			// Get the address for this contact
-			con.setAddress(ResourceFactory.getAddress(tcresultset.getInt("address_id"),connection));
-		}
-		return con;
-	}
-
-	static public InsurancePlanContactComponent getInsurancePlanContact(ResultSet resultset, Connection connection) throws SQLException{
-		InsurancePlanContactComponent con = new InsurancePlanContactComponent();
-		con.setId(resultset.getString("contact_id"));
-		con.setPurpose(ResourceFactory.getCodeableConcept(resultset.getInt("purpose_id"),connection));
-		con.setName(ResourceFactory.getHumanName(resultset.getInt("name_id"),connection));
-		if (connection != null) {
-			// Gather the telecoms for this netowrk contact
-			ResultSet tcresultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", resultset.getInt("name_id"));
-			while(tcresultset.next()) {
-				VhDirContactPoint tele = getContactPoint(tcresultset, connection);
-				tele.setId(tcresultset.getString("telecom_id"));
-				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
-				con.addTelecom(tele);
-			}
-			// Get the address for this contact
-			con.setAddress(ResourceFactory.getAddress(tcresultset.getInt("address_id"),connection));
+				VhDirTelecom tele = getTelecom(tcresultset, connection);
+				if (!tele.hasAvailableTime() )
+					// Add 9:00-4:30 any day, available time for this telecom contact point
+					tele.addAvailableTime(makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				    con.addTelecom(tele);
+			    }
+			    // Get the address for this contact
+			    con.setAddress(ResourceFactory.getAddress(tcresultset.getInt("address_id"),connection));
 		}
 		return con;
 	}
 
 	/**
-	 * Get a VhDirContactPoint specific to and Endpoint contact
+	 * Organization profile uses OrganizationContactComponent as a contact component.
 	 * @param resultset
 	 * @param connection
 	 * @return
 	 * @throws SQLException
 	 */
-	static public VhDirContactPoint getEndpointContact(ResultSet resultset, Connection connection) throws SQLException {
-		VhDirContactPoint contact = getContactPoint(resultset, connection);
-		contact.setId(resultset.getString("endpoint_contact_id"));
-		contact.setViaintermediary(ResourceFactory.getResourceReference(resultset.getInt("via_intermediary"), connection));
-		// Add 9:00-4:30 any day, available time for this contact point
-		contact.addAvailableTime(makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
-		return contact;
+	static public OrganizationContactComponent getOrganizationContact(ResultSet resultset, Connection connection) throws SQLException {
+		OrganizationContactComponent occ = new OrganizationContactComponent();
+		// Set id
+		int orgContactId = resultset.getInt("contact_id");
+		occ.setId(resultset.getString("contact_id"));
+		
+		// Set name
+		occ.setName(ResourceFactory.getHumanName(resultset));
+		
+		// Handle telecoms for contacts
+	    ResultSet teleResultset = DatabaseUtil.runQuery(connection, "SELECT * FROM telecom WHERE contact_id = ?", orgContactId);
+		while(teleResultset.next()) {
+			VhDirTelecom tele = getTelecom(teleResultset,connection); 
+			if (!tele.hasAvailableTime()) {
+				// Add weekday, normal business hours availablility for this contact
+				tele.addAvailableTime(ContactFactory.makeAvailableTime("mon;tue;wed;thu;fri", false, "08:00:00", "17:00:00"));
+			}
+			occ.addTelecom(tele);
+		}
+		
+		return occ;
+	}
+
+	//-------------------------------------------------------------------------------------------------------------
+    // AVAILABLE TIMES  &  NOT AVAILABLE TIMES
+	//-------------------------------------------------------------------------------------------------------------
+
+	static public VhDirAvailableTime getAvailableTime(ResultSet resultset) throws SQLException {
+		VhDirAvailableTime available = makeAvailableTime(resultset.getString("days_of_week"),
+				resultset.getBoolean("all_day"),
+				resultset.getString("available_start_time"),
+				resultset.getString("available_end_time"));
+		available.setId(resultset.getString("available_time_id"));
+		return available;
+	}
+
+	/**
+	 * Generate an availableTime object from the given parameters
+	 * @param daysString, semicolon delimited string of 3-letter day names, e.g.  "mon;tue;wed;thu;fri"
+	 * @param allDay  true if this available time is all day
+	 * @param startTime if allday is false, start time, e.g. "08:00:00"
+	 * @param endTime if allday is false, start time, e.g. "17:00:00"
+	 * @return VhDirContactPointAvailableTime
+	 */
+	static public VhDirAvailableTime makeAvailableTime(String daysString, boolean allDay, String startTime, String endTime) {
+		// Set some available time - for organizations make it all day 7 days a week
+		VhDirAvailableTime available = new VhDirAvailableTime();
+		CodeType dayCode = null;
+		String[] days = daysString.split(";");
+		for (String d : days) {
+			dayCode = new CodeType();
+			dayCode.setSystem("http://hl7.org/fhir/days-of-week");
+			dayCode.setValue(d);
+			available.addDaysOfWeek(dayCode);
+		}
+		available.setAllDay(allDay);
+		if (!allDay) {
+			TimeType start = new TimeType();
+			start.setValue("08:00:00");
+			available.setAvailableStartTime(start);
+			TimeType end = new TimeType();
+			end.setValue("17:00:00");
+			available.setAvailableEndTime(end);
+		}
+		return available;	
 	}
 
 	/**
@@ -163,7 +249,7 @@ public class ContactFactory {
 	 * @return
 	 * @throws SQLException
 	 */
-	static public HealthcareServiceAvailableTimeComponent getAvailableTime(ResultSet resultset) throws SQLException {
+	static public HealthcareServiceAvailableTimeComponent getHealthCareServiceAvailableTime(ResultSet resultset) throws SQLException {
 		HealthcareServiceAvailableTimeComponent at = _makeAvailableTime(resultset.getString("days_of_week"),
 				                                                        resultset.getBoolean("all_day"),
 				                                                        resultset.getString("available_start_time"),
@@ -221,36 +307,6 @@ public class ContactFactory {
 		return at;
 	}
 
-	/**
-	 * Generate an availableTime object from the given parameters
-	 * @param daysString, semicolon delimited string of 3-letter day names, e.g.  "mon;tue;wed;thu;fri"
-	 * @param allDay  true if this available time is all day
-	 * @param startTime if allday is false, start time, e.g. "08:00:00"
-	 * @param endTime if allday is false, start time, e.g. "17:00:00"
-	 * @return VhDirContactPointAvailableTime
-	 */
-	static public VhDirContactPointAvailableTime makeAvailableTime(String daysString, boolean allDay, String startTime, String endTime) {
-		// Set some available time - for organizations make it all day 7 days a week
-		VhDirContactPointAvailableTime available = new VhDirContactPointAvailableTime();
-		CodeType dayCode = null;
-		String[] days = daysString.split(";");
-		for (String d : days) {
-			dayCode = new CodeType();
-			dayCode.setSystem("http://hl7.org/fhir/days-of-week");
-			dayCode.setValue(d);
-			available.addDaysOfWeek(dayCode);
-		}
-		available.setAllDay(allDay);
-		if (!allDay) {
-			TimeType start = new TimeType();
-			start.setValue("08:00:00");
-			available.setAvailableStartTime(start);
-			TimeType end = new TimeType();
-			end.setValue("17:00:00");
-			available.setAvailableEndTime(end);
-		}
-		return available;	
-	}
 	
 
 }

@@ -13,7 +13,7 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.util.ElementUtil;
 
 @DatatypeDef(name="VhDirContactPoint")
-public class VhDirContactPoint extends ContactPoint {
+public class VhDirTelecom extends ContactPoint {
 	private static final long serialVersionUID = 1L;
     
 	/**
@@ -28,10 +28,10 @@ public class VhDirContactPoint extends ContactPoint {
 	/**
 	 * Add the contact point available time
 	 */
-    @Child(name = "availabletime", type = {VhDirContactPointAvailableTime.class}, order=2, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=false)
+    @Child(name = "availabletime", type = {VhDirAvailableTime.class}, order=2, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=false)
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime", definedLocally=false, isModifier=false)
     @Description(shortDefinition="A contact detail for the organization", formalDefinition="A contact detail for the organization." )
-    protected List<VhDirContactPointAvailableTime> availabletime;
+    protected List<VhDirAvailableTime> availabletime;
 	
 	public Reference getViaintermediary() {
 		return viaintermediary;
@@ -41,21 +41,25 @@ public class VhDirContactPoint extends ContactPoint {
 		this.viaintermediary = viaintermediary;
 	}
 
-	public List<VhDirContactPointAvailableTime> getAvailableTime() {
+	public List<VhDirAvailableTime> getAvailableTime() {
 		return availabletime;
 	}
 
-	public void setAvailableTime(List<VhDirContactPointAvailableTime> availabletime) {
+	public void setAvailableTime(List<VhDirAvailableTime> availabletime) {
 		this.availabletime = availabletime;
 	}
 	
-	public VhDirContactPoint addAvailableTime(VhDirContactPointAvailableTime t) {
+	public VhDirTelecom addAvailableTime(VhDirAvailableTime t) {
 	    if (t == null)
 	      return this;
 	    if (this.availabletime == null)
-	      this.availabletime = new ArrayList<VhDirContactPointAvailableTime>();
+	      this.availabletime = new ArrayList<VhDirAvailableTime>();
 	    this.availabletime.add(t);
 	    return this;
+	}
+
+	public boolean hasAvailableTime() {
+		return (this.availabletime != null && !this.availabletime.isEmpty());
 	}
 	
 	/**

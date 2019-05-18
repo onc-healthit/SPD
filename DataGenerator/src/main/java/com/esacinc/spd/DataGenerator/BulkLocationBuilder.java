@@ -15,7 +15,7 @@ import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 
-import com.esacinc.spd.model.VhDirContactPoint;
+import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.model.VhDirEhr;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirLocation;
@@ -237,10 +237,11 @@ public class BulkLocationBuilder {
 	private void handleTelecoms(Connection connection, VhDirLocation loc, int locId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from telecom where location_id = ?", locId);
 		while(resultset.next()) {
-				VhDirContactPoint tele = ContactFactory.getContactPoint(resultset,connection);
-				tele.setId(resultset.getString("telecom_id"));
-				// Add 9:00-4:30 any day, available time for this telecom contact point
-				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				VhDirTelecom tele = ContactFactory.getTelecom(resultset,connection);
+				if (!tele.hasAvailableTime()) {
+					// Add 9:00-4:30 any day, available time for this telecom contact point
+					tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat", false, "09:00:00", "17:30:00"));
+				}
 				loc.addTelecom(tele);
 		}
 	}

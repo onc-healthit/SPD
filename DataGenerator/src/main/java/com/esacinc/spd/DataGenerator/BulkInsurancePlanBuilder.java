@@ -16,7 +16,6 @@ import org.hl7.fhir.r4.model.Reference;
 
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirInsurancePlan;
-import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.InsurancePlanFactory;
 import com.esacinc.spd.util.ResourceFactory;
@@ -132,7 +131,7 @@ public class BulkInsurancePlanBuilder {
 	private void handleContacts(Connection connection, VhDirInsurancePlan ip, int ipId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from contact where insurance_plan_id = ?", ipId);
 		while(resultset.next()) {
-			InsurancePlanContactComponent con = ContactFactory.getInsurancePlanContact(resultset,connection);
+			InsurancePlanContactComponent con = InsurancePlanFactory.getInsurancePlanContact(resultset,connection);
 			ip.addContact(con);
 		}
 	}

@@ -34,10 +34,11 @@ public class DatabaseUtil {
 			Class.forName("com.mysql.jdbc.Driver");
 			connection = DriverManager.getConnection(connectionUrl,	dbUsername, dbPassword);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			ErrorReport.writeError("DatabaseUtil", "getConnection", "", e.getMessage());
 			System.err.println("\nFHIR Resource generation terminated with connection error");
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
+			ErrorReport.writeError("DatabaseUtil", "getConnection", "", e.getMessage());
 			System.err.println("\nFHIR Resource generation terminated, mysql driver not found");
 			e.printStackTrace();
 		} 

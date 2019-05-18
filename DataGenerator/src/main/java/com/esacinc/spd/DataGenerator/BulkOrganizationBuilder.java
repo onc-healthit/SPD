@@ -21,6 +21,7 @@ import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkOrganizationBuilder {
@@ -41,12 +42,13 @@ public class BulkOrganizationBuilder {
 	
 		int cnt = 0;
 		int certCount = 0;
+		int orgId = 0;
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirOrganization org = new VhDirOrganization();
 			try {
 			// set the id
-			int orgId = resultSet.getInt("organization_id");
+			orgId = resultSet.getInt("organization_id");
 			org.setId(resultSet.getString("organization_id"));
 						 					
 			// Handle description
@@ -100,6 +102,8 @@ public class BulkOrganizationBuilder {
 			}
 			catch (Exception e) {
 				e.printStackTrace();
+				ErrorReport.writeError("VhDirOrganization", String.valueOf(orgId), "getOrganizations", e.getMessage());
+
 			}
 			cnt++;
 		}

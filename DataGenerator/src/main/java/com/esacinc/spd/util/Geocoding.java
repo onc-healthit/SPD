@@ -91,9 +91,11 @@ public class Geocoding {
 	
 			con.disconnect();
 		} catch (MalformedURLException e) {
+			ErrorReport.writeError("VhDirGeocodeLocation", "postalCode: " + postalCode, "URL Exception", e.getMessage());
 			System.err.println("Geocoding Error: MalformedURLException: " + e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
+			ErrorReport.writeError("VhDirGeocodeLocation", "postalCode: " + postalCode, "IO Exception", e.getMessage());
 			System.err.println("Geocoding Error: IOException: " + e.getMessage());
 			e.printStackTrace();
 		}

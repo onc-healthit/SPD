@@ -1,7 +1,6 @@
 package com.esacinc.spd.DataGenerator;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -13,16 +12,12 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Consent.ConsentPolicyComponent;
 import org.hl7.fhir.r4.model.Consent.ConsentProvisionType;
 import org.hl7.fhir.r4.model.Consent.ConsentState;
-import org.hl7.fhir.r4.model.Consent.provisionComponent;
 import org.hl7.fhir.r4.model.Consent.provisionActorComponent;
-import org.hl7.fhir.r4.model.Timing;
-import org.hl7.fhir.r4.model.VerificationResult.Status;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
+import org.hl7.fhir.r4.model.Consent.provisionComponent;
 
-import com.esacinc.spd.model.VhDirPrimarySource;
 import com.esacinc.spd.model.VhDirRestriction;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkRestrictionBuilder {
@@ -41,7 +36,7 @@ public class BulkRestrictionBuilder {
 		List<VhDirRestriction> restrictions = new ArrayList<VhDirRestriction>();
 		int cnt = 0;
 	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_restriction", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirRestriction res = new VhDirRestriction();
 		
 			// set the id
@@ -84,6 +79,8 @@ public class BulkRestrictionBuilder {
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
 			res.setStatus(ConsentState.NULL);
+			ErrorReport.writeWarning("VhDirRestriction", res.getId(), "unrecognized status ", e.getMessage());
+
 		}
 
 	}
@@ -139,6 +136,8 @@ public class BulkRestrictionBuilder {
 			}
 			catch (Exception e) {
 				cc.setType(ConsentProvisionType.NULL);
+				ErrorReport.writeWarning("VhDirRestriction", res.getId(), "unrecognized type ", e.getMessage());
+
 			}
 			// TODO this is a problem since the vhdir resource says action is a singleton (0..), while the standard has it as a list.
 			CodeableConcept action = ResourceFactory.getCodeableConcept(resultset.getInt("action_cc_id"),connection);
@@ -161,12 +160,16 @@ public class BulkRestrictionBuilder {
 					String display = "";
 					if (tokens.length > 0) {
 						code = tokens[0];
+					} 
+					else {
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Security_labels: " + labels, "Security labels expected to be a ';' delimited list of code,display pairs");
 					}
 					if (tokens.length > 1) {
 						display = tokens[1];
 					}
 					else {
 						display = code;
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Security_labels: " + labels, "Security labels expected to be a ';' delimited list of code,display pairs");
 					}
 					Coding labelCode = ResourceFactory.makeCoding(code, display , "http://hl7.org/fhir/ValueSet/security-labels", false);
 					cc.addSecurityLabel(labelCode);
@@ -183,11 +186,15 @@ public class BulkRestrictionBuilder {
 					if (tokens.length > 0) {
 						code = tokens[0];
 					}
+					else {
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Purposes: " + purposes, "Purposes expected to be a ';' delimited list of code,display pairs");
+					}
 					if (tokens.length > 1) {
 						display = tokens[1];
 					}
 					else {
 						display = code;
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Purposes: " + purposes, "Purposes expected to be a ';' delimited list of code,display pairs");
 					}
 					Coding purposeCode = ResourceFactory.makeCoding(code, display , "http://terminology.hl7.org/ValueSet/v3-PurposeOfUse", false);
 					cc.addPurpose(purposeCode);

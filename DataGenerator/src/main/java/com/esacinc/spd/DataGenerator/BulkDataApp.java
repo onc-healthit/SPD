@@ -24,6 +24,7 @@ import com.esacinc.spd.model.VhDirCareTeam;
 //import com.esacinc.spd.model.VhDirPractitionerRole;
 //import com.esacinc.spd.model.VhDirRestriction;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.Geocoding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,9 +39,9 @@ public class BulkDataApp {
 	// Database connection and querying are handled in DatabaseUtils.java
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ALL = false;  
+	private static boolean DO_ALL = true;  
 	private static boolean DO_ORGANIZATIONS = false;
-	private static boolean DO_PRACTITIONERS = false;
+	private static boolean DO_PRACTITIONERS = true;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
@@ -48,7 +49,7 @@ public class BulkDataApp {
 	private static boolean DO_CARETEAMS = false;
 	private static boolean DO_HEALTHCARESERVICES = false;
 	private static boolean DO_INSURANCEPLANS = false;
-	private static boolean DO_RESTRICTIONS = true;
+	private static boolean DO_RESTRICTIONS = false;
 	// TODO
 	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
 	private static boolean DO_PRACTITIONERROLES = false;
@@ -88,10 +89,17 @@ public class BulkDataApp {
 	private static int    PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
 	// Control how many entries we process in each section and output. -1 means ALL.
-	public static int MAX_ENTRIES = 1;  
+	public static int MAX_ENTRIES = -1;  
 	
+	public static boolean okToProceed(int cnt) {
+		return (MAX_ENTRIES == -1 || cnt < MAX_ENTRIES);
+	}
 	public static void main(String[] args) {
 		
+		// Open the error report file, and write some bookkeeping info
+		ErrorReport.open();
+		ErrorReport.writeInfo("Control Variables", "", String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE), "");
+
 		// Testing some geocode stuff.
 		if (DO_GEOTEST)
 		{
@@ -101,6 +109,7 @@ public class BulkDataApp {
 				Geocoding.geocodePostalCode("96297", null);
 			}
 			catch (Exception e) {
+				ErrorReport.writeError("Geocode Testing", "", "Geocoding error", e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -113,12 +122,14 @@ public class BulkDataApp {
 		
 		
 		if (DO_ALL || DO_ORGANIZATIONS) {
+			ErrorReport.writeInfo("DO_ORGANIZATIONS","","","");
 			try{
 				// Get and write Organizations
 				System.out.println("Generate Organization resources...");
 				BulkOrganizationBuilder orgBuilder = new BulkOrganizationBuilder();
 				List<VhDirOrganization> organizations = orgBuilder.getOrganizations(connection);
-				outputOrganizationList(organizations);  
+				outputOrganizationList(organizations); 
+				ErrorReport.writeInfo("","",String.format("%d Organizations Collected", organizations.size()),"");
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -131,6 +142,7 @@ public class BulkDataApp {
 		}
 		
 		if (DO_ALL || DO_PRACTITIONERS) {
+			ErrorReport.writeInfo("DO_PRACTITIONERS","","","");
 			try {
 				// Get and write Practitioners
 				System.out.println("Generate Practitioner resources...");
@@ -138,16 +150,18 @@ public class BulkDataApp {
 				BulkPractitionerBuilder pracBuilder = new BulkPractitionerBuilder();
 				List<VhDirPractitioner> practitioners = pracBuilder.getPractitioners(connection);
 				outputPractitionerList(practitioners); 
+				ErrorReport.writeInfo("","",String.format("%d Practitioners Collected", practitioners.size()),"");
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERS", e.getMessage());
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "PARSE error in DO_PRACTITIONERS", e.getMessage());
 				e.printStackTrace();
 			} 			
 		}
 		
 		if (DO_ALL || DO_NETWORKS) {
+			ErrorReport.writeInfo("DO_NETWORKS","","","");
 			try {
 				// Get and write Networks
 				System.out.println("Generate Network resources...");
@@ -155,124 +169,138 @@ public class BulkDataApp {
 				BulkNetworkBuilder nwBuilder = new BulkNetworkBuilder();
 				List<VhDirNetwork> networks = nwBuilder.getNetworks(connection);
 				outputNetworkList(networks); 
+				ErrorReport.writeInfo("","",String.format("%d Networks Collected", networks.size()),"");
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_NETWORKS", e.getMessage());
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_NETWORKS", e.getMessage());
 				e.printStackTrace();
 			} 			
 		}
 
 		if (DO_ALL || DO_LOCATIONS) {
+			ErrorReport.writeInfo("DO_LOCATIONS","","","");
 			try{
 				// Get and write Locations
 				System.out.println("Generate Location resources...");
 				BulkLocationBuilder locBuilder = new BulkLocationBuilder();
 				List<VhDirLocation> locations = locBuilder.getLocations(connection);
 				outputLocationList(locations);  
+				ErrorReport.writeInfo("","",String.format("%d Locations Collected", locations.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_LOCATIONS", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_NETWORKS", e.getMessage());
 				e.printStackTrace();
 			}  
 		}
 
 		if (DO_ALL || DO_VALIDATIONS) {
+			ErrorReport.writeInfo("DO_VALIDATIONS","","","");
 			try{
 				// Get and write Validations
 				System.out.println("Generate Validation resources...");
 				BulkValidationBuilder valBuilder = new BulkValidationBuilder();
 				List<VhDirValidation> validations = valBuilder.getValidations(connection);
 				outputValidationList(validations);  
+				ErrorReport.writeInfo("","",String.format("%d Validations Collected", validations.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_VALIDATIONS", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_VALIDATIONS", e.getMessage());
 				e.printStackTrace();
 			}  
 		}
 
 		if (DO_ALL || DO_ENDPOINTS) {
+			ErrorReport.writeInfo("DO_ENDPOINTS","","","");
 			try{
 				// Get and write Endpoints
 				System.out.println("Generate Endpoint resources...");
 				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
 				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
 				outputEndpointList(endpoints);  
+				ErrorReport.writeInfo("","",String.format("%d Endpoints Collected", endpoints.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_ENDPOINTS", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_ENDPOINTSS", e.getMessage());
 				e.printStackTrace();
 			}  
 		}
 
 		if (DO_ALL || DO_CARETEAMS) {
+			ErrorReport.writeInfo("DO_CARETEAMS","","","");
 			try{
 				// Get and write Careteams
 				System.out.println("Generate Careteam resources...");
 				BulkCareTeamBuilder ctBuilder = new BulkCareTeamBuilder();
 				List<VhDirCareTeam> careteams = ctBuilder.getCareTeams(connection);
 				outputCareTeamList(careteams);  
+				ErrorReport.writeInfo("","",String.format("%d CareTeams Collected", careteams.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_CARETEAMS", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_CARETEAMS", e.getMessage());
 				e.printStackTrace();
 			} 
 		}
 
 		if (DO_ALL || DO_HEALTHCARESERVICES) {
+			ErrorReport.writeInfo("DO_HEALTHCARESERVICES","","","");
 			try{
 				// Get and write HeathcareServices
 				System.out.println("Generate Healthcare_Service resources...");
 				BulkHealthcareServiceBuilder hsBuilder = new BulkHealthcareServiceBuilder();
 				List<VhDirHealthcareService> services = hsBuilder.getHealthcareServices(connection);
 				outputServicesList(services);  
+				ErrorReport.writeInfo("","",String.format("%d Healthcare Services Collected", services.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_HEALTHCARESERVICES", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_HEALTHCARESERVICES", e.getMessage());
 				e.printStackTrace();
 			} 
 		}
 
 		if (DO_ALL || DO_INSURANCEPLANS) {
+			ErrorReport.writeInfo("DO_INSURANCEPLANS","","","");
 			try{
 				// Get and write Insurance Planes
 				System.out.println("Generate Insurance_Plan resources...");
 				BulkInsurancePlanBuilder epBuilder = new BulkInsurancePlanBuilder();
 				List<VhDirInsurancePlan> plans = epBuilder.getInsurancePlans(connection);
 				outputInsurancePlanList(plans);  
+				ErrorReport.writeInfo("","",String.format("%d Insurance Plans Collected", plans.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_INSURANCEPLANS", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_INSURANCEPLANS", e.getMessage());
 				e.printStackTrace();
 			} 
 		}
 
 		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
+			ErrorReport.writeInfo("DO_ORGANIZATIONAFFILIATIONS","","","");
 			/*
 			try{
 				// Get and write Organization Affiliations
@@ -280,19 +308,21 @@ public class BulkDataApp {
 				BulkOrganizationAffiliationBuilder affBuilder = new BulkOrganizationAffiliationBuilder();
 				List<VhDirOrganizationAffiliation> affiliations = affBuilder.getOrganizationAffiliations(connection);
 				outputAffiliationList(affiliations);  
+				ErrorReport.writeInfo("","",String.format("%d Organization Affiliations Collected", affiliations.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_ORGANIZATIONAFFILIATIONS", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_ORGANIZATIONAFFILIATIONS", e.getMessage());
 				e.printStackTrace();
 			} 
 			*/ 
 		}
 
 		if (DO_ALL || DO_PRACTITIONERROLES) {
+			ErrorReport.writeInfo("DO_PRACTITIONERROLES","","","");
 			/*
 			try{
 				// Get and write Practitioner Roles
@@ -300,37 +330,42 @@ public class BulkDataApp {
 				BulkPractitionerRoleBuilder prBuilder = new BulkPractitionerRoleBuilder();
 				List<VhDirPractitionerRole> roles = prBuilder.getPractitionerRoles(connection);
 				outputRoleList(roles);  
+				ErrorReport.writeInfo("","",String.format("%d Practitioner Roles Collected", roles.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERROLES", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parsse error in DO_PRACTITIONERROLES", e.getMessage());
 				e.printStackTrace();
 			} 
 			*/ 
 		}
 
 		if (DO_ALL || DO_RESTRICTIONS) {
+			ErrorReport.writeInfo("DO_RESTRICTIONS","","","");
 			try{
 				// Get and write Restrictions
 				System.out.println("Generate Restriction resources...");
 				BulkRestrictionBuilder resBuilder = new BulkRestrictionBuilder();
 				List<VhDirRestriction> restrictions = resBuilder.getRestrictions(connection);
 				outputRestrictionList(restrictions);  
+				ErrorReport.writeInfo("","",String.format("%d Restrictions Collected", restrictions.size()),"");
 			}	
 			catch (SQLException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in O_RESTRICTIONS", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				// TODO Auto-generated catch block
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in O_RESTRICTIONS", e.getMessage());
 				e.printStackTrace();
 			} 
 		}
 
 		System.out.println("\n\nFHIR Resource generation complete");
+		System.out.println(ErrorReport.getSummaryNote());
+		ErrorReport.close();
 
 	}
 
@@ -365,10 +400,12 @@ public class BulkDataApp {
 
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputOrganizationList", "IOException", e.getMessage());
 			System.err.println("IO EXCEPTION writing organization list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputOrganizationList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing organization list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -406,10 +443,12 @@ public class BulkDataApp {
 
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputPractitionerList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing practitioner list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputPractitionerList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing practitioner list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -447,10 +486,12 @@ public class BulkDataApp {
 
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputNetworkList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing network list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputNetworkList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing network list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -488,10 +529,12 @@ public class BulkDataApp {
 
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputLocationList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing location list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputLocationList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing location list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -529,10 +572,12 @@ public class BulkDataApp {
 
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputValidationList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing validation list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputValidationList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing validation list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -569,10 +614,12 @@ public class BulkDataApp {
 			}
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputEndpointList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing endpoint list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputEndpointList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing endpoint list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -609,10 +656,12 @@ public class BulkDataApp {
 			}
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputCareTeamList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing careteam list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputCareTeamList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing careteam list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -649,10 +698,12 @@ public class BulkDataApp {
 			}
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputHealthcareServiceList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing healtchare service list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputHealtheareServiceList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing healthcare service list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -689,10 +740,12 @@ public class BulkDataApp {
 			}
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputInsurancePlanList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing insurance plan list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputInsurancePlanList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing insurance plan list: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -729,10 +782,12 @@ public class BulkDataApp {
 			}
 		}
 		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputRestrictionList", "IOException", e.getMessage());
 			System.err.println("EXCEPTION writing restrictions list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputRestrictionList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing restrictions list: " + e.getMessage());
 			e.printStackTrace();
 		}

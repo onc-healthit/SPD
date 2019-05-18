@@ -79,6 +79,8 @@ public class ContactFactory {
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
 			telecom.setSystem(ContactPointSystem.NULL);
+			ErrorReport.writeWarning("VhDirTelecom", telecom.getId(), "unrecognized system ", e.getMessage());
+
 		}
 
 		// Value - string
@@ -91,6 +93,8 @@ public class ContactFactory {
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
 			telecom.setUse(ContactPointUse.NULL);
+			ErrorReport.writeWarning("VhDirTelecom", telecom.getId(), "unrecognized use ", e.getMessage());
+
 		}
 
 		// Rank - int
@@ -132,6 +136,8 @@ public class ContactFactory {
 			VhDirTelecom telecom = getTelecom(resultset, connection);
 			return telecom; // Only expecting one
 		}	
+		ErrorReport.writeError("VhDirTelecom", resultset.getString("telecomId"), "No telecom found with given id: "+telecomId, "ContactFactory.getTelecom");
+
 		return null;  // If we get here, there was no row in the telecom table with that id
 	}
 
@@ -301,6 +307,8 @@ public class ContactFactory {
 					// Bad day value. Don't do anything.
 					System.err.println("Bad Day of Week value: " + d + " in getAvailableTime");
 					System.err.println("   " + e.getMessage());
+					ErrorReport.writeWarning("AvailableTime", "" , "Bad day of week value in: " + daysString, e.getMessage());
+
 				}
 			}
 		}

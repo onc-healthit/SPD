@@ -70,6 +70,7 @@ public class ResourceFactory {
 		while(refs.next()) {
 			return getResourceReference(refs,connection); // We only expect one in this case
 		}
+		ErrorReport.writeError("Reference", String.valueOf(refId), "No resource reference found with id " + refId , "ResourceFactory.getResourceReference");
 		return null;  // If we get here, there was no reference with that id
 	}
 
@@ -104,6 +105,7 @@ public class ResourceFactory {
 			identifier = getIdentifier(resultset);
 			return identifier; // There should only be one 
 		}
+		ErrorReport.writeError("VhDirIdentifier", String.valueOf(identifierId), "No identifier found with id " + identifierId , "ResourceFactory.getIdentifier");
 		return null;  // If we get here, there was no identifier with that id
 	}
 	
@@ -125,6 +127,7 @@ public class ResourceFactory {
 	    }
 	    catch (Exception e) {
 	    	identifier.setUse(IdentifierUse.NULL);
+			ErrorReport.writeWarning("VhDirIdentifier", identifier.getId(), "unrecognized use", e.getMessage());
 	    }
 	    
 	    // Handle system
@@ -142,6 +145,7 @@ public class ResourceFactory {
 		}
 		catch (Exception e) {
 			identifier.setStatus(IdentifierStatus.UNKNOWN);
+			ErrorReport.writeWarning("VhDirIdentifier", identifier.getId(), "unrecognized status", e.getMessage());
 		}
 
 		return identifier;
@@ -160,6 +164,7 @@ public class ResourceFactory {
 			VhDirAddress addr = getAddress(resultset, connection);
 			return addr;
 		}	
+		ErrorReport.writeError("VhDirAddress", String.valueOf(addrId), "No address found with id " + addrId , "ResourceFactory.getAddress");
 		return null;  // If we get here, there was no identifier with that id
 	}
 	
@@ -183,6 +188,8 @@ public class ResourceFactory {
 		}
 		catch (Exception e) {
 			addr.setUse(AddressUse.NULL);
+			ErrorReport.writeWarning("VhDirAddress", addr.getId(), "unrecognized address use", e.getMessage());
+
 		}
 		
 		// Set Type
@@ -191,6 +198,8 @@ public class ResourceFactory {
 		}
 		catch (Exception e) {
 			addr.setType(AddressType.NULL);
+			ErrorReport.writeWarning("VhDirAddress", addr.getId(), "unrecognized address type", e.getMessage());
+
 		}
 		
 		// Set text
@@ -260,6 +269,8 @@ public class ResourceFactory {
 		while(resultset.next()) {
 			return getHumanName(resultset);  // We expect only one.
 		}
+		ErrorReport.writeError("HumanName", String.valueOf(nameId), "No name found with id " + nameId , "ResourceFactory.getHumanName");
+
 		return null; // If we get here, there was no name with that id
 	}
 
@@ -283,9 +294,13 @@ public class ResourceFactory {
 		name.setPeriod(per);
 		
 		String use = names.getString("use");
-		if ( use == null || "usual".equals(use))
-			name.setUse(NameUse.USUAL);
-		
+		try {
+			name.setUse(NameUse.fromCode(names.getString("use")));
+		}
+		catch (Exception e) {
+			name.setUse(NameUse.NULL);
+			ErrorReport.writeWarning("HumanName", name.getId(), "Unrecognized use", e.getMessage());
+		}		
 		return name;
 	}
 
@@ -376,6 +391,7 @@ public class ResourceFactory {
 		while(resultset.next()) {
 			return getCodeableConcept(resultset); // We only expect one with this query
 		}
+		ErrorReport.writeError("CodeableConcept", String.valueOf(conceptId), "No CodeableConcept found with id: " + conceptId, "ResourceFactory.getCodeableConcept");
 		return null;  // If we get here, there was no cc found.
 	}
 
@@ -428,9 +444,10 @@ public class ResourceFactory {
 			uc.setCaseType(getCodeableConcept(resultset.getInt("type_cc_id"),connection));
 			uc.setStandard(new UriType(resultset.getString("standard")));
 			// uc.setUrl (Url is handled automatically in the class definition)
-			break; // We are expecting only one.
+			return uc; // We are expecting only one.
 		}
-		return uc;
+		ErrorReport.writeError("VhDirEndpointUseCase", String.valueOf(ucId), "No use_case found with id: " + ucId, "ResourceFactory.getEndpointUseCase");
+		return null;
 	}
 
 	
@@ -582,6 +599,7 @@ public class ResourceFactory {
 	public static VhDirNote getNote(ResultSet resultset) throws SQLException {
 		VhDirNote note = new VhDirNote();
 		// TODO The 'note' model maintains a practitioner_id pointing to a VhDirPractitioner. This should really be a resource reference
+		ErrorReport.writeInfo("VhDirNote", resultset.getString("note_id"), "The 'note' model maintains a practitioner_id pointing to a VhDirPractitioner. This should really be a resource reference", "ResourceFactory.getNote");
 		note.setId(resultset.getString("note_id"));
 		note.setAuthor(makeResourceReference(resultset.getString("practitioner_id"),"VhDirPractioner", null, "Author"));
 		note.setTime(resultset.getDate("time"));
@@ -667,6 +685,8 @@ public class ResourceFactory {
 		}
 		catch (Exception e) {
 			per.setUserData("Error","Invalid date for start or end encountered.");
+			ErrorReport.writeWarning("Period", "", String.format("Error in ResourceFactory.makePeriod(%s,%s)",startDatetime, endDatetime), e.getMessage());
+
 		}
 		return per;
 	}
@@ -705,7 +725,7 @@ public class ResourceFactory {
 			typeList.add(code);
 		}
 		catch (Exception e) {
-			// do nothing
+			ErrorReport.writeWarning("Signature", "", String.format("Error in ResourceFactory.makeSignature(type;%s, targetFormat:%s)",type,targetFormat), e.getMessage());
 		}
 		sig.setType(typeList);
 		sig.setWho(makeResourceReference("1","VhDirPractitioner",null,""));

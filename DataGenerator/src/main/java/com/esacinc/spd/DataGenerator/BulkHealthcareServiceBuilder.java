@@ -38,7 +38,7 @@ public class BulkHealthcareServiceBuilder {
 		int cnt = 0;
 		List<VhDirHealthcareService> healthcareservices = new ArrayList<VhDirHealthcareService>();
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_healthcare_service", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating healthcareservice for id " + resultSet.getInt("healthcare_service_id"));
 			VhDirHealthcareService hs = new VhDirHealthcareService();
 		

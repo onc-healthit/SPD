@@ -137,6 +137,7 @@ public class DigitalCertificateFactory {
 		CodeableConcept certTrust = new CodeableConcept();
 		certTrust.addCoding(ResourceFactory.makeCoding(trustFramework,  trustFramework, "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-digitalcertificate", false));
 		cert.setTrustFramework(certTrust);
+		ErrorReport.writeInfo("VhDirDigitalCertificate", "", String.format("Created a fake digital certificate with args: %d, %s, %s, %s, %s, %s",nth, type, use, trustFramework, standard, expiration), "DigitalCertificateFactory.makeDigitalCertificate");
 		return cert;
 	}
 

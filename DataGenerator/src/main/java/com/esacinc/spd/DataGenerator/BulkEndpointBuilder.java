@@ -18,6 +18,7 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkEndpointBuilder {
@@ -36,7 +37,7 @@ public class BulkEndpointBuilder {
 		int cnt = 0;
 		List<VhDirEndpoint> endpoints = new ArrayList<VhDirEndpoint>();
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_endpoint", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirEndpoint ep = new VhDirEndpoint();
 		
@@ -103,6 +104,7 @@ public class BulkEndpointBuilder {
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
 			ep.setStatus(EndpointStatus.NULL);
+			ErrorReport.writeWarning("VhDirEndpoint", ep.getId(), "Unrecognized status", e.getMessage());
 		}
 	}
 

@@ -23,6 +23,7 @@ import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkLocationBuilder {
@@ -41,7 +42,7 @@ public class BulkLocationBuilder {
 		int cnt = 0;
 		List<VhDirLocation> locations = new ArrayList<VhDirLocation>();
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_location", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirLocation loc = new VhDirLocation();
 		
@@ -126,6 +127,8 @@ public class BulkLocationBuilder {
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
 			loc.setStatus(LocationStatus.NULL);
+			ErrorReport.writeWarning("VhDirELocation", loc.getId(), "Unrecognized status", e.getMessage());
+
 		}
 
 	}

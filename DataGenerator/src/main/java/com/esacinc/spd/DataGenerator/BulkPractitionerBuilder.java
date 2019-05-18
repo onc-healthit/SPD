@@ -21,6 +21,7 @@ import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkPractitionerBuilder {
@@ -40,7 +41,7 @@ public class BulkPractitionerBuilder {
 		int cnt = 0;
 		int certCount = 0;
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirPractitioner prac = new VhDirPractitioner();
 		
 			// set the id
@@ -119,6 +120,8 @@ public class BulkPractitionerBuilder {
 					// Who knows what they've put as gender in the db. Let's just say OTHER.
 					prac.setGender(AdministrativeGender.OTHER);
 				}
+				ErrorReport.writeWarning("VhDirPractitioner", prac.getId(), "unrecognized gender: " + gender, e.getMessage());
+
 			}
 		}
 	}

@@ -17,6 +17,7 @@ import org.hl7.fhir.r4.model.Reference;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirInsurancePlan;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.InsurancePlanFactory;
 import com.esacinc.spd.util.ResourceFactory;
 
@@ -36,7 +37,7 @@ public class BulkInsurancePlanBuilder {
 		int cnt = 0;
 		List<VhDirInsurancePlan> insurancePlans = new ArrayList<VhDirInsurancePlan>();
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_insurance_plan", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirInsurancePlan ip = new VhDirInsurancePlan();
 		
 			// set the id
@@ -47,6 +48,8 @@ public class BulkInsurancePlanBuilder {
 			}
 			catch (Exception e) {
 				ip.setStatus(PublicationStatus.UNKNOWN);
+				ErrorReport.writeWarning("VhDirInsurancePlan", ip.getId(), "Unrecognized status", e.getMessage());
+
 			}
 			ip.setName(resultSet.getString("name"));
 			ip.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"), resultSet.getDate("period_end")));

@@ -17,6 +17,7 @@ import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorCompo
 import com.esacinc.spd.model.VhDirPrimarySource;
 import com.esacinc.spd.model.VhDirValidation;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkValidationBuilder {
@@ -35,7 +36,7 @@ public class BulkValidationBuilder {
 		List<VhDirValidation> validations = new ArrayList<VhDirValidation>();
 		int cnt = 0;
 	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_validation", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirValidation val = new VhDirValidation();
 		
@@ -88,6 +89,8 @@ public class BulkValidationBuilder {
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
 			val.setStatus(Status.NULL);
+			ErrorReport.writeWarning("VhDirValidation", val.getId(), "unrecognized status ", e.getMessage());
+
 		}
 
 	}

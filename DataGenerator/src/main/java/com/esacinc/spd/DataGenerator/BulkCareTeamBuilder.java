@@ -19,6 +19,7 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirNote;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkCareTeamBuilder {
@@ -38,7 +39,7 @@ public class BulkCareTeamBuilder {
 		
 		int cnt = 0;
         ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_careteam", null);
-		while (resultSet.next() && cnt < BulkDataApp.MAX_ENTRIES) {
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirCareTeam ct = new VhDirCareTeam();
 		
 			// set the id
@@ -110,6 +111,7 @@ public class BulkCareTeamBuilder {
 		}
 		catch (Exception e) {
 			// Probably means status was not found in LocationStatus
+			ErrorReport.writeWarning("VhDirCareteam", ct.getId(), "Invalid status value ", "");
 			ct.setStatus(CareTeamStatus.NULL);
 		}
 	}

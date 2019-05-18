@@ -37,7 +37,7 @@ public class BulkDataApp {
 	// Database connection and querying are handled in DatabaseUtils.java
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ALL = false;  
+	private static boolean DO_ALL = true;  
 	private static boolean DO_ORGANIZATIONS = true;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;

@@ -15,6 +15,7 @@ import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
 import com.esacinc.spd.model.VhDirPractitioner;
+import com.esacinc.spd.model.VhDirRestriction;
 import com.esacinc.spd.model.VhDirValidation;
 import com.esacinc.spd.model.VhDirCareTeam;
 //import com.esacinc.spd.model.VhDirInsurancePlan;
@@ -37,8 +38,8 @@ public class BulkDataApp {
 	// Database connection and querying are handled in DatabaseUtils.java
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ALL = true;  
-	private static boolean DO_ORGANIZATIONS = true;
+	private static boolean DO_ALL = false;  
+	private static boolean DO_ORGANIZATIONS = false;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
@@ -47,10 +48,11 @@ public class BulkDataApp {
 	private static boolean DO_CARETEAMS = false;
 	private static boolean DO_HEALTHCARESERVICES = false;
 	private static boolean DO_INSURANCEPLANS = false;
+	private static boolean DO_RESTRICTIONS = true;
 	// TODO
 	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
 	private static boolean DO_PRACTITIONERROLES = false;
-	private static boolean DO_RESTRICTIONS = false;
+	
 
 	private static boolean DO_GEOTEST = false;
 
@@ -311,13 +313,12 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_RESTRICTIONS) {
-			/*
 			try{
 				// Get and write Restrictions
 				System.out.println("Generate Restriction resources...");
 				BulkRestrictionBuilder resBuilder = new BulkRestrictionBuilder();
-				List<VhDirRestriction> restrictions = epBuilder.getEndpoints(connection);
-				outputEndpointList(restrictions);  
+				List<VhDirRestriction> restrictions = resBuilder.getRestrictions(connection);
+				outputRestrictionList(restrictions);  
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -327,7 +328,6 @@ public class BulkDataApp {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-			*/ 
 		}
 
 		System.out.println("\n\nFHIR Resource generation complete");
@@ -689,11 +689,51 @@ public class BulkDataApp {
 			}
 		}
 		catch (IOException e) {
-			System.err.println("EXCEPTION writing healtchare service list: " + e.getMessage());
+			System.err.println("EXCEPTION writing insurance plan list: " + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (NullPointerException e) {
-			System.err.println("NULL POINTER EXCEPTION writing healthcare service list: " + e.getMessage());
+			System.err.println("NULL POINTER EXCEPTION writing insurance plan list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputRestrictionList(List<VhDirRestriction>restrictions) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_RESTRICTIONS));
+			BufferedWriter pp_writer = null;
+			if (FILE_RESTRICTIONS_PP != null &&  !FILE_RESTRICTIONS_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_RESTRICTIONS_PP));
+			}
+			for (VhDirRestriction plan : restrictions) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+
+				String nwJson = jsonParser.encodeResourceToString(plan);
+				writer.write(nwJson);
+				writer.write("\n");
+
+				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
+				maybePrettyPrintToConsole(prettyJson, cnt, "RESTRICTION");
+				
+				cnt++;
+			}
+			writer.close();
+			if (pp_writer != null) {
+				pp_writer.close();
+			}
+		}
+		catch (IOException e) {
+			System.err.println("EXCEPTION writing restrictions list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			System.err.println("NULL POINTER EXCEPTION writing restrictions list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

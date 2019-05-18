@@ -278,7 +278,7 @@
   ],
   "communication": [
     {
-      "id": "x6711",
+      "id": "x9947",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",

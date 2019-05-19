@@ -12,7 +12,7 @@ import org.hl7.fhir.r4.model.Type;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="contactpoint-availabletime")
+@DatatypeDef(name="vhdir-availabletime")
 public class VhDirAvailableTime extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
 

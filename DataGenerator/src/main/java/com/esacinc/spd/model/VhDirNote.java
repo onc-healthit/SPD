@@ -4,7 +4,7 @@ import org.hl7.fhir.r4.model.Annotation;
 
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 
-@DatatypeDef(name="Note")
+@DatatypeDef(name="vhdir-note")
 public class VhDirNote extends Annotation {
 	private static final long serialVersionUID = 1L;
 

@@ -4,8 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.DateType;
-import org.hl7.fhir.r4.model.StringType;
 
 import com.esacinc.spd.model.VhDirDigitalCertificate;
 

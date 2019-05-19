@@ -8,7 +8,7 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 
-@DatatypeDef(name="OrganizationContactComponent")
+@DatatypeDef(name="vhdir-contact")
 public class VhDirContact extends OrganizationContactComponent {
 	private static final long serialVersionUID = 1L;
     

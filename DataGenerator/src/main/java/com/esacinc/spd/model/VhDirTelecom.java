@@ -12,7 +12,7 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="VhDirContactPoint")
+@DatatypeDef(name="vhdir-telecom")
 public class VhDirTelecom extends ContactPoint {
 	private static final long serialVersionUID = 1L;
     

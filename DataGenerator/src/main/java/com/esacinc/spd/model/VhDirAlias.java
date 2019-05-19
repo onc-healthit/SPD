@@ -1,23 +1,17 @@
 package com.esacinc.spd.model;
 
-import org.hl7.fhir.r4.model.BackboneElement;
 import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Configuration;
-import org.hl7.fhir.r4.model.Element;
-import org.hl7.fhir.r4.model.Period;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.Type;
 import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.api.ICompositeType;
-import org.hl7.fhir.utilities.Utilities;
+import org.hl7.fhir.r4.model.Period;
 
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 //import ca.uhn.fhir.model.api.annotation.Extension;
 
-@DatatypeDef(name="VhDirAlias")
+@DatatypeDef(name="vhdir-alias")
 public class VhDirAlias extends Extension  {
 	private static final long serialVersionUID = 1L;
 

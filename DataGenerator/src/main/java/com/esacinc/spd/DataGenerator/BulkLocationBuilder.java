@@ -1,7 +1,6 @@
 package com.esacinc.spd.DataGenerator;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -15,12 +14,12 @@ import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 
-import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.model.VhDirEhr;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
+import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ErrorReport;

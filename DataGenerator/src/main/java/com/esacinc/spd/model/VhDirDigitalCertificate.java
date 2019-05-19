@@ -3,12 +3,9 @@ package com.esacinc.spd.model;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.hl7.fhir.r4.model.Attachment;
-import org.hl7.fhir.r4.model.BackboneElement;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DateType;
-import org.hl7.fhir.r4.model.Element;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.StringType;
 
@@ -17,7 +14,7 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="VhDirDigitalCertificate")
+@DatatypeDef(name="vhdir-digitalcertificate")
 public class VhDirDigitalCertificate extends Extension {
 	private static final long serialVersionUID = 1L;
 

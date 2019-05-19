@@ -7,13 +7,12 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Extension;
 import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.Type;
 
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 
-@DatatypeDef(name="VhDirEhr")
+@DatatypeDef(name="vhdir-ehr")
 public class VhDirEhr extends Extension {
 	private static final long serialVersionUID = 1L;
 

@@ -8,7 +8,6 @@ import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.api.annotation.Child;
-import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;

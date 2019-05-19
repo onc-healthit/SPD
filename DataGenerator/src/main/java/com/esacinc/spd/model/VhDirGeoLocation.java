@@ -11,7 +11,7 @@ import org.hl7.fhir.r4.model.Extension;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="Geolocation")
+@DatatypeDef(name="vhdir-geolocation")
 public class VhDirGeoLocation extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
     

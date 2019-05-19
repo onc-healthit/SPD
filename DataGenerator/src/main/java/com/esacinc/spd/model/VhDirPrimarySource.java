@@ -9,7 +9,7 @@ import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 
-@DatatypeDef(name="VhDirPrimarySource")
+@DatatypeDef(name="vhdir-primarysource")
 public class VhDirPrimarySource extends VerificationResultPrimarySourceComponent {
 	private static final long serialVersionUID = 1L;
 

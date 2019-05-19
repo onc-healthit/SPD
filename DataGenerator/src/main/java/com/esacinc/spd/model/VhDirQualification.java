@@ -4,7 +4,7 @@ import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
 
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 
-@DatatypeDef(name="VhDirQualification")
+@DatatypeDef(name="vhdir-qualification")
 public class VhDirQualification extends PractitionerQualificationComponent {
 
 	/**

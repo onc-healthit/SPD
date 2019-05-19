@@ -13,7 +13,7 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate",
-      "valueVhDirDigitalCertificate": {
+      "valueVhdir-digitalcertificate": {
         "extension": [
           {
             "url": "type",
@@ -68,14 +68,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -118,7 +118,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -169,7 +169,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -221,7 +221,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -275,7 +275,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -302,7 +302,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -341,7 +341,7 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate",
-      "valueVhDirDigitalCertificate": {
+      "valueVhdir-digitalcertificate": {
         "extension": [
           {
             "url": "type",
@@ -396,14 +396,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -446,7 +446,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -497,7 +497,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -549,7 +549,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -603,7 +603,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -630,7 +630,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -669,7 +669,7 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate",
-      "valueVhDirDigitalCertificate": {
+      "valueVhdir-digitalcertificate": {
         "extension": [
           {
             "url": "type",
@@ -724,14 +724,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -774,7 +774,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -825,7 +825,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -877,7 +877,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -929,7 +929,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -981,7 +981,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1035,7 +1035,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1062,7 +1062,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1101,14 +1101,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -1151,7 +1151,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1202,7 +1202,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1254,7 +1254,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1308,7 +1308,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1335,7 +1335,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1374,14 +1374,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -1424,7 +1424,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1475,7 +1475,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1529,7 +1529,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1556,7 +1556,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1595,14 +1595,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -1645,7 +1645,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1696,7 +1696,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1750,7 +1750,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1777,7 +1777,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -1816,14 +1816,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -1866,7 +1866,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1917,7 +1917,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -1969,7 +1969,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2023,7 +2023,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -2050,7 +2050,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -2089,14 +2089,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -2139,7 +2139,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2190,7 +2190,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2242,7 +2242,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2296,7 +2296,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -2323,7 +2323,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -2362,14 +2362,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -2412,7 +2412,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2463,7 +2463,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2515,7 +2515,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2567,7 +2567,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2619,7 +2619,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2673,7 +2673,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -2700,7 +2700,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -2739,14 +2739,14 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "1",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
       }
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhDirAlias": {
+      "valueVhdir-alias": {
         "id": "2",
         "valueString": "976258200"
       }
@@ -2789,7 +2789,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2840,7 +2840,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2892,7 +2892,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
-          "valueContactpoint-availabletime": {
+          "valueVhdir-availabletime": {
             "extension": [
               {
                 "url": "daysOfWeek",
@@ -2946,7 +2946,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",
@@ -2973,7 +2973,7 @@
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-          "valueGeolocation": {
+          "valueVhdir-geolocation": {
             "extension": [
               {
                 "url": "latitude",

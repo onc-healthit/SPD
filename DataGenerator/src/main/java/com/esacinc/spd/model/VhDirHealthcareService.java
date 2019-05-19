@@ -3,12 +3,9 @@ package com.esacinc.spd.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Element;
 import org.hl7.fhir.r4.model.HealthcareService;
-import org.hl7.fhir.r4.model.Location;
 import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.StringType;
 
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.Description;

@@ -14,7 +14,7 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 
-@DatatypeDef(name="VhDirIdentifier")
+@DatatypeDef(name="vhdir-identifier")
 public class VhDirIdentifier extends Identifier {
 	private static final long serialVersionUID = 1L;
 	

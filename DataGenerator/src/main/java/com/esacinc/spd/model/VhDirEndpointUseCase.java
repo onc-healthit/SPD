@@ -1,18 +1,15 @@
 package com.esacinc.spd.model;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Element;
 import org.hl7.fhir.r4.model.Extension;
-import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhir.r4.model.UriType;
-import org.hl7.fhir.r4.model.UrlType;
 
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 //import ca.uhn.fhir.model.api.annotation.Extension;
 
-@DatatypeDef(name="UseCase")
+@DatatypeDef(name="vhdir-endpointusecase")
 public class VhDirEndpointUseCase extends Extension {
 	private static final long serialVersionUID = 1L;
 

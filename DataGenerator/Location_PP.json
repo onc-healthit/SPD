@@ -9,7 +9,7 @@
   "extension": [
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr",
-      "valueVhDirEhr": {
+      "valueVhdir-ehr": {
         "id": "1",
         "url": "www.medstar.com",
         "developer": "Medstar",
@@ -24,7 +24,7 @@
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients",
-      "valueVhDirNewPatients": {
+      "valueVhdir-newpatients": {
         "id": "1",
         "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients",
         "acceptingPatients": true,
@@ -51,7 +51,7 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueGeolocation": {
+        "valueVhdir-geolocation": {
           "extension": [
             {
               "url": "latitude",

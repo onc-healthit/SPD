@@ -25,6 +25,8 @@ public class DatabaseUtil {
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_large";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_larged_scrubbed";
 
+	public static String zipConnectionUrl = "jdbc:mysql://65.111.255.73:3306/zipcode";
+	
 	public DatabaseUtil() { }
 
 	static public Connection getConnection() {
@@ -45,6 +47,23 @@ public class DatabaseUtil {
 		return connection;
 	}
 	
+	static public Connection getZipConnection() {
+		// Connect to the DB
+		Connection connection = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			connection = DriverManager.getConnection(zipConnectionUrl,	dbUsername, dbPassword);
+		} catch (SQLException e) {
+			ErrorReport.writeError("DatabaseUtil", "getZipConnection", "", e.getMessage());
+			System.err.println("\nFHIR Zipcode connection terminated with connection error");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			ErrorReport.writeError("DatabaseUtil", "getZipConnection", "", e.getMessage());
+			System.err.println("\nFHIR  Zipcode connection terminated, mysql driver not found");
+			e.printStackTrace();
+		} 
+		return connection;
+	}
 	
 	static public ResultSet runQuery (Connection connection, String strSql, Integer id) throws SQLException{
 		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
@@ -54,5 +73,15 @@ public class DatabaseUtil {
 		ResultSet resultset = sqlStatement.executeQuery();
 		return resultset;
 	}
+	
+	static public ResultSet runZipQuery (Connection connection, String strSql, String id) throws SQLException{
+		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
+		if (id != null) {
+			sqlStatement.setString(1, id);
+		}
+		ResultSet resultset = sqlStatement.executeQuery();
+		return resultset;
+	}
 
+	
 }

@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.esacinc.spd.model.VhDirGeoLocation;
@@ -31,85 +32,85 @@ public class Geocoding {
 	 */
 	public static VhDirGeoLocation geocodePostalCode(String postalCode, Connection connection) throws SQLException {
 		
-		if (LIMIT_REACHED) return null;
-		
 		// Don't even bother if we don't have a postal code that is at least 5 characters
 		if (postalCode.length() < 5) {
+			ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Invalid postal code", "Must be at least 5 characters. Unable to geolocate");
 			System.err.println("Geocoding Error: Invalid postal code: " + postalCode + ". Must be at least 5 characters. Unable to geolocate");
 			return null;
 		}
 		postalCode = postalCode.substring(0,5);
 		// If first 5 chars of the postal code aren't digits, then we also have a problem.
 		if (!postalCode.matches("[0-9]+")) {
-			ErrorReport.writeError("Geocode", "", "Invalid postal code: " + postalCode, "Must be all digits. Unable to geolocate");
+			ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Invalid postal code", "Must be all digits. Unable to geolocate");
 			System.err.println("Geocoding Error: Invalid postal code: " + postalCode + ". Must be all digits. Unable to geolocate");
 			return null;
 		}
-		VhDirGeoLocation loc = new VhDirGeoLocation();
-		String baseUrl = "http://api.geonames.org/postalCodeSearchJSON?country=US&postalcode=";
-		String fullUrl = baseUrl + postalCode + "&username=mholck";
-		URL postResource;
-		
-		try {
-			postResource = new URL(fullUrl);
-			HttpURLConnection con;
-			con = (HttpURLConnection) postResource.openConnection();
-			con.setRequestMethod("GET");
-			con.setRequestProperty("Content-Type", "application/json");
-			con.setDoOutput(true);
-			con.setConnectTimeout(0);
-			con.setReadTimeout(0);
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String l = null;
-			while ((l=br.readLine())!=null) {
-				System.out.println(l);
-				if (l.indexOf("the hourly limit") > -1) {
-					LIMIT_REACHED = true;
-					ErrorReport.writeError("Geocode", "", "Postal code: " + postalCode, "Limit reached of 1000 calls in an hour to service.");
-				}
-				JsonElement result = new JsonParser().parse(l);
-			    JsonObject resultObj = result.getAsJsonObject();
-			    JsonArray postalCodes = resultObj.getAsJsonArray("postalCodes");
-			    if (postalCodes == null || !postalCodes.isJsonArray()) {
-					ErrorReport.writeError("Geocode", "", "Postal code: " + postalCode, "Error parsing results from http://api.geonames.org with postal code: " + postalCode + " Returned line: '" + l + "'");
-			    	System.err.println("Geocoding Error: Error parsing results from http://api.geonames.org with postal code: " + postalCode + " Returned line: '" + l + "'");
-			    }
-			    else if (postalCodes.size() == 0 ) {
-					ErrorReport.writeError("Geocode", "", "Postal code: " + postalCode, "No valid values returned from http://api.geonames.org  for postal code " + postalCode );
-			    	System.err.println("Geocoding Error: No valid values returned from http://api.geonames.org  for postal code " + postalCode );
-			    }
-			    else {
-				    JsonObject propertiesJson = postalCodes.get(0).getAsJsonObject();
-				    double lat = propertiesJson.get("lat").getAsDouble();
-				    double lon = propertiesJson.get("lng").getAsDouble();
-				    loc.setLatitude(lat);
-				    loc.setLongitude(lon);
-			    
-				    // Update all DB records with this postalCode to add lat/lon
-				    if (connection != null) {
-					    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
-					    		postalCode + "%'";
-					    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-					    updateStatement.setDouble(1, lat);
-					    updateStatement.setDouble(2, lon);
-						updateStatement.executeUpdate();
-				    }
-			    }
-			}
-			br.close();
+		// Try to get a geolocation from our local zipcode table...
+		VhDirGeoLocation loc = geocodeLocalPostalCode(postalCode);
+		// If we couldn't get a loc from the local zipcode table, then try calling an external source...
+		if (loc == null && !LIMIT_REACHED )
+		{
+			try {
+				loc = new VhDirGeoLocation();
+				String baseUrl = "http://api.geonames.org/postalCodeSearchJSON?country=US&postalcode=";
+				String fullUrl = baseUrl + postalCode + "&username=mholck";
+				URL postResource;
 	
-			con.disconnect();
-		} catch (MalformedURLException e) {
-			ErrorReport.writeError("VhDirGeocodeLocation", "postalCode: " + postalCode, "URL Exception", e.getMessage());
-			System.err.println("Geocoding Error: MalformedURLException: " + e.getMessage());
-			e.printStackTrace();
-		} catch (IOException e) {
-			ErrorReport.writeError("VhDirGeocodeLocation", "postalCode: " + postalCode, "IO Exception", e.getMessage());
-			System.err.println("Geocoding Error: IOException: " + e.getMessage());
-			e.printStackTrace();
-		}
+				postResource = new URL(fullUrl);
+				HttpURLConnection con;
+				con = (HttpURLConnection) postResource.openConnection();
+				con.setRequestMethod("GET");
+				con.setRequestProperty("Content-Type", "application/json");
+				con.setDoOutput(true);
+				con.setConnectTimeout(0);
+				con.setReadTimeout(0);
+				
+				BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				String l = null;
+				while ((l=br.readLine())!=null) {
+					System.out.println(l);
+					if (l.indexOf("the hourly limit") > -1) {
+						LIMIT_REACHED = true;
+						ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Too Many calls", "Limit reached of 1000 calls in an hour to service api.geonames.org.");
+					}
+					JsonElement result = new JsonParser().parse(l);
+				    JsonObject resultObj = result.getAsJsonObject();
+				    JsonArray postalCodes = resultObj.getAsJsonArray("postalCodes");
+				    if (postalCodes == null || !postalCodes.isJsonArray() || postalCodes.size() == 0) {
+						ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Null or Empty Results", "Error parsing results from http://api.geonames.org with postal code: " + postalCode + " Returned line: '" + l + "'");
+				    	System.err.println("Geocoding Error: Error parsing results from http://api.geonames.org with postal code: " + postalCode + " Returned line: '" + l + "'");
+				    }
+					else {
+					    JsonObject propertiesJson = postalCodes.get(0).getAsJsonObject();
+					    double lat = propertiesJson.get("lat").getAsDouble();
+					    double lon = propertiesJson.get("lng").getAsDouble();
+					    loc.setLatitude(lat);
+					    loc.setLongitude(lon);
+				    
+					    // Update all DB records with this postalCode to add lat/lon
+					    if (connection != null) {
+						    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
+						    		postalCode + "%'";
+						    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+						    updateStatement.setDouble(1, lat);
+						    updateStatement.setDouble(2, lon);
+							updateStatement.executeUpdate();
+					    }
+				    }
+				}
+				br.close();
 		
+				con.disconnect();
+			} catch (MalformedURLException e) {
+				ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "URL Exception", e.getMessage());
+				System.err.println("Geocoding Error: MalformedURLException: " + e.getMessage());
+				e.printStackTrace();
+			} catch (IOException e) {
+				ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "IO Exception", e.getMessage());
+				System.err.println("Geocoding Error: IOException: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
 		return loc;
 	}
 	
@@ -129,11 +130,33 @@ public class Geocoding {
 			}
 		}
 		catch (Exception e) {
-				System.err.println("Exception creating geolocation for (" + lat + ", " + lon + ") and postalCode '" + postalCode + "'" + e.getMessage());
-				e.printStackTrace();
+			ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: "+postalCode, "Geocoding.getGeoLocation" , "Exception creating geolocation for (" + lat + ", " + lon + ") and postalCode '" + postalCode + "'" + e.getMessage());
+			System.err.println("Exception creating geolocation for (" + lat + ", " + lon + ") and postalCode '" + postalCode + "'" + e.getMessage());
+			e.printStackTrace();
 		}
 
 		return loc;
 		
+	}
+	
+	static public VhDirGeoLocation geocodeLocalPostalCode(String postalCode) throws SQLException {
+		System.out.println("Calling local geocoding for " + postalCode);
+		Connection zipconnection = DatabaseUtil.getZipConnection();
+		if (zipconnection != null) {
+			ResultSet resultset = DatabaseUtil.runZipQuery(zipconnection, "select * from zip_codes where zip = ?", postalCode);
+			while (resultset.next()) {
+				VhDirGeoLocation loc = new VhDirGeoLocation();
+				loc.setLatitude(resultset.getDouble("latitude"));
+				loc.setLatitude(resultset.getDouble("longitude"));
+				zipconnection.close();
+				return loc; // expecting only one.
+			}
+			ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Geocoding.geocodeLocalPostalCode", "Postal code not found in local db.");
+			zipconnection.close();
+		}
+		else {
+			System.err.println("Unable to open connection to zip schema");
+		}
+		return null;
 	}
 }

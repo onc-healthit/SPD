@@ -37,11 +37,19 @@ import ca.uhn.fhir.parser.IParser;
 public class BulkDataApp {
 
 	// Database connection and querying are handled in DatabaseUtils.java
+
+    // Control Variables
+	private static boolean DO_REPORTING = true;   // false means no error report file generated.
+	public static int      MAX_ENTRIES = 10;      // Control how many entries we process in each section and output. -1 means ALL. 
+	private static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
+	private static int     PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
+	private static boolean DO_GEOTEST = true;     // Run some geocode testing.  Probably always false
+
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ALL = true;  
-	private static boolean DO_ORGANIZATIONS = false;
-	private static boolean DO_PRACTITIONERS = true;
+	private static boolean DO_ALL = true;   // If true, process all resource type, regardless of settings below
+	private static boolean DO_ORGANIZATIONS = true;
+	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
 	private static boolean DO_VALIDATIONS = false;
@@ -54,8 +62,6 @@ public class BulkDataApp {
 	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
 	private static boolean DO_PRACTITIONERROLES = false;
 	
-
-	private static boolean DO_GEOTEST = false;
 
 	// Which VhDir resource files to generate...
 	private static String FILE_ORGANIZATIONS = "Organization.ndjson";
@@ -85,20 +91,23 @@ public class BulkDataApp {
 	private static String FILE_ORGANIZATIONAFFILIATIONS_PP = "OrganizationAffiliation_PP.json";
 	private static String FILE_PRACTITIONERROLES_PP = "PractitionerRole_PP.json";
 	private static String FILE_RESTRICTIONS_PP = "Restriction_PP.json";
-	private static int    MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
-	private static int    PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
-	// Control how many entries we process in each section and output. -1 means ALL.
-	public static int MAX_ENTRIES = -1;  
-	
+	/**
+	 * Used by all the resource builders to determine if it is time to stop processing them...
+	 * @param cnt
+	 * @return
+	 */
 	public static boolean okToProceed(int cnt) {
 		return (MAX_ENTRIES == -1 || cnt < MAX_ENTRIES);
 	}
+	
 	public static void main(String[] args) {
 		
 		// Open the error report file, and write some bookkeeping info
-		ErrorReport.open();
-		ErrorReport.writeInfo("Control Variables", "", String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE), "");
+		if (DO_REPORTING) {
+			ErrorReport.open();
+		}
+		ErrorReport.writeInfo("Control Variables", "", "" ,String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE));
 
 		// Testing some geocode stuff.
 		if (DO_GEOTEST)
@@ -122,7 +131,6 @@ public class BulkDataApp {
 		
 		
 		if (DO_ALL || DO_ORGANIZATIONS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_ORGANIZATIONS","","","");
 			try{
 				// Get and write Organizations
@@ -130,7 +138,8 @@ public class BulkDataApp {
 				BulkOrganizationBuilder orgBuilder = new BulkOrganizationBuilder();
 				List<VhDirOrganization> organizations = orgBuilder.getOrganizations(connection);
 				outputOrganizationList(organizations); 
-				ErrorReport.writeInfo("","",String.format("%d Organizations Collected", organizations.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Organizations Collected", organizations.size()));
 			}	
 			catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -143,7 +152,6 @@ public class BulkDataApp {
 		}
 		
 		if (DO_ALL || DO_PRACTITIONERS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_PRACTITIONERS","","","");
 			try {
 				// Get and write Practitioners
@@ -152,7 +160,8 @@ public class BulkDataApp {
 				BulkPractitionerBuilder pracBuilder = new BulkPractitionerBuilder();
 				List<VhDirPractitioner> practitioners = pracBuilder.getPractitioners(connection);
 				outputPractitionerList(practitioners); 
-				ErrorReport.writeInfo("","",String.format("%d Practitioners Collected", practitioners.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Practitioners Collected", practitioners.size()));
 			} catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERS", e.getMessage());
 				e.printStackTrace();
@@ -163,7 +172,6 @@ public class BulkDataApp {
 		}
 		
 		if (DO_ALL || DO_NETWORKS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_NETWORKS","","","");
 			try {
 				// Get and write Networks
@@ -172,7 +180,8 @@ public class BulkDataApp {
 				BulkNetworkBuilder nwBuilder = new BulkNetworkBuilder();
 				List<VhDirNetwork> networks = nwBuilder.getNetworks(connection);
 				outputNetworkList(networks); 
-				ErrorReport.writeInfo("","",String.format("%d Networks Collected", networks.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Networks Collected", networks.size()));
 			} catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_NETWORKS", e.getMessage());
 				e.printStackTrace();
@@ -183,7 +192,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_LOCATIONS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_LOCATIONS","","","");
 			try{
 				// Get and write Locations
@@ -191,7 +199,8 @@ public class BulkDataApp {
 				BulkLocationBuilder locBuilder = new BulkLocationBuilder();
 				List<VhDirLocation> locations = locBuilder.getLocations(connection);
 				outputLocationList(locations);  
-				ErrorReport.writeInfo("","",String.format("%d Locations Collected", locations.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Locations Collected", locations.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_LOCATIONS", e.getMessage());
@@ -204,7 +213,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_VALIDATIONS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_VALIDATIONS","","","");
 			try{
 				// Get and write Validations
@@ -212,7 +220,8 @@ public class BulkDataApp {
 				BulkValidationBuilder valBuilder = new BulkValidationBuilder();
 				List<VhDirValidation> validations = valBuilder.getValidations(connection);
 				outputValidationList(validations);  
-				ErrorReport.writeInfo("","",String.format("%d Validations Collected", validations.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Validations Collected", validations.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_VALIDATIONS", e.getMessage());
@@ -225,7 +234,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_ENDPOINTS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_ENDPOINTS","","","");
 			try{
 				// Get and write Endpoints
@@ -233,7 +241,8 @@ public class BulkDataApp {
 				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
 				List<VhDirEndpoint> endpoints = epBuilder.getEndpoints(connection);
 				outputEndpointList(endpoints);  
-				ErrorReport.writeInfo("","",String.format("%d Endpoints Collected", endpoints.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Endpoints Collected", endpoints.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_ENDPOINTS", e.getMessage());
@@ -246,7 +255,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_CARETEAMS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_CARETEAMS","","","");
 			try{
 				// Get and write Careteams
@@ -254,7 +262,8 @@ public class BulkDataApp {
 				BulkCareTeamBuilder ctBuilder = new BulkCareTeamBuilder();
 				List<VhDirCareTeam> careteams = ctBuilder.getCareTeams(connection);
 				outputCareTeamList(careteams);  
-				ErrorReport.writeInfo("","",String.format("%d CareTeams Collected", careteams.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d CareTeams Collected", careteams.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_CARETEAMS", e.getMessage());
@@ -267,7 +276,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_HEALTHCARESERVICES) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_HEALTHCARESERVICES","","","");
 			try{
 				// Get and write HeathcareServices
@@ -275,7 +283,8 @@ public class BulkDataApp {
 				BulkHealthcareServiceBuilder hsBuilder = new BulkHealthcareServiceBuilder();
 				List<VhDirHealthcareService> services = hsBuilder.getHealthcareServices(connection);
 				outputServicesList(services);  
-				ErrorReport.writeInfo("","",String.format("%d Healthcare Services Collected", services.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Healthcare Services Collected", services.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_HEALTHCARESERVICES", e.getMessage());
@@ -288,7 +297,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_INSURANCEPLANS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_INSURANCEPLANS","","","");
 			try{
 				// Get and write Insurance Planes
@@ -296,7 +304,8 @@ public class BulkDataApp {
 				BulkInsurancePlanBuilder epBuilder = new BulkInsurancePlanBuilder();
 				List<VhDirInsurancePlan> plans = epBuilder.getInsurancePlans(connection);
 				outputInsurancePlanList(plans);  
-				ErrorReport.writeInfo("","",String.format("%d Insurance Plans Collected", plans.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Insurance Plans Collected", plans.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_INSURANCEPLANS", e.getMessage());
@@ -309,7 +318,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_ORGANIZATIONAFFILIATIONS","","","");
 			/*
 			try{
@@ -318,7 +326,8 @@ public class BulkDataApp {
 				BulkOrganizationAffiliationBuilder affBuilder = new BulkOrganizationAffiliationBuilder();
 				List<VhDirOrganizationAffiliation> affiliations = affBuilder.getOrganizationAffiliations(connection);
 				outputAffiliationList(affiliations);  
-				ErrorReport.writeInfo("","",String.format("%d Organization Affiliations Collected", affiliations.size()),"");
+			    ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Organization Affiliations Collected", affiliations.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_ORGANIZATIONAFFILIATIONS", e.getMessage());
@@ -332,7 +341,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_PRACTITIONERROLES) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_PRACTITIONERROLES","","","");
 			/*
 			try{
@@ -341,7 +349,8 @@ public class BulkDataApp {
 				BulkPractitionerRoleBuilder prBuilder = new BulkPractitionerRoleBuilder();
 				List<VhDirPractitionerRole> roles = prBuilder.getPractitionerRoles(connection);
 				outputRoleList(roles);  
-				ErrorReport.writeInfo("","",String.format("%d Practitioner Roles Collected", roles.size()),"");
+			    ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Practitioner Roles Collected", roles.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERROLES", e.getMessage());
@@ -355,7 +364,6 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_RESTRICTIONS) {
-			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_RESTRICTIONS","","","");
 			try{
 				// Get and write Restrictions
@@ -363,7 +371,8 @@ public class BulkDataApp {
 				BulkRestrictionBuilder resBuilder = new BulkRestrictionBuilder();
 				List<VhDirRestriction> restrictions = resBuilder.getRestrictions(connection);
 				outputRestrictionList(restrictions);  
-				ErrorReport.writeInfo("","",String.format("%d Restrictions Collected", restrictions.size()),"");
+				ErrorReport.setCursor("", "");
+				ErrorReport.writeInfo("","","",String.format("%d Restrictions Collected", restrictions.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in O_RESTRICTIONS", e.getMessage());
@@ -376,9 +385,12 @@ public class BulkDataApp {
 		}
 
 		ErrorReport.setCursor("", "");
-		System.out.println("\n\nFHIR Resource generation complete");
-		System.out.println(ErrorReport.getSummaryNote());
-		ErrorReport.close();
+		System.out.println("\n\nFHIR Resource generation complete.");
+		if (DO_REPORTING) {
+			System.out.println("   " + ErrorReport.getSummaryNote());
+			System.out.println("   See " + ErrorReport.REPORT_FILENAME + " for details.");
+			ErrorReport.close();
+		}
 
 	}
 

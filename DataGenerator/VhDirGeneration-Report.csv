@@ -1,263 +1,50 @@
-MSG TYPE,PROCESS CURSOR,RESOURCE,ID,NOTE,ERROR MESSAGE
-I, ,ErrorReport,,Generation Time: Sat May 18 18:12:10 MDT 2019,
-I, ,Control Variables,,Process all resource types: Yes, Max Entries: -1, Max Pretty Print Entries: 10, Print Nth of each Resource to console: 0,
-I, ,DO_ORGANIZATIONS,,,
-I,VhDirOrganization(id: 1) ,VhDirDigitalCertificate,,Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Mon May 18 18:12:10 MDT 2020,DigitalCertificateFactory.makeDigitalCertificate
-E,VhDirOrganization(id: 1) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 1) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirOrganization(id: 2) ,VhDirDigitalCertificate,,Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Mon May 18 18:12:12 MDT 2020,DigitalCertificateFactory.makeDigitalCertificate
-E,VhDirOrganization(id: 2) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 2) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 2) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 2) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 2) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 2) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirOrganization(id: 3) ,VhDirDigitalCertificate,,Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Mon May 18 18:12:13 MDT 2020,DigitalCertificateFactory.makeDigitalCertificate
-E,VhDirOrganization(id: 3) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 3) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 4) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 4) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 4) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 4) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 4) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 4) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 5) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 5) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 5) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 5) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 5) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 6) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 6) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 6) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 6) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 6) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 7) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 7) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 8) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 8) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 8) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 8) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 8) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 8) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 9) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 9) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 10) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 10) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 10) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 10) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 10) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 10) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 11) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 11) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 11) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 11) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 11) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 11) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 12) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 12) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 12) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 12) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 12) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 12) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 13) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 13) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 14) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 14) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 15) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 15) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 16) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 16) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 17) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 17) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 17) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 17) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 17) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 17) ,Reference,17,No resource reference found with id 17,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 18) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 18) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 18) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 18) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 18) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 18) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 19) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 19) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 19) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 19) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 19) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 19) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 20) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 20) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 21) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 21) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 21) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 22) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 22) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 22) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 23) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 23) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 23) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 24) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 24) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 24) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 25) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 25) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 25) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 26) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 26) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 26) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirOrganization(id: 27) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 27) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-E,VhDirOrganization(id: 27) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirOrganization(id: 27) ,,,27 Organizations Collected,
-I, ,DO_PRACTITIONERS,,,
-I,VhDirPractitioner(id: 1) ,VhDirDigitalCertificate,,Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Mon May 18 18:12:34 MDT 2020,DigitalCertificateFactory.makeDigitalCertificate
-W,VhDirPractitioner(id: 1) ,VhDirPractitioner,1,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirPractitioner(id: 2) ,VhDirDigitalCertificate,,Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Mon May 18 18:12:34 MDT 2020,DigitalCertificateFactory.makeDigitalCertificate
-W,VhDirPractitioner(id: 2) ,VhDirPractitioner,2,unrecognized gender: M,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
-E,VhDirPractitioner(id: 2) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirPractitioner(id: 3) ,VhDirDigitalCertificate,,Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Mon May 18 18:12:35 MDT 2020,DigitalCertificateFactory.makeDigitalCertificate
-W,VhDirPractitioner(id: 3) ,VhDirPractitioner,3,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 4) ,VhDirPractitioner,4,unrecognized gender: M,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
-E,VhDirPractitioner(id: 4) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 5) ,VhDirPractitioner,5,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 5) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 5) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 6) ,VhDirPractitioner,6,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 6) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 7) ,VhDirPractitioner,7,unrecognized gender: M,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
-E,VhDirPractitioner(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 7) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 8) ,VhDirPractitioner,8,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 8) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 8) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 9) ,VhDirPractitioner,9,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 9) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 10) ,VhDirPractitioner,10,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 10) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 11) ,VhDirPractitioner,11,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 11) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 11) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 12) ,VhDirPractitioner,12,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 12) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 12) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 13) ,VhDirPractitioner,13,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 13) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 14) ,VhDirPractitioner,14,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 14) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 15) ,VhDirPractitioner,15,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 15) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 16) ,VhDirPractitioner,16,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 16) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 17) ,VhDirPractitioner,17,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 17) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 17) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 18) ,VhDirPractitioner,18,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 18) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 18) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 19) ,VhDirPractitioner,19,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 19) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-W,VhDirPractitioner(id: 20) ,VhDirPractitioner,20,unrecognized gender: F,No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-E,VhDirPractitioner(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirPractitioner(id: 20) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirPractitioner(id: 20) ,,,20 Practitioners Collected,
-I, ,DO_NETWORKS,,,
-I,VhDirNetwork(id: 10) ,,,10 Networks Collected,
-I, ,DO_LOCATIONS,,,
-E,VhDirLocation(id: 1) ,CodeableConcept,0,No CodeableConcept found with id: 0,ResourceFactory.getCodeableConcept
-I,VhDirLocation(id: 1) ,,,1 Locations Collected,
-I, ,DO_VALIDATIONS,,,
-E,VhDirValidation(id: 1) ,CodeableConcept,3,No CodeableConcept found with id: 3,ResourceFactory.getCodeableConcept
-W,VhDirValidation(id: 1) ,VhDirValidation,1,unrecognized status ,Unknown Status code 'ok'
-I,VhDirValidation(id: 1) ,,,1 Validations Collected,
-I, ,DO_ENDPOINTS,,,
-I,VhDirEndpoint(id: null) ,VhDirDigitalCertificate,,Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Mon May 18 18:12:54 MDT 2020,DigitalCertificateFactory.makeDigitalCertificate
-W,VhDirEndpoint(id: null) ,VhDirEndpoint,null,Unrecognized status,Unknown EndpointStatus code 'ok'
-I,VhDirEndpoint(id: null) ,,,1 Endpoints Collected,
-I, ,DO_CARETEAMS,,,
-I, ,,,0 CareTeams Collected,
-I, ,DO_HEALTHCARESERVICES,,,
-E,VhDirHealthcareService(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirHealthcareService(id: 1) ,,,1 Healthcare Services Collected,
-I, ,DO_INSURANCEPLANS,,,
-E,VhDirInsurancePlan(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirInsurancePlan(id: 1) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirInsurancePlan(id: 2) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirInsurancePlan(id: 2) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirInsurancePlan(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirInsurancePlan(id: 3) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirInsurancePlan(id: 4) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-E,VhDirInsurancePlan(id: 4) ,Reference,0,No resource reference found with id 0,ResourceFactory.getResourceReference
-I,VhDirInsurancePlan(id: 4) ,,,4 Insurance Plans Collected,
-I, ,DO_ORGANIZATIONAFFILIATIONS,,,
-I, ,DO_PRACTITIONERROLES,,,
-I, ,DO_RESTRICTIONS,,,
-I,VhDirRestrictio(id: 1) ,,,1 Restrictions Collected,
-I, ,END,,,Wrote 208 error, 22 warning and 31 info messages to file VhDirGeneration-Report.csv
+MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
+I |  |ErrorReport | | |Generation Time: Sun May 19 10:18:21 MDT 2019
+I |  |Control Variables | | |Process all resource types: Yes, Max Entries: 10, Max Pretty Print Entries: 10, Print Nth of each Resource to console: 0
+G |  |VhDirGeoLocation |postalCode: 09603 |Geocoding.geocodeLocalPostalCode |Postal code not found in local db.
+G |  |VhDirGeoLocation |postalCode: 09603 |Null or Empty Results |Error parsing results from http://api.geonames.org with postal code: 09603 Returned line: '{"postalCodes":[]}'
+G |  |VhDirGeoLocation |postalCode: 96297 |Geocoding.geocodeLocalPostalCode |Postal code not found in local db.
+G |  |VhDirGeoLocation |postalCode: 96297 |Null or Empty Results |Error parsing results from http://api.geonames.org with postal code: 96297 Returned line: '{"postalCodes":[]}'
+I |  |DO_ORGANIZATIONS | | |
+I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 10:18:24 MDT 2020
+I |VhDirOrganization(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Tue May 19 10:18:25 MDT 2020
+I |VhDirOrganization(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Tue May 19 10:18:25 MDT 2020
+I |  | | | |10 Organizations Collected
+I |  |DO_PRACTITIONERS | | |
+I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 10:18:30 MDT 2020
+W |VhDirPractitioner(id: 1)  |VhDirPractitioner |1 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
+I |VhDirPractitioner(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Tue May 19 10:18:31 MDT 2020
+W |VhDirPractitioner(id: 2)  |VhDirPractitioner |2 |unrecognized gender: M |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
+I |VhDirPractitioner(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Tue May 19 10:18:31 MDT 2020
+W |VhDirPractitioner(id: 3)  |VhDirPractitioner |3 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
+W |VhDirPractitioner(id: 4)  |VhDirPractitioner |4 |unrecognized gender: M |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
+W |VhDirPractitioner(id: 5)  |VhDirPractitioner |5 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
+W |VhDirPractitioner(id: 6)  |VhDirPractitioner |6 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
+W |VhDirPractitioner(id: 7)  |VhDirPractitioner |7 |unrecognized gender: M |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
+W |VhDirPractitioner(id: 8)  |VhDirPractitioner |8 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
+W |VhDirPractitioner(id: 9)  |VhDirPractitioner |9 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
+W |VhDirPractitioner(id: 10)  |VhDirPractitioner |10 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
+I |  | | | |10 Practitioners Collected
+I |  |DO_NETWORKS | | |
+I |  | | | |10 Networks Collected
+I |  |DO_LOCATIONS | | |
+I |  | | | |1 Locations Collected
+I |  |DO_VALIDATIONS | | |
+E |VhDirValidation(id: 1)  |CodeableConcept |3 |ResourceFactory.getCodeableConcept |No CodeableConcept found with id: 3
+W |VhDirValidation(id: 1)  |VhDirValidation |1 |unrecognized status  |Unknown Status code 'ok'
+I |  | | | |1 Validations Collected
+I |  |DO_ENDPOINTS | | |
+I |VhDirEndpoint(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 10:18:40 MDT 2020
+W |VhDirEndpoint(id: 1)  |VhDirEndpoint |1 |Unrecognized status |Unknown EndpointStatus code 'ok'
+I |  | | | |1 Endpoints Collected
+I |  |DO_CARETEAMS | | |
+I |  | | | |0 CareTeams Collected
+I |  |DO_HEALTHCARESERVICES | | |
+I |  | | | |1 Healthcare Services Collected
+I |  |DO_INSURANCEPLANS | | |
+I |  | | | |4 Insurance Plans Collected
+I |  |DO_ORGANIZATIONAFFILIATIONS | | |
+I |  |DO_PRACTITIONERROLES | | |
+I |  |DO_RESTRICTIONS | | |
+I |  | | | |1 Restrictions Collected
+I |  |END | | |Wrote 1 error, 12 warning, 4 geocode, and 31 info messages to file VhDirGeneration-Report.csv

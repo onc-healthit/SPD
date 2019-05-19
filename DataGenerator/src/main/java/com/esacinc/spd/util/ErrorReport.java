@@ -12,13 +12,13 @@ import java.util.Date;
 
 public class ErrorReport {
 
-	private static String REPORT_FILENAME = "VhDirGeneration-Report.csv";
-	private static BufferedWriter writer = null;
+	public static String REPORT_FILENAME = "VhDirGeneration-Report.csv";
 	public static int errors = 0;
 	public static int warnings = 0;
+	public static int geocodes = 0;
 	public static int info = 0;
-	
 	public static String CURSOR = "";
+	private static BufferedWriter writer = null;
 		
 	public ErrorReport() { }
 
@@ -40,10 +40,10 @@ public class ErrorReport {
 			info = 0;
 			Date now = new Date();
 			// Write out column headers...
-			writeMessage("MSG TYPE","PROCESS CURSOR","RESOURCE","ID","NOTE","ERROR MESSAGE");
+			writeMessage("MSG TYPE","PROCESS CURSOR","RESOURCE","ID","SHORT NOTE","MESSAGE");
 			ErrorReport.setCursor("", "");
 		    // Write some bookkeeping...
-			writeInfo("ErrorReport", "", "Generation Time: " + now.toString(), "");
+			writeInfo("ErrorReport", "", "","Generation Time: " + now.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,23 +62,33 @@ public class ErrorReport {
 	}
 	
 	static public void writeError(String resourceType, String resourceId, String note, String errorMsg) {
+		if (writer == null ) return;
 		writeMessage("E",CURSOR,resourceType,resourceId, note, errorMsg);
 		errors++;
 	}
 	
 	static public void writeWarning(String resourceType, String resourceId, String note, String errorMsg) {
+		if (writer == null ) return;
 		writeMessage("W",CURSOR,resourceType,resourceId, note, errorMsg);
 		warnings++;
 	}
 	
 	static public void writeInfo(String resourceType, String resourceId, String note, String errorMsg) {
+		if (writer == null ) return;
 		writeMessage("I",CURSOR,resourceType,resourceId, note, errorMsg);
 		info++;
 	}
 
+	static public void writeGeoCodeMsg(String resourceType, String resourceId, String note, String errorMsg) {
+		if (writer == null ) return;
+		writeMessage("G",CURSOR,resourceType,resourceId, note, errorMsg);
+		geocodes++;
+	}
+
+	
 	static public void writeMessage(String msgType, String cursor, String resourceType, String resourceId, String note, String errorMsg) {
 		if (writer != null) {
-			String msg = String.format("%s,%s,%s,%s,%s,%s", msgType,cursor, resourceType, resourceId, note, errorMsg);
+			String msg = String.format("%s |%s |%s |%s |%s |%s", msgType,cursor, resourceType, resourceId, note, errorMsg);
 			try {
 				writer.write(msg);
 				writer.write("\n");
@@ -90,8 +100,9 @@ public class ErrorReport {
 	}
 	
 	static public String getSummaryNote() {
-		String note = String.format("Wrote %d error, %d warning and %d info messages to file %s", errors, warnings, info, REPORT_FILENAME);
+		String note = "";		
 		if (writer != null) {
+			note = String.format("Wrote %d error, %d warning, %d geocode, and %d info messages to file %s", errors, warnings, geocodes, info, REPORT_FILENAME);
 			writeInfo("END","","",note);
 		}
 		return note;

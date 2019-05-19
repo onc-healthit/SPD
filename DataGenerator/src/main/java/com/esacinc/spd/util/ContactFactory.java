@@ -131,12 +131,13 @@ public class ContactFactory {
 	 * @throws SQLException
 	 */
 	static public VhDirTelecom getTelecom(int telecomId, Connection connection) throws SQLException{
+		if (telecomId == 0) return null;  // We know for sure there's no 0 id.
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where telecom_id = ?", telecomId);
 		while(resultset.next()) {
 			VhDirTelecom telecom = getTelecom(resultset, connection);
 			return telecom; // Only expecting one
 		}	
-		ErrorReport.writeError("VhDirTelecom", resultset.getString("telecomId"), "No telecom found with given id: "+telecomId, "ContactFactory.getTelecom");
+		ErrorReport.writeError("VhDirTelecom", resultset.getString("telecomId"), "ContactFactory.getTelecom", "No telecom found with given id: "+telecomId);
 
 		return null;  // If we get here, there was no row in the telecom table with that id
 	}

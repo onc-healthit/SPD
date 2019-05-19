@@ -66,11 +66,12 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public Reference getResourceReference(int refId, Connection connection) throws SQLException{
+		if (refId == 0) return null;  // We know for sure there's no 0 id.
 		ResultSet refs = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where resource_reference_id = ?", refId);
 		while(refs.next()) {
 			return getResourceReference(refs,connection); // We only expect one in this case
 		}
-		ErrorReport.writeError("Reference", String.valueOf(refId), "No resource reference found with id " + refId, "ResourceFactory.getResourceReference");
+		ErrorReport.writeError("Reference", String.valueOf(refId), "ResourceFactory.getResourceReference", "No resource reference found with id " + refId);
 		return null;  // If we get here, there was no reference with that id
 	}
 
@@ -96,6 +97,7 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public VhDirIdentifier getIdentifier(int identifierId, Connection connection) throws SQLException{
+		if (identifierId == 0) return null;  // We know for sure there's no 0 id.
 		VhDirIdentifier identifier = new VhDirIdentifier();
 		String sqlString = "SELECT * from identifier where ridentifier_id = ?";
 		PreparedStatement sqlStatement = connection.prepareStatement(sqlString);
@@ -105,7 +107,7 @@ public class ResourceFactory {
 			identifier = getIdentifier(resultset);
 			return identifier; // There should only be one 
 		}
-		ErrorReport.writeError("VhDirIdentifier", String.valueOf(identifierId), "No identifier found with id " + identifierId, "ResourceFactory.getIdentifier");
+		ErrorReport.writeError("VhDirIdentifier", String.valueOf(identifierId), "ResourceFactory.getIdentifier", "No identifier found with id " + identifierId);
 		return null;  // If we get here, there was no identifier with that id
 	}
 	
@@ -159,12 +161,13 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public VhDirAddress getAddress(int addrId, Connection connection) throws SQLException{
+		if (addrId == 0) return null;  // We know for sure there's no 0 id.
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where address_id = ?", addrId);
 		while(resultset.next()) {
 			VhDirAddress addr = getAddress(resultset, connection);
 			return addr;
 		}	
-		ErrorReport.writeError("VhDirAddress", String.valueOf(addrId), "No address found with id " + addrId , "ResourceFactory.getAddress");
+		ErrorReport.writeError("VhDirAddress", String.valueOf(addrId), "ResourceFactory.getAddress", "No address found with id " + addrId );
 		return null;  // If we get here, there was no identifier with that id
 	}
 	
@@ -265,11 +268,12 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public HumanName getHumanName(int nameId, Connection connection) throws SQLException{
+		if (nameId == 0) return null;  // We know for sure there's no 0 id.
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from name where name_id = ?", nameId);
 		while(resultset.next()) {
 			return getHumanName(resultset);  // We expect only one.
 		}
-		ErrorReport.writeError("HumanName", String.valueOf(nameId), "No name found with id " + nameId , "ResourceFactory.getHumanName");
+		ErrorReport.writeError("HumanName", String.valueOf(nameId), "ResourceFactory.getHumanName", "No name found with id " + nameId );
 
 		return null; // If we get here, there was no name with that id
 	}
@@ -299,7 +303,7 @@ public class ResourceFactory {
 		}
 		catch (Exception e) {
 			name.setUse(NameUse.NULL);
-			ErrorReport.writeWarning("HumanName", name.getId(), "Unrecognized use", e.getMessage());
+			ErrorReport.writeWarning("HumanName", name.getId(), "Unrecognized use: "+use, e.getMessage());
 		}		
 		return name;
 	}
@@ -313,6 +317,7 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public CodeableConcept getCommunicationProficiency(String commId, Connection connection) throws SQLException {
+		if (commId == null || commId.isEmpty()) return null;  // We know for sure there's no 0 id.
 		CodeableConcept comm_cc = new CodeableConcept(); // To hold all the codings
 		comm_cc.setId(commId);
 		// Now get all the codes belonging to this communication
@@ -387,11 +392,12 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public CodeableConcept getCodeableConcept(int conceptId, Connection connection) throws SQLException{
+		if (conceptId == 0) return null;  // We know for sure there's no 0 id.
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from fhir_codeable_concept where codeable_concept_id = ?", conceptId);
 		while(resultset.next()) {
 			return getCodeableConcept(resultset); // We only expect one with this query
 		}
-		ErrorReport.writeError("CodeableConcept", String.valueOf(conceptId), "No CodeableConcept found with id: " + conceptId, "ResourceFactory.getCodeableConcept");
+		ErrorReport.writeError("CodeableConcept", String.valueOf(conceptId), "ResourceFactory.getCodeableConcept", "No CodeableConcept found with id: " + conceptId);
 		return null;  // If we get here, there was no cc found.
 	}
 
@@ -437,6 +443,7 @@ public class ResourceFactory {
 	 * @throws SQLException
 	 */
 	static public VhDirEndpointUseCase getEndpointUseCase(String ucId, Connection connection) throws SQLException {
+		if (ucId == null || ucId.isEmpty()) return null;  // We know for sure there's no 0 id.
 		VhDirEndpointUseCase uc = new VhDirEndpointUseCase(); //
 		uc.setId(ucId);
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from use_case where use_case_id = ?", Integer.valueOf(ucId)); 
@@ -446,7 +453,7 @@ public class ResourceFactory {
 			// uc.setUrl (Url is handled automatically in the class definition)
 			return uc; // We are expecting only one.
 		}
-		ErrorReport.writeError("VhDirEndpointUseCase", String.valueOf(ucId), "No use_case found with id: " + ucId, "ResourceFactory.getEndpointUseCase");
+		ErrorReport.writeError("VhDirEndpointUseCase", String.valueOf(ucId), "ResourceFactory.getEndpointUseCase", "No use_case found with id: " + ucId);
 		return null;
 	}
 
@@ -599,7 +606,7 @@ public class ResourceFactory {
 	public static VhDirNote getNote(ResultSet resultset) throws SQLException {
 		VhDirNote note = new VhDirNote();
 		// TODO The 'note' model maintains a practitioner_id pointing to a VhDirPractitioner. This should really be a resource reference
-		ErrorReport.writeInfo("VhDirNote", resultset.getString("note_id"), "The 'note' model maintains a practitioner_id pointing to a VhDirPractitioner. This should really be a resource reference", "ResourceFactory.getNote");
+		ErrorReport.writeInfo("VhDirNote", resultset.getString("note_id"), "ResourceFactory.getNote","The 'note' model maintains a practitioner_id pointing to a VhDirPractitioner. This should really be a resource reference");
 		note.setId(resultset.getString("note_id"));
 		note.setAuthor(makeResourceReference(resultset.getString("practitioner_id"),"VhDirPractioner", null, "Author"));
 		note.setTime(resultset.getDate("time"));
@@ -725,7 +732,7 @@ public class ResourceFactory {
 			typeList.add(code);
 		}
 		catch (Exception e) {
-			ErrorReport.writeWarning("Signature", "", String.format("Error in ResourceFactory.makeSignature(type;%s, targetFormat:%s)",type,targetFormat), e.getMessage());
+			ErrorReport.writeWarning("Signature", "", String.format("makeSignature Args:type;%s, targetFormat:%s",type,targetFormat), e.getMessage());
 		}
 		sig.setType(typeList);
 		sig.setWho(makeResourceReference("1","VhDirPractitioner",null,""));

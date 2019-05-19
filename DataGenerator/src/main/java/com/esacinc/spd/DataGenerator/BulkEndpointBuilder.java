@@ -42,8 +42,8 @@ public class BulkEndpointBuilder {
 			VhDirEndpoint ep = new VhDirEndpoint();
 		
 			// set the id
-			int epId = resultSet.getInt("location_id");
-			ep.setId(resultSet.getString("location_id"));
+			int epId = resultSet.getInt("endpoint_id");
+			ep.setId(resultSet.getString("endpoint_id"));
 			ErrorReport.setCursor("VhDirEndpoint", ep.getId());
 			
 			ep.setName(resultSet.getString("name"));

@@ -18,6 +18,7 @@ import com.google.gson.JsonParser;
 
 public class Geocoding {
 	
+	static public boolean LIMIT_REACHED = false; 
 	/**
 	 * Calls a web service to get the lat/lon for the postal code passed in.  If connection parameter is
 	 * non-null, then update all of the rows in the 'address' table in the database with the same postal code with the
@@ -30,6 +31,8 @@ public class Geocoding {
 	 */
 	public static VhDirGeoLocation geocodePostalCode(String postalCode, Connection connection) throws SQLException {
 		
+		if (LIMIT_REACHED) return null;
+		
 		// Don't even bother if we don't have a postal code that is at least 5 characters
 		if (postalCode.length() < 5) {
 			System.err.println("Geocoding Error: Invalid postal code: " + postalCode + ". Must be at least 5 characters. Unable to geolocate");
@@ -38,6 +41,7 @@ public class Geocoding {
 		postalCode = postalCode.substring(0,5);
 		// If first 5 chars of the postal code aren't digits, then we also have a problem.
 		if (!postalCode.matches("[0-9]+")) {
+			ErrorReport.writeError("Geocode", "", "Invalid postal code: " + postalCode, "Must be all digits. Unable to geolocate");
 			System.err.println("Geocoding Error: Invalid postal code: " + postalCode + ". Must be all digits. Unable to geolocate");
 			return null;
 		}
@@ -60,13 +64,19 @@ public class Geocoding {
 			String l = null;
 			while ((l=br.readLine())!=null) {
 				System.out.println(l);
+				if (l.indexOf("the hourly limit") > -1) {
+					LIMIT_REACHED = true;
+					ErrorReport.writeError("Geocode", "", "Postal code: " + postalCode, "Limit reached of 1000 calls in an hour to service.");
+				}
 				JsonElement result = new JsonParser().parse(l);
 			    JsonObject resultObj = result.getAsJsonObject();
 			    JsonArray postalCodes = resultObj.getAsJsonArray("postalCodes");
 			    if (postalCodes == null || !postalCodes.isJsonArray()) {
+					ErrorReport.writeError("Geocode", "", "Postal code: " + postalCode, "Error parsing results from http://api.geonames.org with postal code: " + postalCode + " Returned line: '" + l + "'");
 			    	System.err.println("Geocoding Error: Error parsing results from http://api.geonames.org with postal code: " + postalCode + " Returned line: '" + l + "'");
 			    }
 			    else if (postalCodes.size() == 0 ) {
+					ErrorReport.writeError("Geocode", "", "Postal code: " + postalCode, "No valid values returned from http://api.geonames.org  for postal code " + postalCode );
 			    	System.err.println("Geocoding Error: No valid values returned from http://api.geonames.org  for postal code " + postalCode );
 			    }
 			    else {
@@ -108,7 +118,7 @@ public class Geocoding {
 		VhDirGeoLocation loc = new VhDirGeoLocation();
 		try {
 			// If we don't have a valid lat/lon, the get one by geo locating the given postalCode
-			if (lat == null || lon == null || lat == 0.0 || lon == 0.0) {
+			if (!LIMIT_REACHED && (lat == null || lon == null || lat == 0.0 || lon == 0.0)) {
 				System.out.println("Geocoding.getGeoLocation:  Calling Geocoding lat-lon for postal code " + postalCode);
 				loc = Geocoding.geocodePostalCode(postalCode, connection);
 			} else {

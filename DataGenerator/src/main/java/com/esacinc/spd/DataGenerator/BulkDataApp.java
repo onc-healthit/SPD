@@ -105,6 +105,7 @@ public class BulkDataApp {
 		
 		// Open the error report file, and write some bookkeeping info
 		if (DO_REPORTING) {
+			ErrorReport.messageThrottles(false, false, false, false); // ignore: errors, warnings, info, geocode messages.
 			ErrorReport.open();
 		}
 		ErrorReport.writeInfo("Control Variables", "", "" ,String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE));

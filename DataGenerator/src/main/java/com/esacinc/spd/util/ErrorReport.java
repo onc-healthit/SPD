@@ -14,9 +14,21 @@ public class ErrorReport {
 	public static int info = 0;
 	public static String CURSOR = "";
 	private static BufferedWriter writer = null;
+	
+	private static boolean IGNORE_ERRORS = false;
+	private static boolean IGNORE_WARNINGS = false;
+	private static boolean IGNORE_INFO = false;
+	private static boolean IGNORE_GEOCODES = false;
 		
 	public ErrorReport() { }
 
+	static public void messageThrottles(boolean ignoreE, boolean ignoreW, boolean ignoreI, boolean ignoreG) {
+		IGNORE_ERRORS = ignoreE;
+		IGNORE_WARNINGS = ignoreW;
+		IGNORE_INFO = ignoreI;
+		IGNORE_GEOCODES = ignoreG;
+	}
+	
 	static public void setCursor(String resource, String id) {
 		if (resource.isEmpty()) {
 			CURSOR = " ";
@@ -57,25 +69,25 @@ public class ErrorReport {
 	}
 	
 	static public void writeError(String resourceType, String resourceId, String note, String errorMsg) {
-		if (writer == null ) return;
+		if (writer == null || IGNORE_ERRORS) return;
 		writeMessage("E",CURSOR,resourceType,resourceId, note, errorMsg);
 		errors++;
 	}
 	
 	static public void writeWarning(String resourceType, String resourceId, String note, String errorMsg) {
-		if (writer == null ) return;
+		if (writer == null || IGNORE_WARNINGS ) return;
 		writeMessage("W",CURSOR,resourceType,resourceId, note, errorMsg);
 		warnings++;
 	}
 	
 	static public void writeInfo(String resourceType, String resourceId, String note, String errorMsg) {
-		if (writer == null ) return;
+		if (writer == null || IGNORE_INFO) return;
 		writeMessage("I",CURSOR,resourceType,resourceId, note, errorMsg);
 		info++;
 	}
 
 	static public void writeGeoCodeMsg(String resourceType, String resourceId, String note, String errorMsg) {
-		if (writer == null ) return;
+		if (writer == null || IGNORE_GEOCODES) return;
 		writeMessage("G",CURSOR,resourceType,resourceId, note, errorMsg);
 		geocodes++;
 	}

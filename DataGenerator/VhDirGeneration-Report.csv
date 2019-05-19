@@ -1,22 +1,18 @@
 MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
-I |  |ErrorReport | | |Generation Time: Sun May 19 10:57:17 MDT 2019
+I |  |ErrorReport | | |Generation Time: Sun May 19 11:50:02 MDT 2019
 I |  |Control Variables | | |Process all resource types: Yes, Max Entries: -1, Max Pretty Print Entries: 10, Print Nth of each Resource to console: 0
-G |  |VhDirGeoLocation |postalCode: 09603 |Geocoding.geocodeLocalPostalCode |Postal code not found in local db.
-G |  |VhDirGeoLocation |postalCode: 09603 |Null or Empty Results |Error parsing results from http://api.geonames.org with postal code: 09603 Returned line: '{"postalCodes":[]}'
-G |  |VhDirGeoLocation |postalCode: 96297 |Geocoding.geocodeLocalPostalCode |Postal code not found in local db.
-G |  |VhDirGeoLocation |postalCode: 96297 |Null or Empty Results |Error parsing results from http://api.geonames.org with postal code: 96297 Returned line: '{"postalCodes":[]}'
 I |  |DO_ORGANIZATIONS | | |
-I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 10:57:19 MDT 2020
-I |VhDirOrganization(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Tue May 19 10:57:20 MDT 2020
-I |VhDirOrganization(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Tue May 19 10:57:21 MDT 2020
+I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 11:50:05 MDT 2020
+I |VhDirOrganization(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Tue May 19 11:50:06 MDT 2020
+I |VhDirOrganization(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Tue May 19 11:50:07 MDT 2020
 E |VhDirOrganization(id: 17)  |Reference |17 |ResourceFactory.getResourceReference |No resource reference found with id 17
 I |  | | | |27 Organizations Collected
 I |  |DO_PRACTITIONERS | | |
-I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 10:57:37 MDT 2020
+I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 11:50:34 MDT 2020
 W |VhDirPractitioner(id: 1)  |VhDirPractitioner |1 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
-I |VhDirPractitioner(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Tue May 19 10:57:38 MDT 2020
+I |VhDirPractitioner(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Tue May 19 11:50:35 MDT 2020
 W |VhDirPractitioner(id: 2)  |VhDirPractitioner |2 |unrecognized gender: M |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
-I |VhDirPractitioner(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Tue May 19 10:57:39 MDT 2020
+I |VhDirPractitioner(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Tue May 19 11:50:36 MDT 2020
 W |VhDirPractitioner(id: 3)  |VhDirPractitioner |3 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
 W |VhDirPractitioner(id: 4)  |VhDirPractitioner |4 |unrecognized gender: M |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.M
 W |VhDirPractitioner(id: 5)  |VhDirPractitioner |5 |unrecognized gender: F |No enum constant org.hl7.fhir.r4.model.Enumerations.AdministrativeGender.F
@@ -45,7 +41,7 @@ E |VhDirValidation(id: 1)  |CodeableConcept |3 |ResourceFactory.getCodeableConce
 W |VhDirValidation(id: 1)  |VhDirValidation |1 |unrecognized status  |Unknown Status code 'ok'
 I |  | | | |1 Validations Collected
 I |  |DO_ENDPOINTS | | |
-I |VhDirEndpoint(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 10:57:57 MDT 2020
+I |VhDirEndpoint(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue May 19 11:51:04 MDT 2020
 W |VhDirEndpoint(id: 1)  |VhDirEndpoint |1 |Unrecognized status |Unknown EndpointStatus code 'ok'
 I |  | | | |1 Endpoints Collected
 I |  |DO_CARETEAMS | | |
@@ -58,4 +54,4 @@ I |  |DO_ORGANIZATIONAFFILIATIONS | | |
 I |  |DO_PRACTITIONERROLES | | |
 I |  |DO_RESTRICTIONS | | |
 I |  | | | |1 Restrictions Collected
-I |  |END | | |Wrote 2 error, 22 warning, 4 geocode, and 31 info messages
+I |  |END | | |Wrote 2 error, 22 warning, 0 geocode, and 31 info messages

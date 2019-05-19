@@ -1,5 +1,8 @@
-import { Npi, npidb, spddb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias} from '../model/sequelizeModels';
+import { Npi, npidb, spddb, Organization, Address, Telecom, Contact, Name, Provider, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias, ProviderRole, FhirCodeableConcept} from '../model/sequelizeModels';
+import { issuerOrgMap } from './issuerMap';
 import Sequelize from 'sequelize';
+
+const Op = Sequelize.Op;
 
 export const query = {
 	/*async getNoOrg(){
@@ -239,14 +242,14 @@ export const query = {
 	async getInsurancePlans() {
 		var plans = await InsurancePlan.findAll({
 			order: [['PlanMarketingName']],
-			offset: 10000, 
-			limit: 5000});
+			offset: 0, 
+			limit: 500});
 		var currentName = '';
 		for (var i = 0; i < plans.length; i++) {
 			console.log("Plan Name: "+plans[i].PlanMarketingName);
-			var ownerId = 0;
+			var ownerId = 0, refId = 0;
 			if (plans[i].PlanMarketingName === currentName) {
-			console.log("Plan exist: "+plans[i].PlanMarketingName);
+				console.log("Plan exist: "+plans[i].PlanMarketingName);
 				var exist = await SpdInsurancePlan.findOne({
 					where: {
 						name: plans[i].PlanMarketingName
@@ -256,6 +259,7 @@ export const query = {
 					var id = await Identifier.create({
 						identifier_status_value_code: "active",
 						use: "official",
+						system: "https://www.cms.gov/CCIIO/",
 						value: plans[i].PlanId,
 						insurance_plan_id: exist.insurance_plan_id
 					});																
@@ -276,59 +280,182 @@ export const query = {
 					if (hiosOrg.ISSR_LGL_NAME != null && hiosOrg.ISSR_LGL_NAME.length > 0){
 						tempName = hiosOrg.ISSR_LGL_NAME;
 					}
-					var created = await Organization.create({
-					  active: '1',
-					  name: tempName});
-					var orgCreated = await Organization.findOne({where: {name: tempName}});
-					if (hiosOrg.ORG_STATE.length <= 2) {
-					console.log("Good State: "+hiosOrg.ORG_STATE);
-						var address1 = await Address.create({
-							use: "work",
-							line1: hiosOrg.ORG_ADR1,
-							line2: hiosOrg.ORG_ADR2,
-							city: hiosOrg.ORG_CITY, 
-							state: hiosOrg.ORG_STATE,
-							postalCode: hiosOrg.ORG_ZIP,
-							country: 'USA',
-							organization_id: orgCreated.organization_id
-						});							
+					var spdOrgEx = await Organization.findOne({where: {name: tempName}});
+					if (spdOrgEx != null){
+						var ref = await Reference.findOne({where:
+							{
+								type: 'vhdir_organization',
+								//identifier: orgName
+								identifier: spdOrgEx.organization_id.toString()
+							}
+							});
+						if (ref == null) {
+							var tempRef = await Reference.create({
+								type: 'vhdir_organization',
+								//identifier: orgName
+								identifier: spdOrgEx.toString()
+							});
+							var refCreated = await Reference.findOne({where:
+							{
+								type: 'vhdir_organization',
+								//identifier: orgName
+								identifier: spdOrgEx.toString()
+							}
+							});
+							refId = refCreated.resource_reference_id
+						}
+						else {
+							refId = ref.resource_reference_id;						
+						}
+						
 					}
 					else {
-					console.log("Bad State: "+hiosOrg.ORG_STATE);
-						var address1 = await Address.create({
-							use: "work",
-							line1: hiosOrg.ORG_ADR2,
-							line2: hiosOrg.ORG_CITY, 
-							city: hiosOrg.ORG_STATE,
-							state: hiosOrg.ORG_ZIP,
-							postalCode: hiosOrg.ORG_ZIP4,
-							country: 'USA',
+						var created = await Organization.create({
+						  active: '1',
+						  name: tempName});
+						var orgCreated = await Organization.findOne({where: {name: tempName}});
+						if (hiosOrg.ORG_STATE.length <= 2) {
+						console.log("Good State: "+hiosOrg.ORG_STATE);
+							var address1 = await Address.create({
+								use: "work",
+								line1: hiosOrg.ORG_ADR1,
+								line2: hiosOrg.ORG_ADR2,
+								city: hiosOrg.ORG_CITY, 
+								state: hiosOrg.ORG_STATE,
+								postalCode: hiosOrg.ORG_ZIP,
+								country: 'USA',
+								organization_id: orgCreated.organization_id
+							});							
+						}
+						else {
+						console.log("Bad State: "+hiosOrg.ORG_STATE);
+							var address1 = await Address.create({
+								use: "work",
+								line1: hiosOrg.ORG_ADR2,
+								line2: hiosOrg.ORG_CITY, 
+								city: hiosOrg.ORG_STATE,
+								state: hiosOrg.ORG_ZIP,
+								postalCode: hiosOrg.ORG_ZIP4,
+								country: 'USA',
+								organization_id: orgCreated.organization_id
+							});														
+						}
+						var id = await Identifier.create({
+							identifier_status_value_code: "active",
+							use: "secondary",
+							system: "https://www.cms.gov/CCIIO/",
+							value: hiosOrg.HIOS_ISSUER_ID,
 							organization_id: orgCreated.organization_id
-						});														
+						});
+						ownerId = orgCreated.organization_id;	
+						//SPD-149
+						var ref = await Reference.findOne({where:
+							{
+								type: 'vhdir_organization',
+								//identifier: orgName
+								identifier: ownerId.toString()
+							}
+							});
+						if (ref == null) {
+							var tempRef = await Reference.create({
+								type: 'vhdir_organization',
+								//identifier: orgName
+								identifier: ownerId.toString()
+							});
+							var refCreated = await Reference.findOne({where:
+							{
+								type: 'vhdir_organization',
+								//identifier: orgName
+								identifier: ownerId.toString()
+							}
+							});
+							refId = refCreated.resource_reference_id
+						}
+						else {
+							refId = ref.resource_reference_id;						
+						}
 					}
-					var id = await Identifier.create({
-						identifier_status_value_code: "active",
-						use: "secondary",
-						value: hiosOrg.HIOS_ISSUER_ID,
-						organization_id: orgCreated.organization_id
-					});
-					ownerId = orgCreated.organization_id;					
+					
 				}
 				else {
-					console.log("Owner not found: "+plans[i].PlanMarketingName+" SKIP!!!");
-					continue;
+					console.log("Owner not found: "+plans[i].PlanMarketingName+". Go to local map.");
+					var orgFound = false;
+					//SPD-117
+					for (var j = 0; j < issuerOrgMap.length; j++) {
+						if (plans[i].IssuerId == issuerOrgMap[j].issuerId){
+							orgFound = true;
+							var orgExisted = await Organization.findOne({where: {name: issuerOrgMap[j].orgName}});
+							if (orgExisted == null) {
+								var created = await Organization.create({
+								  active: '1',
+								  name: issuerOrgMap[j].orgName});
+								var orgCreated = await Organization.findOne({where: {name: issuerOrgMap[j].orgName}});
+								var id = await Identifier.create({
+									identifier_status_value_code: "active",
+									use: "secondary",
+									system: "https://www.cms.gov/CCIIO/",
+									value: issuerOrgMap[j].issuerId,
+									organization_id: orgCreated.organization_id
+								});
+								var ref = await Reference.findOne({where:
+									{
+										type: 'vhdir_organization',
+										identifier: orgCreated.organization_id.toString()
+									}
+									});
+								if (ref == null) {
+									var tempRef = await Reference.create({
+										type: 'vhdir_organization',
+										identifier: orgCreated.organization_id.toString()
+									});
+									var refCreated = await Reference.findOne({where:
+									{
+										type: 'vhdir_organization',
+										identifier: orgCreated.organization_id.toString()
+									}
+									});
+									refId = refCreated.resource_reference_id
+								}
+								else {
+									refId = ref.resource_reference_id;						
+								}
+								
+							}
+							else {
+								var refEx = await Reference.findOne({where:
+									{
+										type: 'vhdir_organization',
+										identifier: orgExisted.organization_id.toString()
+									}
+									});
+								refId = refEx.resource_reference_id
+							}
+						}
+					}
+					if (!orgFound)
+						continue;
 				}
 			}
 			else {
-				ownerId = id.organization_id;
+				var refExisted = await Reference.findOne({where:
+					{
+						type: 'vhdir_organization',
+						//identifier: orgName
+						identifier: id.organization_id.toString()
+					}
+					});
+					
+				refId = refExisted.resource_reference_id;
+
+				//ownerId = id.organization_id;
 			}
 			var plan = await SpdInsurancePlan.create({
 				status: 'active',
 				name: plans[i].PlanMarketingName,
 				period_start: plans[i].PlanEffectiveDate,
 				period_end: plans[i].PlanExpirationDate,
-				owned_by_organization_id: ownerId,
-				administered_by_organization_id: ownerId
+				ownedBy_reference_id: refId,
+				administeredBy_reference_id: refId
 			});
 			var planCreated = await SpdInsurancePlan.findOne({
 				where: {
@@ -338,6 +465,7 @@ export const query = {
 			var id = await Identifier.create({
 				identifier_status_value_code: "active",
 				use: "official",
+				system: "https://www.cms.gov/CCIIO/",
 				value: plans[i].PlanId,
 				insurance_plan_id: planCreated.insurance_plan_id
 			});											
@@ -346,7 +474,7 @@ export const query = {
 	},
 	async getNetworks() {
 		var cciioQuery = "SELECT NetworkId, SourceName, IssuerId,"+
-			" NetworkName FROM cciio.network"+
+			" NetworkName, StateCode FROM cciio.network"+
 			" WHERE SourceName='HIOS' ";
 		var res = await cciiodb.query(cciioQuery, { model: Cciio } );
 		var nwId = '', names = [], owner = null, org = null, orgId = null, orgName = null ;
@@ -357,7 +485,7 @@ export const query = {
 					org = await Organization.findOne({where: {name: owner.ISSR_LGL_NAME}});
 					if (org != null) {
 						console.log("Org Found: "+JSON.stringify(org));
-						//orgId = org.organization_id
+						orgId = org.organization_id.toString();
 						orgName = org.name;
 					}
 					else {
@@ -372,7 +500,7 @@ export const query = {
 						var orgCreated = await Organization.findOne({where: {name: tempName}});
 						//console.log("OrgCreated: "+JSON.stringify(orgCreated));
 						if (owner.ORG_STATE.length <= 2) {
-						console.log("Good State: "+owner.ORG_STATE);
+							console.log("Good State: "+owner.ORG_STATE);
 							var address1 = await Address.create({
 								use: "work",
 								line1: owner.ORG_ADR1,
@@ -385,7 +513,7 @@ export const query = {
 							});							
 						}
 						else {
-						console.log("Bad State: "+owner.ORG_STATE);
+							console.log("Bad State: "+owner.ORG_STATE);
 							var address1 = await Address.create({
 								use: "work",
 								line1: owner.ORG_ADR2,
@@ -397,33 +525,39 @@ export const query = {
 								organization_id: orgCreated.organization_id
 							});														
 						}
+						//SPD-146
 						var id = await Identifier.create({
 							identifier_status_value_code: "active",
 							use: "secondary",
+							system: "https://www.cms.gov/CCIIO/",
 							value: owner.HIOS_ISSUER_ID,
 							organization_id: orgCreated.organization_id
 						});											
-						//orgId = orgCreated.organization_id
+						orgId = orgCreated.organization_id.toString();
 						orgName = orgCreated.name;
 					}
 				}
 				if (names.length > 0) {
 					var refId = null;
+					//SPD-150
 					var ref = await Reference.findOne({where:
 						{
 							type: 'vhdir_organization',
-							identifier: orgName
+							//identifier: orgName
+							identifier: orgId
 						}
 						});
 					if (ref == null) {
 						var tempRef = await Reference.create({
 							type: 'vhdir_organization',
-							identifier: orgName
+							//identifier: orgName
+							identifier: orgId
 						});
 						var refCreated = await Reference.findOne({where:
 						{
 							type: 'vhdir_organization',
-							identifier: orgName
+							//identifier: orgName
+							identifier: orgId
 						}
 						});
 						refId = refCreated.resource_reference_id
@@ -437,12 +571,20 @@ export const query = {
 						part_of_resource_reference_id: refId
 					});
 					var nwCreated = await Network.findOne({where: {alias: names.join(";")}});
+					//SPD-146
 					var id = await Identifier.create({
 						identifier_status_value_code: "active",
 						use: "official",
+						system: "https://www.cms.gov/CCIIO/",
 						value: nwId,
 						network_id: nwCreated.network_id
-					});					
+					});	
+					//SPD-145	
+					var addressNw = await Address.create({
+						use: "work",
+						state: res[i].StateCode,
+						network_id: nwCreated.network_id
+					});							
 				}
 				nwId = res[i].NetworkId;
 				names = [];
@@ -493,7 +635,7 @@ export const query = {
 		"order by `Provider Organization Name (Legal Business Name)` , "+
 		"`Provider Other Organization Name`, `Other Provider Identifier_1`, "+
 		"`Provider First Line Business Mailing Address`, "+
-        "`Provider First Line Business Practice Location Address` limit 0, 10000";
+        "`Provider First Line Business Practice Location Address` limit 3900, 10000";
 		var res = await npidb.query(npiQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		var lbn = "", olbn = null, oid = null, fmailing = "", floc = "", nameToUse = null;
@@ -773,9 +915,22 @@ export const query = {
 		"`NPI Reactivation Date` as reactivation_date, "+
 		"`Provider Gender Code` as gender, "+
 		"`Healthcare Provider Taxonomy Code_1` as healthcare_taxonomy_code_1, "+
+		"`Healthcare Provider Taxonomy Code_2` as healthcare_taxonomy_code_2, "+
+		"`Healthcare Provider Taxonomy Code_3` as healthcare_taxonomy_code_3, "+
+		"`Healthcare Provider Taxonomy Code_4` as healthcare_taxonomy_code_4, "+
+		"`Healthcare Provider Taxonomy Code_5` as healthcare_taxonomy_code_5, "+
+		"`Healthcare Provider Taxonomy Code_6` as healthcare_taxonomy_code_6, "+
+		"`Healthcare Provider Taxonomy Code_7` as healthcare_taxonomy_code_7, "+
+		"`Healthcare Provider Taxonomy Code_8` as healthcare_taxonomy_code_8, "+
+		"`Healthcare Provider Taxonomy Code_9` as healthcare_taxonomy_code_9, "+
+		"`Healthcare Provider Taxonomy Code_10` as healthcare_taxonomy_code_10, "+
+		"`Healthcare Provider Taxonomy Code_11` as healthcare_taxonomy_code_11, "+
+		"`Healthcare Provider Taxonomy Code_12` as healthcare_taxonomy_code_12, "+
+		"`Healthcare Provider Taxonomy Code_13` as healthcare_taxonomy_code_13, "+
+		"`Healthcare Provider Taxonomy Code_14` as healthcare_taxonomy_code_14, "+
+		"`Healthcare Provider Taxonomy Code_15` as healthcare_taxonomy_code_15, "+
 		"`Provider License Number_1` as license_num_1, "+
 		"`Provider License Number State Code_1` as license_num_state_1, "+
-		"`Healthcare Provider Primary Taxonomy Switch_1` as healthcare_primary_taxonomy_switch_1, "+
 		"`Other Provider Identifier_1` as other_identifier_1,"+
 		"`Other Provider Identifier Type Code_1` as other_identifier_type_code_1,"+
 		"`Other Provider Identifier State_1` as other_identifier_state_1,"+
@@ -783,10 +938,18 @@ export const query = {
 		"`Is Sole Proprietor` as is_sole_proprietor "+
 		"FROM nppes.npi WHERE `Entity Type Code` = 1 "+
 		"order by `Provider Last Name (Legal Name)`, `Provider First Name`, `Provider Middle Name` "+
-		"limit 0, 10000";
+		"limit 12000, 2000";
 		var res = await npidb.query(providerQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		for (var i = 0; i < res.length; i++) {
+			/*for (var k = 1; k < 16; k++) {
+			var codePos = eval("res[i].healthcare_taxonomy_code_"+k);
+			if (codePos != null && codePos.length > 0 && k > 1) {
+				console.log("Name: "+res[i].last_name+" Role position "+k+": "+codePos);
+				}
+			}
+			continue;*/
+
 			var fullName = res[i].last_name+res[i].first_name+res[i].middle_name;
 			//console.log("full name: "+JSON.stringify(fullName));
 			var provider = await Provider.findOne({where: {photo: fullName}});
@@ -853,7 +1016,51 @@ export const query = {
 					system: "http://hl7.org/fhir/sid/us-npi",
 					value: res[i].NPI,
 					practitioner_id: providerCreated.practitioner_id
-				});	
+				});
+				//SPD-140
+				var orgAddress = await Address.findOne({where: 
+					{	
+						use: "work",
+						line1: res[i].practice_location_first_line, 
+						city: res[i].practice_location_city, 
+						state: res[i].practice_location_state, 
+						postalCode: res[i].practice_location_postal_code,
+						country: res[i].practice_location_country_code,
+						organization_id: {
+											[Op.ne]: null
+										 }
+					}
+				});
+				if (orgAddress != null) {
+					console.log("Role org found: "+orgAddress.organization_id);
+					var role = await ProviderRole.create({
+						active: '1',
+						practitioner_id: providerCreated.practitioner_id,
+						organization_id: orgAddress.organization_id						
+					});
+					var roleCreated = await ProviderRole.findOne({where:
+					{
+						practitioner_id: providerCreated.practitioner_id,
+						organization_id: orgAddress.organization_id	
+					}						
+					});
+					var codePos = null;
+					for (var j = 1; j < 16; j++) {
+						codePos = eval("res[i].healthcare_taxonomy_code_"+j);
+						console.log("Role position: "+codePos);
+						if (codePos != null && codePos.length > 0) {
+							var codeCreated = await FhirCodeableConcept.create({
+								text: "Taxonomy Code",
+								coding_code: codePos,
+								practitioner_role_specialty_id: roleCreated.practitioner_role_id,
+								practitioner_role_code_id: roleCreated.practitioner_role_id
+							})
+						}
+						
+					}
+					
+					
+				}
 				var address1 = await Address.create({
 					use: "billing",
 					line1: res[i].mailing_address_first_line, 

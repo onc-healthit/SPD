@@ -14,7 +14,7 @@ import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 
-@DatatypeDef(name="VhDirIdentifier")
+@DatatypeDef(name="vhdir-identifier")
 public class VhDirIdentifier extends Identifier {
 	private static final long serialVersionUID = 1L;
 	
@@ -156,7 +156,7 @@ public class VhDirIdentifier extends Identifier {
 	/**
 	 * The status of this identifier
 	 */
-	@Child(name="status", type = {CodeType.class}, order=0, min=1, max=1, modifier=true, summary=true)
+	@Child(name="status", type = {CodeType.class},  min=1, max=1, modifier=true, summary=true)
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status", definedLocally=false, isModifier=false)
     @Description(shortDefinition="Status")
     @ca.uhn.fhir.model.api.annotation.Binding(valueSet="http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-credentialstatus")

@@ -12,8 +12,8 @@ import org.hl7.fhir.r4.model.Type;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.util.ElementUtil;
 
-@DatatypeDef(name="contactpoint-availabletime")
-public class VhDirContactPointAvailableTime extends Type implements ICompositeType {
+@DatatypeDef(name="vhdir-availabletime")
+public class VhDirAvailableTime extends Type implements ICompositeType {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -26,14 +26,14 @@ public class VhDirContactPointAvailableTime extends Type implements ICompositeTy
     }
 
 	@Override
-	public VhDirContactPointAvailableTime copy() {
-		VhDirContactPointAvailableTime retVal = new VhDirContactPointAvailableTime();
+	public VhDirAvailableTime copy() {
+		VhDirAvailableTime retVal = new VhDirAvailableTime();
         super.copyValues(retVal);
         retVal.extension = extension;
         return retVal;
 	}
 	
-	public VhDirContactPointAvailableTime addDaysOfWeek(CodeType t) {
+	public VhDirAvailableTime addDaysOfWeek(CodeType t) {
 	    if (t == null)
 	      return this;
 	    if (this.extension == null)
@@ -45,7 +45,7 @@ public class VhDirContactPointAvailableTime extends Type implements ICompositeTy
 	    return this;
 	}
 
-	public VhDirContactPointAvailableTime setAllDay(boolean allDay) {
+	public VhDirAvailableTime setAllDay(boolean allDay) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
@@ -55,7 +55,7 @@ public class VhDirContactPointAvailableTime extends Type implements ICompositeTy
 		return this;
 	}
 
-	public VhDirContactPointAvailableTime setAvailableStartTime(TimeType availableStartTime) {
+	public VhDirAvailableTime setAvailableStartTime(TimeType availableStartTime) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();
@@ -65,7 +65,7 @@ public class VhDirContactPointAvailableTime extends Type implements ICompositeTy
 		return this;
 	}
 
-	public VhDirContactPointAvailableTime setAvailableEndTime(TimeType availableEndTime) {
+	public VhDirAvailableTime setAvailableEndTime(TimeType availableEndTime) {
 		if (this.extension == null)
 			this.extension = new ArrayList<Extension>();
 		Extension ext = new Extension();

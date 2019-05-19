@@ -8,11 +8,11 @@ import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
 
 import ca.uhn.fhir.model.api.annotation.Child;
-import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
+import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
-@DatatypeDef(name="Endpoint")
+@ResourceDef(name="vhdir-endpoint", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-endpoint")
 public class VhDirEndpoint extends Endpoint {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,14 @@ public class VhDirEndpoint extends Endpoint {
 	@Description(shortDefinition="Preferred order for connecting to the endpoint")
 	private IntegerType rank;
 	
-	// TODO add use-case
+	/**
+	 * Add the use case
+	 */
+	@Child(name="endpointUsecase", type = {VhDirEndpointUseCase.class}, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/endpoint-usecase", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Use cases (service descriptions) supported by the endpoint")
+	private List<VhDirEndpointUseCase>endpointUsecase;
+
 	
 	public List<Reference> getUsageRestriction() {
 		return usageRestriction;
@@ -75,7 +82,24 @@ public class VhDirEndpoint extends Endpoint {
 	    this.digitalcertficate.add(t);
 	    return this;
 	}
+
+	public List<VhDirEndpointUseCase> getEndpointUsecase() {
+		return endpointUsecase;
+	}
+
+	public void setEndpointUsecase(List<VhDirEndpointUseCase> val) {
+		this.endpointUsecase = val;
+	}
 	
+	public VhDirEndpoint addEndpointUsecase(VhDirEndpointUseCase t) {
+	    if (t == null)
+	      return this;
+	    if (this.endpointUsecase == null)
+	      this.endpointUsecase = new ArrayList<VhDirEndpointUseCase>();
+	    this.endpointUsecase.add(t);
+	    return this;
+	}
+
 	public IntegerType getRank() {
 		return rank;
 	}

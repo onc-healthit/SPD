@@ -43,7 +43,7 @@ public class BulkDataApp {
 	public static int      MAX_ENTRIES = -1;      // Control how many entries we process in each section and output. -1 means ALL. 
 	private static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
 	private static int     PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
-	private static boolean DO_GEOTEST = true;     // Run some geocode testing.  Probably always false
+	private static boolean DO_GEOTEST = false;     // Run some geocode testing.  Probably always false
 
 	
 	// Which VhDir resources to generate...

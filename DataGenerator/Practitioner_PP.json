@@ -286,7 +286,7 @@
   ],
   "communication": [
     {
-      "id": "x4691",
+      "id": "x8743",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -506,7 +506,7 @@
   "gender": "male",
   "communication": [
     {
-      "id": "x806",
+      "id": "x2237",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -894,7 +894,7 @@
   "gender": "female",
   "communication": [
     {
-      "id": "x5214",
+      "id": "x5212",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -1057,7 +1057,7 @@
   "gender": "male",
   "communication": [
     {
-      "id": "x2127",
+      "id": "x1658",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -1289,7 +1289,7 @@
   "gender": "female",
   "communication": [
     {
-      "id": "x7826",
+      "id": "x5825",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -1455,7 +1455,7 @@
   "gender": "female",
   "communication": [
     {
-      "id": "x5115",
+      "id": "x1941",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -1786,7 +1786,7 @@
   "gender": "male",
   "communication": [
     {
-      "id": "x7094",
+      "id": "x5441",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -2018,7 +2018,7 @@
   "gender": "female",
   "communication": [
     {
-      "id": "x5439",
+      "id": "x100",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -2236,7 +2236,7 @@
   "gender": "female",
   "communication": [
     {
-      "id": "x5615",
+      "id": "x5001",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",
@@ -2399,7 +2399,7 @@
   "gender": "female",
   "communication": [
     {
-      "id": "x5916",
+      "id": "x787",
       "coding": [
         {
           "system": "http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency",

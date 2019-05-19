@@ -20,6 +20,18 @@ import com.google.gson.JsonParser;
 public class Geocoding {
 	
 	static public boolean LIMIT_REACHED = false; 
+	static public Connection zipconnection = null;
+
+	static public Connection openConnection() {
+		zipconnection = DatabaseUtil.getZipConnection();
+		return zipconnection;
+	}
+	
+	static public void closeConnection() {
+		System.out.println("Closing Zipcode Database connection to " + DatabaseUtil.zipConnectionUrl);
+		DatabaseUtil.closeConnection(zipconnection);
+	}
+	
 	/**
 	 * Calls a web service to get the lat/lon for the postal code passed in.  If connection parameter is
 	 * non-null, then update all of the rows in the 'address' table in the database with the same postal code with the
@@ -141,22 +153,24 @@ public class Geocoding {
 	
 	static public VhDirGeoLocation geocodeLocalPostalCode(String postalCode) throws SQLException {
 		System.out.println("Calling local geocoding for " + postalCode);
-		Connection zipconnection = DatabaseUtil.getZipConnection();
+		if (zipconnection == null) {
+			
+		}
 		if (zipconnection != null) {
 			ResultSet resultset = DatabaseUtil.runZipQuery(zipconnection, "select * from zip_codes where zip = ?", postalCode);
 			while (resultset.next()) {
 				VhDirGeoLocation loc = new VhDirGeoLocation();
 				loc.setLatitude(resultset.getDouble("latitude"));
 				loc.setLatitude(resultset.getDouble("longitude"));
-				zipconnection.close();
 				return loc; // expecting only one.
 			}
 			ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Geocoding.geocodeLocalPostalCode", "Postal code not found in local db.");
-			zipconnection.close();
 		}
 		else {
 			System.err.println("Unable to open connection to zip schema");
 		}
 		return null;
 	}
+	
+
 }

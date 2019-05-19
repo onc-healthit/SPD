@@ -74,6 +74,7 @@ public class DatabaseUtil {
 		return resultset;
 	}
 	
+	// Last arg is a string, which is why we have a separate query.
 	static public ResultSet runZipQuery (Connection connection, String strSql, String id) throws SQLException{
 		PreparedStatement sqlStatement = connection.prepareStatement(strSql);
 		if (id != null) {
@@ -83,5 +84,14 @@ public class DatabaseUtil {
 		return resultset;
 	}
 
-	
+	static public void closeConnection(Connection connection) {
+		if (connection != null) {
+			try {
+				connection.close();
+			}
+			catch (SQLException e) {
+				System.err.println("Error closing database connection: " + connection + ": " + e.getMessage());
+			}
+		}
+	}
 }

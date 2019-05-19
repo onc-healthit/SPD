@@ -102,7 +102,7 @@ public class ErrorReport {
 	static public String getSummaryNote() {
 		String note = "";		
 		if (writer != null) {
-			note = String.format("Wrote %d error, %d warning, %d geocode, and %d info messages to file %s", errors, warnings, geocodes, info, REPORT_FILENAME);
+			note = String.format("Wrote %d error, %d warning, %d geocode, and %d info messages", errors, warnings, geocodes, info);
 			writeInfo("END","","",note);
 		}
 		return note;

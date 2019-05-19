@@ -109,6 +109,13 @@ public class BulkDataApp {
 		}
 		ErrorReport.writeInfo("Control Variables", "", "" ,String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE));
 
+		// Open a connection to the databases that we will use throughout.
+		Connection connection = DatabaseUtil.getConnection();
+		if (connection == null) {
+			return;
+		}
+		Geocoding.openConnection();  // Open a connection to the zipcode database in case we need it.
+
 		// Testing some geocode stuff.
 		if (DO_GEOTEST)
 		{
@@ -123,11 +130,6 @@ public class BulkDataApp {
 			}
 		}
 		
-		// Open a connection to the database that we will use throughout.
-		Connection connection = DatabaseUtil.getConnection();
-		if (connection == null) {
-			return;
-		}
 		
 		
 		if (DO_ALL || DO_ORGANIZATIONS) {
@@ -384,6 +386,10 @@ public class BulkDataApp {
 			} 
 		}
 
+		System.out.println("\nClosing SPD Database connection to " + DatabaseUtil.connectionUrl);
+		DatabaseUtil.closeConnection(connection);
+		Geocoding.closeConnection();
+		
 		ErrorReport.setCursor("", "");
 		System.out.println("\n\nFHIR Resource generation complete.");
 		if (DO_REPORTING) {

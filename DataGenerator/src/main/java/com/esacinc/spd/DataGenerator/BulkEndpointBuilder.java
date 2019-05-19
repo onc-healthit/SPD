@@ -43,8 +43,9 @@ public class BulkEndpointBuilder {
 		
 			// set the id
 			int epId = resultSet.getInt("location_id");
-
 			ep.setId(resultSet.getString("location_id"));
+			ErrorReport.setCursor("VhDirEndpoint", ep.getId());
+			
 			ep.setName(resultSet.getString("name"));
 			ep.setAddress(resultSet.getString("address"));
 			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),resultSet.getString("connectionType"),"Connection Type", false));

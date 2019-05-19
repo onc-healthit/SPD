@@ -42,6 +42,8 @@ public class BulkRestrictionBuilder {
 			// set the id
 			int resId = resultSet.getInt("restriction_id");
 			res.setId(resultSet.getString("restriction_id"));
+			ErrorReport.setCursor("VhDirRestrictio", res.getId());
+			
 			res.setScope(ResourceFactory.getCodeableConcept(resultSet.getInt("scope_cc_id"),connection));
 			res.setDateTime(resultSet.getDate("date_time"));	
 			

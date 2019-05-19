@@ -43,6 +43,8 @@ public class BulkValidationBuilder {
 			// set the id
 			int valId = resultSet.getInt("validation_id");
 			val.setId(resultSet.getString("validation_id"));
+			ErrorReport.setCursor("VhDirValidation", val.getId());
+
 			val.setNeed(ResourceFactory.getCodeableConcept(resultSet.getInt("need_cc_id"),connection));
 			val.addTargetLocation(resultSet.getString("target_location"));
 			val.setStatusDate(resultSet.getDate("status_date")); 

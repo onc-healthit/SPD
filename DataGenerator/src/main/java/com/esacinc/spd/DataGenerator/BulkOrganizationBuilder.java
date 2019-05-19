@@ -50,6 +50,7 @@ public class BulkOrganizationBuilder {
 			// set the id
 			orgId = resultSet.getInt("organization_id");
 			org.setId(resultSet.getString("organization_id"));
+			ErrorReport.setCursor("VhDirOrganization", org.getId());
 						 					
 			// Handle description
 			org.setDescription(resultSet.getString("description"));

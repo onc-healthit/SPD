@@ -122,6 +122,7 @@ public class BulkDataApp {
 		
 		
 		if (DO_ALL || DO_ORGANIZATIONS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_ORGANIZATIONS","","","");
 			try{
 				// Get and write Organizations
@@ -142,6 +143,7 @@ public class BulkDataApp {
 		}
 		
 		if (DO_ALL || DO_PRACTITIONERS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_PRACTITIONERS","","","");
 			try {
 				// Get and write Practitioners
@@ -161,6 +163,7 @@ public class BulkDataApp {
 		}
 		
 		if (DO_ALL || DO_NETWORKS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_NETWORKS","","","");
 			try {
 				// Get and write Networks
@@ -180,6 +183,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_LOCATIONS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_LOCATIONS","","","");
 			try{
 				// Get and write Locations
@@ -200,6 +204,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_VALIDATIONS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_VALIDATIONS","","","");
 			try{
 				// Get and write Validations
@@ -220,6 +225,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_ENDPOINTS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_ENDPOINTS","","","");
 			try{
 				// Get and write Endpoints
@@ -240,6 +246,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_CARETEAMS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_CARETEAMS","","","");
 			try{
 				// Get and write Careteams
@@ -260,6 +267,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_HEALTHCARESERVICES) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_HEALTHCARESERVICES","","","");
 			try{
 				// Get and write HeathcareServices
@@ -280,6 +288,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_INSURANCEPLANS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_INSURANCEPLANS","","","");
 			try{
 				// Get and write Insurance Planes
@@ -300,6 +309,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_ORGANIZATIONAFFILIATIONS","","","");
 			/*
 			try{
@@ -322,6 +332,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_PRACTITIONERROLES) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_PRACTITIONERROLES","","","");
 			/*
 			try{
@@ -344,6 +355,7 @@ public class BulkDataApp {
 		}
 
 		if (DO_ALL || DO_RESTRICTIONS) {
+			ErrorReport.setCursor("", "");
 			ErrorReport.writeInfo("DO_RESTRICTIONS","","","");
 			try{
 				// Get and write Restrictions
@@ -363,6 +375,7 @@ public class BulkDataApp {
 			} 
 		}
 
+		ErrorReport.setCursor("", "");
 		System.out.println("\n\nFHIR Resource generation complete");
 		System.out.println(ErrorReport.getSummaryNote());
 		ErrorReport.close();

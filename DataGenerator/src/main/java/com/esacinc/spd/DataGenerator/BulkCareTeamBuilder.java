@@ -45,7 +45,8 @@ public class BulkCareTeamBuilder {
 			// set the id
 			int ctId = resultSet.getInt("careteam_id");
 			ct.setId(resultSet.getString("careteam_id"));
-			
+			ErrorReport.setCursor("VhDirCareTeam", ct.getId());
+
 			ct.setName(resultSet.getString("name"));
 			ct.setEncounter(ResourceFactory.getResourceReference(resultSet.getInt("encounter_id"), connection));
 			ct.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"), resultSet.getDate("period_end")));

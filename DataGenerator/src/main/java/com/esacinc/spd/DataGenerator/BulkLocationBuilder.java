@@ -49,6 +49,8 @@ public class BulkLocationBuilder {
 			// set the id
 			int locId = resultSet.getInt("location_id");
 			loc.setId(resultSet.getString("location_id"));
+			ErrorReport.setCursor("VhDirLocation", loc.getId());
+
 			loc.setName(resultSet.getString("name"));
 			loc.addAlias(resultSet.getString("alias"));
 			loc.setDescription(resultSet.getString("description"));

@@ -70,7 +70,7 @@ public class ResourceFactory {
 		while(refs.next()) {
 			return getResourceReference(refs,connection); // We only expect one in this case
 		}
-		ErrorReport.writeError("Reference", String.valueOf(refId), "No resource reference found with id " + refId , "ResourceFactory.getResourceReference");
+		ErrorReport.writeError("Reference", String.valueOf(refId), "No resource reference found with id " + refId, "ResourceFactory.getResourceReference");
 		return null;  // If we get here, there was no reference with that id
 	}
 
@@ -105,7 +105,7 @@ public class ResourceFactory {
 			identifier = getIdentifier(resultset);
 			return identifier; // There should only be one 
 		}
-		ErrorReport.writeError("VhDirIdentifier", String.valueOf(identifierId), "No identifier found with id " + identifierId , "ResourceFactory.getIdentifier");
+		ErrorReport.writeError("VhDirIdentifier", String.valueOf(identifierId), "No identifier found with id " + identifierId, "ResourceFactory.getIdentifier");
 		return null;  // If we get here, there was no identifier with that id
 	}
 	
@@ -145,7 +145,7 @@ public class ResourceFactory {
 		}
 		catch (Exception e) {
 			identifier.setStatus(IdentifierStatus.UNKNOWN);
-			ErrorReport.writeWarning("VhDirIdentifier", identifier.getId(), "unrecognized status", e.getMessage());
+			ErrorReport.writeWarning("VhDirIdentifier", identifier.getId(), "unrecognized status ", e.getMessage());
 		}
 
 		return identifier;

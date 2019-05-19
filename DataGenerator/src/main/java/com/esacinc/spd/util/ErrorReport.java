@@ -18,8 +18,19 @@ public class ErrorReport {
 	public static int warnings = 0;
 	public static int info = 0;
 	
+	public static String CURSOR = "";
+		
 	public ErrorReport() { }
 
+	static public void setCursor(String resource, String id) {
+		if (resource.isEmpty()) {
+			CURSOR = " ";
+		}
+		else {
+			CURSOR = String.format("%s(id: %s) ", resource, id);
+		}
+	}
+	
 	static public void open() {
 		
 		try {
@@ -29,7 +40,8 @@ public class ErrorReport {
 			info = 0;
 			Date now = new Date();
 			// Write out column headers...
-			writeMessage("MSG TYPE","RESOURCE","ID","NOTE","ERROR MESSAGE");
+			writeMessage("MSG TYPE","PROCESS CURSOR","RESOURCE","ID","NOTE","ERROR MESSAGE");
+			ErrorReport.setCursor("", "");
 		    // Write some bookkeeping...
 			writeInfo("ErrorReport", "", "Generation Time: " + now.toString(), "");
 		} catch (IOException e) {
@@ -50,23 +62,23 @@ public class ErrorReport {
 	}
 	
 	static public void writeError(String resourceType, String resourceId, String note, String errorMsg) {
-		writeMessage("E",resourceType,resourceId, note, errorMsg);
+		writeMessage("E",CURSOR,resourceType,resourceId, note, errorMsg);
 		errors++;
 	}
 	
 	static public void writeWarning(String resourceType, String resourceId, String note, String errorMsg) {
-		writeMessage("W",resourceType,resourceId, note, errorMsg);
+		writeMessage("W",CURSOR,resourceType,resourceId, note, errorMsg);
 		warnings++;
 	}
 	
 	static public void writeInfo(String resourceType, String resourceId, String note, String errorMsg) {
-		writeMessage("I",resourceType,resourceId, note, errorMsg);
+		writeMessage("I",CURSOR,resourceType,resourceId, note, errorMsg);
 		info++;
 	}
 
-	static public void writeMessage(String msgType,String resourceType, String resourceId, String note, String errorMsg) {
+	static public void writeMessage(String msgType, String cursor, String resourceType, String resourceId, String note, String errorMsg) {
 		if (writer != null) {
-			String msg = String.format("%s,%s,%s,%s,%s", msgType,resourceType, resourceId, note, errorMsg);
+			String msg = String.format("%s,%s,%s,%s,%s,%s", msgType,cursor, resourceType, resourceId, note, errorMsg);
 			try {
 				writer.write(msg);
 				writer.write("\n");

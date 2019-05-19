@@ -20,6 +20,7 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirNewpatients;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkHealthcareServiceBuilder {
@@ -45,6 +46,8 @@ public class BulkHealthcareServiceBuilder {
 			// set the id
 			int hsId = resultSet.getInt("healthcare_service_id");
 			hs.setId(resultSet.getString("healthcare_service_id"));
+			ErrorReport.setCursor("VhDirHealthcareService", hs.getId());
+
 			hs.setActive(resultSet.getBoolean("active"));
 			hs.setProvidedBy(ResourceFactory.getResourceReference(resultSet.getInt("provided_by_organization_id"), connection));
 			hs.setName(resultSet.getString("name"));

@@ -47,6 +47,7 @@ public class BulkPractitionerBuilder {
 			// set the id
 			int pracId = resultSet.getInt("practitioner_id");
 			prac.setId(resultSet.getString("practitioner_id"));
+			ErrorReport.setCursor("VhDirPractitioner", prac.getId());
 			 
 			prac.setActive(resultSet.getBoolean("active"));
 			

@@ -16,6 +16,7 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.ResourceFactory;
 
 public class BulkNetworkBuilder {
@@ -41,6 +42,7 @@ public class BulkNetworkBuilder {
 			// set the id
 			int nwId = resultSet.getInt("network_id");
 			nw.setId(resultSet.getString("network_id"));
+			ErrorReport.setCursor("VhDirNetwork", nw.getId());
 			 
 			nw.setActive(resultSet.getBoolean("active"));
 

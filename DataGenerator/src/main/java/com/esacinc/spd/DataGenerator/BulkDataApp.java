@@ -14,6 +14,7 @@ import com.esacinc.spd.model.VhDirInsurancePlan;
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirOrganizationAffiliation;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.model.VhDirRestriction;
 import com.esacinc.spd.model.VhDirValidation;
@@ -47,8 +48,8 @@ public class BulkDataApp {
 
 	
 	// Which VhDir resources to generate...
-	private static boolean DO_ALL = true;   // If true, process all resource type, regardless of settings below
-	private static boolean DO_ORGANIZATIONS = true;
+	private static boolean DO_ALL = false;   // If true, process all resource type, regardless of settings below
+	private static boolean DO_ORGANIZATIONS = false;
 	private static boolean DO_PRACTITIONERS = false;
 	private static boolean DO_NETWORKS = false;
 	private static boolean DO_LOCATIONS = false;
@@ -58,8 +59,8 @@ public class BulkDataApp {
 	private static boolean DO_HEALTHCARESERVICES = false;
 	private static boolean DO_INSURANCEPLANS = false;
 	private static boolean DO_RESTRICTIONS = false;
+	private static boolean DO_ORGANIZATIONAFFILIATIONS = true;
 	// TODO
-	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
 	private static boolean DO_PRACTITIONERROLES = false;
 	
 
@@ -109,6 +110,7 @@ public class BulkDataApp {
 			ErrorReport.open();
 		}
 		ErrorReport.writeInfo("Control Variables", "", "" ,String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE));
+		ErrorReport.writeInfo("DB Conections", "", "" ,String.format("SPD: %s, ZipCodes: %s, ", DatabaseUtil.connectionUrl, DatabaseUtil.zipConnectionUrl));
 
 		// Open a connection to the databases that we will use throughout.
 		Connection connection = DatabaseUtil.getConnection();
@@ -322,13 +324,12 @@ public class BulkDataApp {
 
 		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
 			ErrorReport.writeInfo("DO_ORGANIZATIONAFFILIATIONS","","","");
-			/*
 			try{
 				// Get and write Organization Affiliations
 				System.out.println("Generate Organization_Affiliation resources...");
 				BulkOrganizationAffiliationBuilder affBuilder = new BulkOrganizationAffiliationBuilder();
 				List<VhDirOrganizationAffiliation> affiliations = affBuilder.getOrganizationAffiliations(connection);
-				outputAffiliationList(affiliations);  
+				outputOrganizationAffiliationsList(affiliations);  
 			    ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Organization Affiliations Collected", affiliations.size()));
 			}	
@@ -340,7 +341,6 @@ public class BulkDataApp {
 				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_ORGANIZATIONAFFILIATIONS", e.getMessage());
 				e.printStackTrace();
 			} 
-			*/ 
 		}
 
 		if (DO_ALL || DO_PRACTITIONERROLES) {
@@ -805,6 +805,48 @@ public class BulkDataApp {
 
 				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
 				maybePrettyPrintToConsole(prettyJson, cnt, "RESTRICTION");
+				
+				cnt++;
+			}
+			writer.close();
+			if (pp_writer != null) {
+				pp_writer.close();
+			}
+		}
+		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputRestrictionList", "IOException", e.getMessage());
+			System.err.println("EXCEPTION writing restrictions list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputRestrictionList", "null pointer", e.getMessage());
+			System.err.println("NULL POINTER EXCEPTION writing restrictions list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputOrganizationAffiliationsList(List<VhDirOrganizationAffiliation>affiliations) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONAFFILIATIONS));
+			BufferedWriter pp_writer = null;
+			if (FILE_ORGANIZATIONAFFILIATIONS_PP != null &&  !FILE_ORGANIZATIONAFFILIATIONS_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONAFFILIATIONS_PP));
+			}
+			for (VhDirOrganizationAffiliation plan : affiliations) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+
+				String nwJson = jsonParser.encodeResourceToString(plan);
+				writer.write(nwJson);
+				writer.write("\n");
+
+				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
+				maybePrettyPrintToConsole(prettyJson, cnt, "ORGANIZATION AFFILIATION");
 				
 				cnt++;
 			}

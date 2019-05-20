@@ -1003,9 +1003,17 @@ export const query = {
 					isActive = '0';
 					console.log("Provider inactive: " + fullName);
 				}
+				var genderCode = 'unknown';
+				if (res[i].gender === 'F') {
+					genderCode = 'female'					
+				}
+				else if (res[i].gender === 'M') {
+					genderCode = 'male'					
+				}
+					
 				var created = await Provider.create({
 					active: isActive,
-					gender: res[i].gender,
+					gender: genderCode,
 					photo: res[i].last_name+res[i].first_name+res[i].middle_name});
 				//console.log("Provider: "+JSON.stringify(created));
 				var providerCreated = await Provider.findOne({where: {photo: res[i].last_name+res[i].first_name+res[i].middle_name}});

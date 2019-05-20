@@ -16,9 +16,9 @@ public class DatabaseUtil {
 	//public static String dbPassword = "root";
 
 	//public static String connectionUrl = "jdbc:mysql://localhost:3306/spd";
-	public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_scrubbed";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small";
+	public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small_scrubbed";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium_scrubbed";

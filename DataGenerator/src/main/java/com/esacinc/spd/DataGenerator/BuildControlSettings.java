@@ -36,8 +36,7 @@ public class BuildControlSettings {
 	protected static boolean DO_INSURANCEPLANS = false;
 	protected static boolean DO_RESTRICTIONS = false;
 	protected static boolean DO_ORGANIZATIONAFFILIATIONS = false;
-	// TODO
-	protected static boolean DO_PRACTITIONERROLES = false;
+	protected static boolean DO_PRACTITIONERROLES = true;
 
 	// Which VhDir resource files to generate...
 	protected static String FILE_ORGANIZATIONS = "Organization.ndjson";

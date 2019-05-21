@@ -10,7 +10,7 @@ import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.HealthcareService.DaysOfWeek;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
-import org.hl7.fhir.r4.model.PractitionerRole.DaysOfWeek;
+import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
 
@@ -364,7 +364,7 @@ public class ContactFactory {
 			String[] days = daysString.split(";");
 			for (String d : days) {
 				try {
-					at.addDaysOfWeek(DaysOfWeek.fromCode(d));
+					at.addDaysOfWeek(PractitionerRole.DaysOfWeek.fromCode(d));
 				}
 				catch (Exception e){
 					// Bad day value. Don't do anything.

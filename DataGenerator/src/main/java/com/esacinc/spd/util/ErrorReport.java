@@ -11,6 +11,7 @@ public class ErrorReport {
 	// I info
 	// E error
 	// W warning
+	// G geocode
 	// C control
 	
 	public static String REPORT_FILENAME = "VhDirGeneration-Report.csv";

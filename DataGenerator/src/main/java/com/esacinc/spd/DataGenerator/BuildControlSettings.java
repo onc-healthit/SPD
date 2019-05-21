@@ -81,6 +81,7 @@ public class BuildControlSettings {
 			
 			// Re-Initialize the variables we use to control how the Report file is generated...
 			DO_REPORTING =   PropertiesUtil.getPropertyBoolean("DO_REPORTING",DO_REPORTING);
+			ErrorReport.REPORT_FILENAME = PropertiesUtil.getPropertyString("REPORT_FILENAME", ErrorReport.REPORT_FILENAME);
 			ErrorReport.IGNORE_ERRORS = PropertiesUtil.getPropertyBoolean("IGNORE_ERRORS",ErrorReport.IGNORE_ERRORS);
 			ErrorReport.IGNORE_WARNINGS = PropertiesUtil.getPropertyBoolean("IGNORE_WARNINGS",ErrorReport.IGNORE_WARNINGS);
 			ErrorReport.IGNORE_INFO = PropertiesUtil.getPropertyBoolean("IGNORE_INFO",ErrorReport.IGNORE_INFO);

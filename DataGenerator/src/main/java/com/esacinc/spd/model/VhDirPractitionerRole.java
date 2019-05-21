@@ -47,6 +47,30 @@ public class VhDirPractitionerRole extends PractitionerRole {
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients", definedLocally=false, isModifier=false)
     @Description(shortDefinition="Whether the location is accepting new patients", formalDefinition="Whether the location is accepting new patients" )
     protected List<VhDirNewpatients> newpatients;
+    
+    /**
+     * A list of new patient profile strings
+     */
+    @Child(name = "newpatientprofile", type = {Element.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatientprofile", definedLocally=false, isModifier=false)
+    @Description(shortDefinition="Type of new patients accepted", formalDefinition="Type of new patients accepted" )
+    protected List<VhDirNewpatientprofile> newpatientprofile;
+    
+    /**
+	 * Add the network reference
+	 */
+	@Child(name="networkReference", type = {Reference.class}, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/network-reference", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Where the care team operates")
+	private List<Reference>networkReference;
+	
+	/**
+	 * Add the qualification
+	 */
+	@Child(name="qualification", type = {VhDirQualification.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/qualification", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Qualification for the organization")
+	private List<VhDirQualification> qualification;
 
     public List<Reference> getUsageRestriction() {
 		return usageRestriction;
@@ -83,6 +107,23 @@ public class VhDirPractitionerRole extends PractitionerRole {
 	    return this;
 	}
 	
+	public List<VhDirNewpatientprofile> getNewpatientprofile() {
+		return newpatientprofile;
+	}
+
+	public void setNewpatientprofile(List<VhDirNewpatientprofile> val) {
+		this.newpatientprofile = val;
+	}
+	
+	public VhDirPractitionerRole addNewpatientprofile(VhDirNewpatientprofile t) {
+	    if (t == null)
+	      return this;
+	    if (this.newpatientprofile == null)
+	      this.newpatientprofile = new ArrayList<VhDirNewpatientprofile>();
+	    this.newpatientprofile.add(t);
+	    return this;
+	}
+	
 	public List<VhDirDigitalCertificate> getDigitalcertficate() {
 		return digitalcertficate;
 	}
@@ -99,5 +140,41 @@ public class VhDirPractitionerRole extends PractitionerRole {
 	    this.digitalcertficate.add(t);
 	    return this;
 	}
+	
+	public List<Reference> getNetworkReference() {
+		return networkReference;
+	}
+
+	public void setNetworkReference(List<Reference> val) {
+		this.networkReference = val;
+	}
+	
+	public VhDirPractitionerRole addNetworkReference(Reference t) {
+	    if (t == null)
+	      return this;
+	    if (this.networkReference == null)
+	      this.networkReference = new ArrayList<Reference>();
+	    this.networkReference.add(t);
+	    return this;
+	}
+	
+	
+	public List<VhDirQualification> getQualification() {
+		return qualification;
+	}
+
+	public void setQualification(List<VhDirQualification> qualification) {
+		this.qualification = qualification;
+	}
+	
+	public VhDirPractitionerRole addQualification(VhDirQualification t) {
+	    if (t == null)
+	      return this;
+	    if (this.qualification == null)
+	      this.qualification = new ArrayList<VhDirQualification>();
+	    this.qualification.add(t);
+	    return this;
+	}
+
 
 }

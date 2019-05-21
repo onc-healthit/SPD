@@ -1,10 +1,10 @@
 MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
-C |Setup |ErrorReport | | |Generation Time: Mon May 20 18:04:43 MDT 2019
+C |Setup |ErrorReport | | |Generation Time: Mon May 20 18:49:44 MDT 2019
 C |Setup |Control Variables | | |Build Control variables re-initialized from properties in file: SPD_settings.properties 
 C |Setup |Control Variables | | |Process all resource types: No, Max Entries: 1, Max Pretty Print Entries: 10, Print Nth of each Resource to console: 0
 C |Setup |DB Conections | | |SPD: jdbc:mysql://65.111.255.73:3306/spd_small, ZipCodes: jdbc:mysql://65.111.255.73:3306/zipcode, 
 I |  |DO_ORGANIZATIONS | | |
-I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Wed May 20 18:04:45 MDT 2020
+I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Wed May 20 18:49:45 MDT 2020
 I |  | | | |1 Organizations Collected
 I |  |DO_ORGANIZATIONAFFILIATIONS | | |
 I |  | | | |0 Organization Affiliations Collected

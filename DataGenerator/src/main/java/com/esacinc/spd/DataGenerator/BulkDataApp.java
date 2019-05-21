@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import com.esacinc.spd.model.VhDirCareTeam;
 import com.esacinc.spd.model.VhDirEndpoint;
 import com.esacinc.spd.model.VhDirHealthcareService;
 import com.esacinc.spd.model.VhDirInsurancePlan;
 import com.esacinc.spd.model.VhDirLocation;
 import com.esacinc.spd.model.VhDirNetwork;
 import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirOrganizationAffiliation;
 import com.esacinc.spd.model.VhDirPractitioner;
 import com.esacinc.spd.model.VhDirRestriction;
 import com.esacinc.spd.model.VhDirValidation;
@@ -23,9 +25,11 @@ import com.esacinc.spd.model.VhDirCareTeam;
 //import com.esacinc.spd.model.VhDirOrganizationAffiliation;
 import com.esacinc.spd.model.VhDirPractitionerRole;
 //import com.esacinc.spd.model.VhDirRestriction;
+
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.Geocoding;
+import com.esacinc.spd.util.PropertiesUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -34,101 +38,30 @@ import com.google.gson.JsonParser;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 
-public class BulkDataApp {
+public class BulkDataApp extends BuildControlSettings {
 
-	// Database connection and querying are handled in DatabaseUtils.java
-
-    // Control Variables
-	private static boolean DO_REPORTING = true;   // false means no error report file generated.
-	public static int      MAX_ENTRIES = -1;      // Control how many entries we process in each section and output. -1 means ALL. 
-	private static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
-	private static int     PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
-	private static boolean DO_GEOTEST = false;     // Run some geocode testing.  Probably always false
-
-	
-	// Which VhDir resources to generate...
-	private static boolean DO_ALL = true;   // If true, process all resource type, regardless of settings below
-	private static boolean DO_ORGANIZATIONS = true;
-	private static boolean DO_PRACTITIONERS = false;
-	private static boolean DO_NETWORKS = false;
-	private static boolean DO_LOCATIONS = false;
-	private static boolean DO_VALIDATIONS = false;
-	private static boolean DO_ENDPOINTS = false;
-	private static boolean DO_CARETEAMS = false;
-	private static boolean DO_HEALTHCARESERVICES = false;
-	private static boolean DO_INSURANCEPLANS = false;
-	private static boolean DO_RESTRICTIONS = false;
-	// TODO
-	private static boolean DO_ORGANIZATIONAFFILIATIONS = false;
-	private static boolean DO_PRACTITIONERROLES = false;
-	
-
-	// Which VhDir resource files to generate...
-	private static String FILE_ORGANIZATIONS = "Organization.ndjson";
-	private static String FILE_PRACTITIONERS = "Practitioner.ndjson";
-	private static String FILE_NETWORKS = "Network.ndjson";
-	private static String FILE_LOCATIONS = "Location.ndjson";
-	private static String FILE_VALIDATIONS = "Validation.ndjson";
-	private static String FILE_ENDPOINTS = "Endpoint.ndjson";
-	private static String FILE_CARETEAMS = "Careteam.ndjson";
-	private static String FILE_HEALTHCARESERVICES = "HealthcareService.ndjson";
-	private static String FILE_INSURANCEPLANS = "InsurancePlan.ndjson";
-	private static String FILE_ORGANIZATIONAFFILIATIONS = "OrganizationAffiliation.ndjson";
-	private static String FILE_PRACTITIONERROLES = "PractitionerRole.ndjson";
-	private static String FILE_RESTRICTIONS = "Restriction.ndjson";
-
-	// Which VhDir resource pretty-printed files to generate...
-	// (Set to null or "" to not generate a file.)
-	private static String FILE_ORGANIZATIONS_PP = "Organization_PP.json";
-	private static String FILE_PRACTITIONERS_PP = "Practitioner_PP.json";
-	private static String FILE_NETWORKS_PP = "Network_PP.json";
-	private static String FILE_LOCATIONS_PP = "Location_PP.json";
-	private static String FILE_VALIDATIONS_PP = "Validation_PP.json";
-	private static String FILE_ENDPOINTS_PP = "Endpoint_PP.json";
-	private static String FILE_CARETEAMS_PP = "Careteam_PP.json";
-	private static String FILE_HEALTHCARESERVICES_PP = "HealthcareService_PP.json";
-	private static String FILE_INSURANCEPLANS_PP = "InsurancePlan_PP.json";
-	private static String FILE_ORGANIZATIONAFFILIATIONS_PP = "OrganizationAffiliation_PP.json";
-	private static String FILE_PRACTITIONERROLES_PP = "PractitionerRole_PP.json";
-	private static String FILE_RESTRICTIONS_PP = "Restriction_PP.json";
-
-	/**
-	 * Used by all the resource builders to determine if it is time to stop processing them...
-	 * @param cnt
-	 * @return
-	 */
-	public static boolean okToProceed(int cnt) {
-		return (MAX_ENTRIES == -1 || cnt < MAX_ENTRIES);
-	}
+    // See BuildControlSettings.java for definitions of all the static variables and other functions used throughout.
 	
 	public static void main(String[] args) {
 		
+		maybeReInitFromProperties(); // in BuildControlSettings
+		
 		// Open the error report file, and write some bookkeeping info
 		if (DO_REPORTING) {
-			ErrorReport.messageThrottles(false, false, false, false); // ignore: errors, warnings, info, geocode messages.
 			ErrorReport.open();
 		}
-		ErrorReport.writeInfo("Control Variables", "", "" ,String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE));
-
-		// Open a connection to the databases that we will use throughout.
-		Connection connection = DatabaseUtil.getConnection();
-		if (connection == null) {
-			return;
+		if (RE_INITIALIZE) {
+			ErrorReport.writeMessage("C","Setup","Control Variables", "", "" ,String.format("Build Control variables re-initialized from properties in file: %s ", PropertiesUtil.PROPERTIES_FILENAME));
 		}
-		Geocoding.openConnection();  // Open a connection to the zipcode database in case we need it.
+		ErrorReport.writeMessage("C","Setup","Control Variables", "", "" ,String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE));
+		ErrorReport.writeMessage("C","Setup","DB Conections", "", "" ,String.format("SPD: %s, ZipCodes: %s, ", DatabaseUtil.connectionUrl, DatabaseUtil.zipConnectionUrl));
+		
+		// Open connections to the databases that we will use throughout.
+		Connection connection = DatabaseUtil.openAllConnections();
 
 		// Testing some geocode stuff.
-		if (DO_GEOTEST)
-		{
-			try {
-				Geocoding.geocodePostalCode("46224", null); // We know this is valid;
-				Geocoding.geocodePostalCode("096030300", null);
-				Geocoding.geocodePostalCode("96297", null);
-			}
-			catch (Exception e) {
-				ErrorReport.writeError("Geocode Testing", "", "Geocoding error", e.getMessage());
-				e.printStackTrace();
-			}
+		if (Geocoding.DO_GEOCODE_TEST) {
+			Geocoding.basicTest();
 		}
 		
 		
@@ -322,13 +255,12 @@ public class BulkDataApp {
 
 		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
 			ErrorReport.writeInfo("DO_ORGANIZATIONAFFILIATIONS","","","");
-			/*
 			try{
 				// Get and write Organization Affiliations
 				System.out.println("Generate Organization_Affiliation resources...");
 				BulkOrganizationAffiliationBuilder affBuilder = new BulkOrganizationAffiliationBuilder();
 				List<VhDirOrganizationAffiliation> affiliations = affBuilder.getOrganizationAffiliations(connection);
-				outputAffiliationList(affiliations);  
+				outputOrganizationAffiliationsList(affiliations);  
 			    ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Organization Affiliations Collected", affiliations.size()));
 			}	
@@ -340,7 +272,6 @@ public class BulkDataApp {
 				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_ORGANIZATIONAFFILIATIONS", e.getMessage());
 				e.printStackTrace();
 			} 
-			*/ 
 		}
 
 		if (DO_ALL || DO_PRACTITIONERROLES) {
@@ -387,9 +318,8 @@ public class BulkDataApp {
 			} 
 		}
 
-		System.out.println("\nClosing SPD Database connection to " + DatabaseUtil.connectionUrl);
-		DatabaseUtil.closeConnection(connection);
-		Geocoding.closeConnection();
+		
+		DatabaseUtil.closeAllConnections(connection);
 		
 		ErrorReport.setCursor("", "");
 		System.out.println("\n\nFHIR Resource generation complete.");
@@ -848,6 +778,48 @@ public class BulkDataApp {
 
 				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
 				maybePrettyPrintToConsole(prettyJson, cnt, "RESTRICTION");
+				
+				cnt++;
+			}
+			writer.close();
+			if (pp_writer != null) {
+				pp_writer.close();
+			}
+		}
+		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputRestrictionList", "IOException", e.getMessage());
+			System.err.println("EXCEPTION writing restrictions list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputRestrictionList", "null pointer", e.getMessage());
+			System.err.println("NULL POINTER EXCEPTION writing restrictions list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void outputOrganizationAffiliationsList(List<VhDirOrganizationAffiliation>affiliations) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONAFFILIATIONS));
+			BufferedWriter pp_writer = null;
+			if (FILE_ORGANIZATIONAFFILIATIONS_PP != null &&  !FILE_ORGANIZATIONAFFILIATIONS_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONAFFILIATIONS_PP));
+			}
+			for (VhDirOrganizationAffiliation plan : affiliations) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+
+				String nwJson = jsonParser.encodeResourceToString(plan);
+				writer.write(nwJson);
+				writer.write("\n");
+
+				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
+				maybePrettyPrintToConsole(prettyJson, cnt, "ORGANIZATION AFFILIATION");
 				
 				cnt++;
 			}

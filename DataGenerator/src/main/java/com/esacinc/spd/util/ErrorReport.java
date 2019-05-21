@@ -7,6 +7,13 @@ import java.util.Date;
 
 public class ErrorReport {
 
+	// Message type indicators:
+	// I info
+	// E error
+	// W warning
+	// G geocode
+	// C control
+	
 	public static String REPORT_FILENAME = "VhDirGeneration-Report.csv";
 	public static int errors = 0;
 	public static int warnings = 0;
@@ -15,10 +22,10 @@ public class ErrorReport {
 	public static String CURSOR = "";
 	private static BufferedWriter writer = null;
 	
-	private static boolean IGNORE_ERRORS = false;
-	private static boolean IGNORE_WARNINGS = false;
-	private static boolean IGNORE_INFO = false;
-	private static boolean IGNORE_GEOCODES = false;
+	public static boolean IGNORE_ERRORS = false;
+	public static boolean IGNORE_WARNINGS = false;
+	public static boolean IGNORE_INFO = false;
+	public static boolean IGNORE_GEOCODES = false;
 		
 	public ErrorReport() { }
 
@@ -50,7 +57,7 @@ public class ErrorReport {
 			writeMessage("MSG TYPE","PROCESS CURSOR","RESOURCE","ID","SHORT NOTE","MESSAGE");
 			ErrorReport.setCursor("", "");
 		    // Write some bookkeeping...
-			writeInfo("ErrorReport", "", "","Generation Time: " + now.toString());
+			writeMessage("C","Setup","ErrorReport", "", "","Generation Time: " + now.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

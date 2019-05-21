@@ -151,7 +151,7 @@ public class BulkHealthcareServiceBuilder {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from fhir_codeable_concept where healthcare_service_specialty_id = ?", hsId);
 		while(resultset.next()) {
 			CodeableConcept cc = ResourceFactory.getCodeableConcept(resultset);
-			hs.addCategory(cc);
+			hs.addSpecialty(cc);
 		}
 	}
 

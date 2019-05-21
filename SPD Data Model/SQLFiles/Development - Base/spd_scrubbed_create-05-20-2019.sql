@@ -29,9 +29,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`actor` (
   `reference_resource_id` INT(11) NOT NULL COMMENT 'The resource that identifies the actor. To identify actors by type, use group to identify a set of actors by some property they share (e.g. \'admitting officers\').\n\nReference(VhDir Organization | VhDir Care Team | VhDir Practitioner)',
   `provision_id` INT(11) NOT NULL COMMENT 'Who|what controlled by this rule (or group, by role)',
   PRIMARY KEY (`actor_id`),
-  INDEX `fk_actor_fhir_codeable_concept1_idx` (`role_cc_id` ASC) ,,
-  INDEX `fk_actor_provision1_idx` (`provision_id` ASC) ,,
-  INDEX `fk_actor_resource_reference1_idx` (`reference_resource_id` ASC) ,,
+  INDEX `fk_actor_fhir_codeable_concept1_idx` (`role_cc_id` ASC) ,
+  INDEX `fk_actor_provision1_idx` (`provision_id` ASC) ,
+  INDEX `fk_actor_resource_reference1_idx` (`reference_resource_id` ASC) ,
   CONSTRAINT `fk_actor_fhir_codeable_concept1`
     FOREIGN KEY (`role_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -73,9 +73,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`address` (
   `organization_id` INT(11) NULL DEFAULT NULL,
   `network_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`address_id`),
-  INDEX `address_practitioner_id_idx` (`practitioner_id` ASC) ,,
-  INDEX `fk_address_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_address_network1_idx` (`network_id` ASC) ,,
+  INDEX `address_practitioner_id_idx` (`practitioner_id` ASC) ,
+  INDEX `fk_address_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_address_network1_idx` (`network_id` ASC) ,
   CONSTRAINT `address_practitioner_id`
     FOREIGN KEY (`practitioner_id`)
     REFERENCES `spd_scrubbed`.`vhdir_practitioner` (`practitioner_id`)
@@ -107,9 +107,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`attestation` (
   `proxy_signature` VARCHAR(45) NULL DEFAULT NULL COMMENT 'Signed assertion by the proxy entity indicating that they have the right to submit attested information on behalf of the attestation source.\n\nSignature type',
   `source_signature` VARCHAR(45) NULL DEFAULT NULL COMMENT 'Signed assertion by the attestation source that they have attested to the information.\n\nSignature type',
   PRIMARY KEY (`attestation_id`),
-  INDEX `fk_attestation_fhir_codeable_concept1_idx` (`communication_method_cc_id` ASC) ,,
-  INDEX `fk_attestation_resource_reference1_idx` (`who_resource_reference_id` ASC) ,,
-  INDEX `fk_attestation_resource_reference2_idx` (`on_behalf_of_resource_reference_id` ASC) ,,
+  INDEX `fk_attestation_fhir_codeable_concept1_idx` (`communication_method_cc_id` ASC) ,
+  INDEX `fk_attestation_resource_reference1_idx` (`who_resource_reference_id` ASC) ,
+  INDEX `fk_attestation_resource_reference2_idx` (`on_behalf_of_resource_reference_id` ASC) ,
   CONSTRAINT `fk_attestation_fhir_codeable_concept1`
     FOREIGN KEY (`communication_method_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -145,10 +145,10 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`available_time` (
   `location_hours_of_operation_id` INT(11) NULL DEFAULT NULL COMMENT 'What days/times during a week is this location usually open',
   `telecom_id` INT(11) NULL DEFAULT NULL COMMENT 'Available times for a telecom\n',
   PRIMARY KEY (`available_time_id`),
-  INDEX `fk_available_time_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_available_time_healthcare_service1_idx` (`healthcare_service_id` ASC) ,,
-  INDEX `fk_available_time_location1_idx` (`location_hours_of_operation_id` ASC) ,,
-  INDEX `fk_available_time_telecom1_idx` (`telecom_id` ASC) ,,
+  INDEX `fk_available_time_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_available_time_healthcare_service1_idx` (`healthcare_service_id` ASC) ,
+  INDEX `fk_available_time_location1_idx` (`location_hours_of_operation_id` ASC) ,
+  INDEX `fk_available_time_telecom1_idx` (`telecom_id` ASC) ,
   CONSTRAINT `fk_available_time_healthcare_service1`
     FOREIGN KEY (`healthcare_service_id`)
     REFERENCES `spd_scrubbed`.`vhdir_healthcare_service` (`healthcare_service_id`),
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`care_team_alias` (
   `name` VARCHAR(512) NULL DEFAULT NULL,
   `careteam_id` INT(11) NULL DEFAULT NULL COMMENT 'Alternate name for care team referenced by this id',
   PRIMARY KEY (`care_team_alias_id`),
-  INDEX `fk_care_team_alias_careteam1_idx` (`careteam_id` ASC) ,,
+  INDEX `fk_care_team_alias_careteam1_idx` (`careteam_id` ASC) ,
   CONSTRAINT `fk_care_team_alias_careteam1`
     FOREIGN KEY (`careteam_id`)
     REFERENCES `spd_scrubbed`.`vhdir_careteam` (`careteam_id`))
@@ -198,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`communication` (
   `text` VARCHAR(45) NULL DEFAULT NULL COMMENT 'Plain text representation of the concept',
   `practitioner_id` INT(11) NULL COMMENT 'A language the practitioner can use in patient communication\nBinding: CommonLanguages (preferred)\nMax Binding: AllLanguages',
   PRIMARY KEY (`communication_id`),
-  INDEX `fk_communication_vhdir_practitioner1_idx` (`practitioner_id` ASC) ,,
+  INDEX `fk_communication_vhdir_practitioner1_idx` (`practitioner_id` ASC) ,
   CONSTRAINT `fk_communication_vhdir_practitioner1`
     FOREIGN KEY (`practitioner_id`)
     REFERENCES `spd_scrubbed`.`vhdir_practitioner` (`practitioner_id`)
@@ -235,12 +235,12 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`contact` (
   `network_id` INT(11) NULL DEFAULT NULL COMMENT 'The network this contact is applicable for',
   `organization_id` INT(11) NULL DEFAULT NULL COMMENT 'Contact for the organization for a certain purpose',
   PRIMARY KEY (`contact_id`),
-  INDEX `fk_contact_fhir_codeable_concept1_idx` (`purpose_cc_id` ASC) ,,
-  INDEX `fk_contact_name1_idx` (`name_id` ASC) ,,
-  INDEX `fk_contact_address1_idx` (`address_id` ASC) ,,
-  INDEX `fk_contact_vhdir_insurance_plan1_idx` (`insurance_plan_id` ASC) ,,
-  INDEX `fk_contact_vhdir_network1_idx` (`network_id` ASC) ,,
-  INDEX `fk_contact_vhdir_organization1_idx` (`organization_id` ASC) ,,
+  INDEX `fk_contact_fhir_codeable_concept1_idx` (`purpose_cc_id` ASC) ,
+  INDEX `fk_contact_name1_idx` (`name_id` ASC) ,
+  INDEX `fk_contact_address1_idx` (`address_id` ASC) ,
+  INDEX `fk_contact_vhdir_insurance_plan1_idx` (`insurance_plan_id` ASC) ,
+  INDEX `fk_contact_vhdir_network1_idx` (`network_id` ASC) ,
+  INDEX `fk_contact_vhdir_organization1_idx` (`organization_id` ASC) ,
   CONSTRAINT `fk_contact_address1`
     FOREIGN KEY (`address_id`)
     REFERENCES `spd_scrubbed`.`address` (`address_id`),
@@ -276,8 +276,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`coverage` (
   `type_cc_id` INT(11) NOT NULL COMMENT 'Type of coverage (Medical; Dental; Mental Health; Substance Abuse; Vision; Drug; Short Term; Long Term Care; Hospice; Home Health).\nBinding: VhDir Coverage Type (example)',
   `insurance_plan_id` INT(11) NULL DEFAULT NULL COMMENT 'Coverage details',
   PRIMARY KEY (`coverage_id`),
-  INDEX `fk_coverage_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,,
-  INDEX `fk_coverage_vhdir_insurance_plan1_idx` (`insurance_plan_id` ASC) ,,
+  INDEX `fk_coverage_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,
+  INDEX `fk_coverage_vhdir_insurance_plan1_idx` (`insurance_plan_id` ASC) ,
   CONSTRAINT `fk_coverage_fhir_codeable_concept1`
     FOREIGN KEY (`type_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -302,8 +302,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`coverage_benefit` (
   `requirement` VARCHAR(45) NULL DEFAULT NULL,
   `coverage_id` INT(11) NOT NULL COMMENT 'List of benefits, at least one required',
   PRIMARY KEY (`benefit_id`),
-  INDEX `fk_benefit_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,,
-  INDEX `fk_benefit_coverage1_idx` (`coverage_id` ASC) ,,
+  INDEX `fk_benefit_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,
+  INDEX `fk_benefit_coverage1_idx` (`coverage_id` ASC) ,
   CONSTRAINT `fk_benefit_coverage1`
     FOREIGN KEY (`coverage_id`)
     REFERENCES `spd_scrubbed`.`coverage` (`coverage_id`),
@@ -333,10 +333,10 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`digital_certificate` (
   `endpoint_id` INT(11) NULL DEFAULT NULL COMMENT 'Digital certificate associated with the endpoint\\\\\\\\nURL: http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate',
   `practitioner_id` INT(11) NULL DEFAULT NULL COMMENT 'Practitioner\'s digital certificate\\\\\\\\nURL: http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate',
   PRIMARY KEY (`digital_certificate_id`),
-  INDEX `fk_digital_certificate_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_digital_certificate_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_digital_certificate_endpoint1_idx` (`endpoint_id` ASC) ,,
-  INDEX `fk_digital_certificate_practitioner1_idx` (`practitioner_id` ASC) ,,
+  INDEX `fk_digital_certificate_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_digital_certificate_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_digital_certificate_endpoint1_idx` (`endpoint_id` ASC) ,
+  INDEX `fk_digital_certificate_practitioner1_idx` (`practitioner_id` ASC) ,
   CONSTRAINT `fk_digital_certificate_endpoint1`
     FOREIGN KEY (`endpoint_id`)
     REFERENCES `spd_scrubbed`.`vhdir_endpoint` (`endpoint_id`),
@@ -369,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`ehr` (
   `location_id` INT(11) NULL DEFAULT NULL COMMENT 'EHR at the location\\\\nURL: http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr',
   `url` VARCHAR(256) NOT NULL DEFAULT 'http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr',
   PRIMARY KEY (`vhdir_ehr_id`),
-  INDEX `fk_vhdir_ehr_vhdir_location1_idx` (`location_id` ASC) ,,
+  INDEX `fk_vhdir_ehr_vhdir_location1_idx` (`location_id` ASC) ,
   CONSTRAINT `fk_vhdir_ehr_vhdir_location1`
     FOREIGN KEY (`location_id`)
     REFERENCES `spd_scrubbed`.`vhdir_location` (`location_id`))
@@ -389,8 +389,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`eligibility` (
   `comment` VARCHAR(45) NULL DEFAULT NULL COMMENT 'Describes the eligibility conditions for the service',
   `healthcare_service_id` INT(11) NULL DEFAULT NULL COMMENT 'Specific eligibility requirements required to use the service',
   PRIMARY KEY (`eligibility_id`),
-  INDEX `fk_eligibility_fhir_codeable_concept1_idx` (`code_cc_id` ASC) ,,
-  INDEX `fk_eligibility_vhdir_healthcare_service1_idx` (`healthcare_service_id` ASC) ,,
+  INDEX `fk_eligibility_fhir_codeable_concept1_idx` (`code_cc_id` ASC) ,
+  INDEX `fk_eligibility_vhdir_healthcare_service1_idx` (`healthcare_service_id` ASC) ,
   CONSTRAINT `fk_eligibility_fhir_codeable_concept1`
     FOREIGN KEY (`code_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -460,37 +460,37 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`fhir_codeable_concept` (
   `communication_id` INT(11) NULL COMMENT 'Spoken language proficiency\nURL: http://hl7.org/fhir/uv/vhdir/StructureDefinition/communication-proficiency\nBinding: VhDir Spoken Language Proficiency (example)',
   `ehr_patient_access_id` INT(11) NULL,
   PRIMARY KEY (`codeable_concept_id`),
-  INDEX `fk_codeable_concept_practitioner_role1_idx` (`practitioner_role_specialty_id` ASC) ,,
-  INDEX `fk_codeable_concept_practitioner_role2_idx` (`practitioner_role_code_id` ASC) ,,
-  INDEX `fk_codeable_concept_organization_affiliation1_idx` (`organization_affiliation_code_id` ASC) ,,
-  INDEX `fk_codeable_concept_organization_affiliation2_idx` (`organization_affiliation_specialty_id` ASC) ,,
-  INDEX `fk_codeable_concept_careteam2_idx` (`careteam_category_id` ASC) ,,
-  INDEX `fk_codeable_concept_endpoint1_idx` (`endpoint_payload_type_id` ASC) ,,
-  INDEX `fk_codeable_concept_organization1_idx` (`organization_type_id` ASC) ,,
-  INDEX `fk_codeable_concept_practitioner1_idx` (`practitioner_accessibility_id` ASC) ,,
-  INDEX `fk_codeable_concept_qualification1_idx` (`qualification_communication_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service1_idx` (`healthcare_service_category_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service2_idx` (`healthcare_service_type_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service3_idx` (`healthcare_service_specialty_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service4_idx` (`healthcare_service_service_provision_code_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service5_idx` (`healthcare_service_program_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service6_idx` (`healthcare_service_characteristic_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service7_idx` (`healthcare_service_communication_id` ASC) ,,
-  INDEX `fk_codeable_concept_healthcare_service8_idx` (`healthcare_service_referral_method_id` ASC) ,,
-  INDEX `fk_codeable_concept_location1_idx` (`location_accessibility_id` ASC) ,,
-  INDEX `fk_codeable_concept_location2_idx` (`location_type_id` ASC) ,,
-  INDEX `fk_codeable_concept_network1_idx` (`network_type_id` ASC) ,,
-  INDEX `fk_codeable_concept_insurance_plan1_idx` (`insurance_plan_type_id` ASC) ,,
-  INDEX `fk_codeable_concept_validation1_idx` (`validation_process_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_participant1_idx` (`careteam_participant_role_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_primary_source1_idx` (`primary_source_type_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_primary_source2_idx` (`primary_source_communication_method_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_primary_source3_idx` (`primary_source_push_type_available_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_cost_benefit_individual_cost1_idx` (`plan_cost_qualifier` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_qualification1_idx` (`qualification_where_valid_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_vhdir_restriction1_idx` (`restriction_category_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_communication1_idx` (`communication_id` ASC) ,,
-  INDEX `fk_fhir_codeable_concept_ehr1_idx` (`ehr_patient_access_id` ASC) ,,
+  INDEX `fk_codeable_concept_practitioner_role1_idx` (`practitioner_role_specialty_id` ASC) ,
+  INDEX `fk_codeable_concept_practitioner_role2_idx` (`practitioner_role_code_id` ASC) ,
+  INDEX `fk_codeable_concept_organization_affiliation1_idx` (`organization_affiliation_code_id` ASC) ,
+  INDEX `fk_codeable_concept_organization_affiliation2_idx` (`organization_affiliation_specialty_id` ASC) ,
+  INDEX `fk_codeable_concept_careteam2_idx` (`careteam_category_id` ASC) ,
+  INDEX `fk_codeable_concept_endpoint1_idx` (`endpoint_payload_type_id` ASC) ,
+  INDEX `fk_codeable_concept_organization1_idx` (`organization_type_id` ASC) ,
+  INDEX `fk_codeable_concept_practitioner1_idx` (`practitioner_accessibility_id` ASC) ,
+  INDEX `fk_codeable_concept_qualification1_idx` (`qualification_communication_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service1_idx` (`healthcare_service_category_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service2_idx` (`healthcare_service_type_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service3_idx` (`healthcare_service_specialty_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service4_idx` (`healthcare_service_service_provision_code_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service5_idx` (`healthcare_service_program_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service6_idx` (`healthcare_service_characteristic_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service7_idx` (`healthcare_service_communication_id` ASC) ,
+  INDEX `fk_codeable_concept_healthcare_service8_idx` (`healthcare_service_referral_method_id` ASC) ,
+  INDEX `fk_codeable_concept_location1_idx` (`location_accessibility_id` ASC) ,
+  INDEX `fk_codeable_concept_location2_idx` (`location_type_id` ASC) ,
+  INDEX `fk_codeable_concept_network1_idx` (`network_type_id` ASC) ,
+  INDEX `fk_codeable_concept_insurance_plan1_idx` (`insurance_plan_type_id` ASC) ,
+  INDEX `fk_codeable_concept_validation1_idx` (`validation_process_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_participant1_idx` (`careteam_participant_role_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_primary_source1_idx` (`primary_source_type_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_primary_source2_idx` (`primary_source_communication_method_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_primary_source3_idx` (`primary_source_push_type_available_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_cost_benefit_individual_cost1_idx` (`plan_cost_qualifier` ASC) ,
+  INDEX `fk_fhir_codeable_concept_qualification1_idx` (`qualification_where_valid_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_vhdir_restriction1_idx` (`restriction_category_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_communication1_idx` (`communication_id` ASC) ,
+  INDEX `fk_fhir_codeable_concept_ehr1_idx` (`ehr_patient_access_id` ASC) ,
   CONSTRAINT `fk_codeable_concept_careteam2`
     FOREIGN KEY (`careteam_category_id`)
     REFERENCES `spd_scrubbed`.`vhdir_careteam` (`careteam_id`),
@@ -627,8 +627,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`general_cost` (
   `comment` VARCHAR(45) NULL DEFAULT NULL,
   `plan_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`general_cost_id`),
-  INDEX `fk_general_cost_plan1_idx` (`plan_id` ASC) ,,
-  INDEX `fk_general_cost_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,,
+  INDEX `fk_general_cost_plan1_idx` (`plan_id` ASC) ,
+  INDEX `fk_general_cost_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,
   CONSTRAINT `fk_general_cost_fhir_codeable_concept1`
     FOREIGN KEY (`type_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -668,19 +668,19 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`identifier` (
   `network_id` INT(11) NULL DEFAULT NULL COMMENT 'Identifies this network across multiple systems',
   `plan_id` INT(11) NULL DEFAULT NULL COMMENT 'Business identifier for plan',
   PRIMARY KEY (`identifier_id`),
-  INDEX `endpoint_id_idx` (`endpoint_identifier_id` ASC) ,,
-  INDEX `healthcare_service_id_idx` (`healthcare_service_id` ASC) ,,
-  INDEX `insurance_plan_id_idx` (`insurance_plan_id` ASC) ,,
-  INDEX `practitioner_role_id_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `practitioner_id_idx` (`practitioner_id` ASC) ,,
-  INDEX `fk_identifier_qualification1_idx` (`qualification_id` ASC) ,,
-  INDEX `fk_identifier_codeable_concept1_idx` (`type_cc_id` ASC) ,,
-  INDEX `fk_identifier_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_identifier_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,,
-  INDEX `fk_identifier_careteam1_idx` (`careteam_id` ASC) ,,
-  INDEX `fk_identifier_location1_idx` (`location_id` ASC) ,,
-  INDEX `fk_identifier_network1_idx` (`network_id` ASC) ,,
-  INDEX `fk_identifier_plan1_idx` (`plan_id` ASC) ,,
+  INDEX `endpoint_id_idx` (`endpoint_identifier_id` ASC) ,
+  INDEX `healthcare_service_id_idx` (`healthcare_service_id` ASC) ,
+  INDEX `insurance_plan_id_idx` (`insurance_plan_id` ASC) ,
+  INDEX `practitioner_role_id_idx` (`practitioner_role_id` ASC) ,
+  INDEX `practitioner_id_idx` (`practitioner_id` ASC) ,
+  INDEX `fk_identifier_qualification1_idx` (`qualification_id` ASC) ,
+  INDEX `fk_identifier_codeable_concept1_idx` (`type_cc_id` ASC) ,
+  INDEX `fk_identifier_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_identifier_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,
+  INDEX `fk_identifier_careteam1_idx` (`careteam_id` ASC) ,
+  INDEX `fk_identifier_location1_idx` (`location_id` ASC) ,
+  INDEX `fk_identifier_network1_idx` (`network_id` ASC) ,
+  INDEX `fk_identifier_plan1_idx` (`plan_id` ASC) ,
   CONSTRAINT `fk_identifier_careteam1`
     FOREIGN KEY (`careteam_id`)
     REFERENCES `spd_scrubbed`.`vhdir_careteam` (`careteam_id`),
@@ -740,8 +740,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`limit` (
   `code_cc_id` INT(11) NULL COMMENT 'Binding: VhDir Limit Unit (example)',
   `coverage_benefit_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`limit_id`),
-  INDEX `fk_limit_benefit1_idx` (`coverage_benefit_id` ASC) ,,
-  INDEX `fk_limit_fhir_codeable_concept1_idx` (`code_cc_id` ASC) ,,
+  INDEX `fk_limit_benefit1_idx` (`coverage_benefit_id` ASC) ,
+  INDEX `fk_limit_fhir_codeable_concept1_idx` (`code_cc_id` ASC) ,
   CONSTRAINT `fk_limit_benefit1`
     FOREIGN KEY (`coverage_benefit_id`)
     REFERENCES `spd_scrubbed`.`coverage_benefit` (`benefit_id`),
@@ -771,7 +771,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`name` (
   `period_end` DATETIME NULL DEFAULT NULL,
   `practitioner_id` INT(11) NULL DEFAULT NULL COMMENT 'The name(s) associated with the practitioner',
   PRIMARY KEY (`name_id`),
-  INDEX `practitioner_id_idx` (`practitioner_id` ASC) ,,
+  INDEX `practitioner_id_idx` (`practitioner_id` ASC) ,
   CONSTRAINT `name_practitioner_id`
     FOREIGN KEY (`practitioner_id`)
     REFERENCES `spd_scrubbed`.`vhdir_practitioner` (`practitioner_id`)
@@ -793,8 +793,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`new_patient_profile` (
   `practitioner_role_id` INT(11) NULL DEFAULT NULL COMMENT 'Type of new patients accepted\\\\nURL: http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatientprofile',
   `location_id` INT(11) NOT NULL,
   PRIMARY KEY (`new_patient_profile_id`),
-  INDEX `fk_new_patient_profile_vhdir_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_new_patient_profile_vhdir_location1_idx` (`location_id` ASC) ,,
+  INDEX `fk_new_patient_profile_vhdir_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_new_patient_profile_vhdir_location1_idx` (`location_id` ASC) ,
   CONSTRAINT `fk_new_patient_profile_vhdir_practitioner_role1`
     FOREIGN KEY (`practitioner_role_id`)
     REFERENCES `spd_scrubbed`.`vhdir_practitioner_role` (`practitioner_role_id`),
@@ -822,10 +822,10 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`new_patients` (
   `location_id` INT(11) NULL,
   `network_resource_reference_id` INT(11) NOT NULL,
   PRIMARY KEY (`new_patients_id`),
-  INDEX `fk_new_patients_vhdir_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_new_patients_vhdir_healthcare_service1_idx` (`healthcare_service_id` ASC) ,,
-  INDEX `fk_new_patients_vhdir_location1_idx` (`location_id` ASC) ,,
-  INDEX `fk_new_patients_resource_reference1_idx` (`network_resource_reference_id` ASC) ,,
+  INDEX `fk_new_patients_vhdir_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_new_patients_vhdir_healthcare_service1_idx` (`healthcare_service_id` ASC) ,
+  INDEX `fk_new_patients_vhdir_location1_idx` (`location_id` ASC) ,
+  INDEX `fk_new_patients_resource_reference1_idx` (`network_resource_reference_id` ASC) ,
   CONSTRAINT `fk_new_patients_vhdir_healthcare_service1`
     FOREIGN KEY (`healthcare_service_id`)
     REFERENCES `spd_scrubbed`.`vhdir_healthcare_service` (`healthcare_service_id`),
@@ -859,8 +859,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`not_available_time` (
   `during_end_time` TIME NULL DEFAULT NULL,
   `practitioner_role_id` INT(11) NULL DEFAULT NULL COMMENT 'Not available during this time due to provided reason',
   `healthcare_service_id` INT(11) NULL DEFAULT NULL COMMENT 'Not available during this time due to provided reason',
-  INDEX `fk_unavailable_time_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_unavailable_time_healthcare_service1_idx` (`healthcare_service_id` ASC) ,,
+  INDEX `fk_unavailable_time_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_unavailable_time_healthcare_service1_idx` (`healthcare_service_id` ASC) ,
   PRIMARY KEY (`unavailable_time_id`),
   CONSTRAINT `fk_unavailable_time_healthcare_service1`
     FOREIGN KEY (`healthcare_service_id`)
@@ -886,8 +886,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`note` (
   `practitioner_id` INT(11) NULL DEFAULT NULL COMMENT 'Reference(VhDir Practitioner), string',
   `careteam_note_id` INT(11) NULL DEFAULT NULL COMMENT 'Comments made about the CareTeam',
   PRIMARY KEY (`note_id`),
-  INDEX `fk_note_practitioner1_idx` (`practitioner_id` ASC) ,,
-  INDEX `fk_note_careteam1_idx` (`careteam_note_id` ASC) ,,
+  INDEX `fk_note_practitioner1_idx` (`practitioner_id` ASC) ,
+  INDEX `fk_note_careteam1_idx` (`careteam_note_id` ASC) ,
   CONSTRAINT `fk_note_careteam1`
     FOREIGN KEY (`careteam_note_id`)
     REFERENCES `spd_scrubbed`.`vhdir_careteam` (`careteam_id`),
@@ -912,8 +912,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`organization_alias` (
   `alias_type_cc_id` INT(11) NULL DEFAULT NULL,
   `organization_id` INT(11) NULL DEFAULT NULL COMMENT 'A list of alternate names that the organization is known as, or was known as in the past',
   PRIMARY KEY (`organization_alias_id`),
-  INDEX `fk_organization_alias_codeable_concept1_idx` (`alias_type_cc_id` ASC) ,,
-  INDEX `fk_organization_alias_organization1_idx` (`organization_id` ASC) ,,
+  INDEX `fk_organization_alias_codeable_concept1_idx` (`alias_type_cc_id` ASC) ,
+  INDEX `fk_organization_alias_organization1_idx` (`organization_id` ASC) ,
   CONSTRAINT `fk_organization_alias_codeable_concept1`
     FOREIGN KEY (`alias_type_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -936,7 +936,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`organization_taxonomy` (
   `value` VARCHAR(255) NOT NULL,
   `organization_id` INT(11) NOT NULL,
   PRIMARY KEY (`organization_taxonomy_id`),
-  INDEX `fk_organization_taxonomy_vhdir_organization1_idx` (`organization_id` ASC) ,,
+  INDEX `fk_organization_taxonomy_vhdir_organization1_idx` (`organization_id` ASC) ,
   CONSTRAINT `fk_organization_taxonomy_vhdir_organization1`
     FOREIGN KEY (`organization_id`)
     REFERENCES `spd_scrubbed`.`vhdir_organization` (`organization_id`)
@@ -957,8 +957,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`participant` (
   `member` INT(11) NULL COMMENT 'Who is involved\n	Reference(VhDir Care Team | VhDir Practitioner Role | VhDir Organization)	',
   `careteam_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`participant_id`),
-  INDEX `fk_participant_resource_reference1_idx` (`member` ASC) ,,
-  INDEX `fk_participant_vhdir_careteam1_idx` (`careteam_id` ASC) ,,
+  INDEX `fk_participant_resource_reference1_idx` (`member` ASC) ,
+  INDEX `fk_participant_vhdir_careteam1_idx` (`careteam_id` ASC) ,
   CONSTRAINT `fk_participant_resource_reference1`
     FOREIGN KEY (`member`)
     REFERENCES `spd_scrubbed`.`resource_reference` (`resource_reference_id`)
@@ -984,8 +984,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`plan` (
   `type_cc_id` INT(11) NULL COMMENT 'Binding: VhDir Plan Type (example)',
   `insurance_plan_id` INT(11) NULL DEFAULT NULL COMMENT 'Plan details',
   PRIMARY KEY (`plan_id`),
-  INDEX `fk_plan_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,,
-  INDEX `fk_plan_vhdir_insurance_plan1_idx` (`insurance_plan_id` ASC) ,,
+  INDEX `fk_plan_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,
+  INDEX `fk_plan_vhdir_insurance_plan1_idx` (`insurance_plan_id` ASC) ,
   CONSTRAINT `fk_plan_fhir_codeable_concept1`
     FOREIGN KEY (`type_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -1009,7 +1009,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`policy` (
   `uri` VARCHAR(45) NULL DEFAULT NULL COMMENT 'Specific policy covered by this restriction',
   `restriction_id` INT(11) NULL DEFAULT NULL COMMENT 'Policies covered by this consent',
   PRIMARY KEY (`policy_id`),
-  INDEX `fk_policy_vhdir_restriction1_idx` (`restriction_id` ASC) ,,
+  INDEX `fk_policy_vhdir_restriction1_idx` (`restriction_id` ASC) ,
   CONSTRAINT `fk_policy_vhdir_restriction1`
     FOREIGN KEY (`restriction_id`)
     REFERENCES `spd_scrubbed`.`vhdir_restriction` (`restriction_id`))
@@ -1030,9 +1030,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`primary_source` (
   `can_push_updates_cc_id` INT(11) NULL DEFAULT NULL COMMENT 'Ability of the primary source to push updates/alerts (yes; no; undetermined).\n\nAbility of the primary source to push updates/alerts.\nThe codes SHOULD be taken from can-push-updates',
   `who_resource_reference_id` INT(11) NULL COMMENT 'Reference to the primary source.\nReference(VhDir Organization | VhDir Practitioner | VhDir Practitioner Role)\n',
   PRIMARY KEY (`primary_source_id`),
-  INDEX `fk_primary_source_fhir_codeable_concept1_idx` (`validation_status_cc_id` ASC) ,,
-  INDEX `fk_primary_source_fhir_codeable_concept2_idx` (`can_push_updates_cc_id` ASC) ,,
-  INDEX `fk_primary_source_resource_reference1_idx` (`who_resource_reference_id` ASC) ,,
+  INDEX `fk_primary_source_fhir_codeable_concept1_idx` (`validation_status_cc_id` ASC) ,
+  INDEX `fk_primary_source_fhir_codeable_concept2_idx` (`can_push_updates_cc_id` ASC) ,
+  INDEX `fk_primary_source_resource_reference1_idx` (`who_resource_reference_id` ASC) ,
   CONSTRAINT `fk_primary_source_fhir_codeable_concept1`
     FOREIGN KEY (`validation_status_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -1061,7 +1061,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`provision` (
   `purpose` VARCHAR(512) NULL DEFAULT NULL COMMENT 'Name assigned to the restriction condition\n\nWhen the purpose of use tag is on the data, access request purpose of use shall not conflict.',
   `action_cc_id` INT(11) NULL DEFAULT NULL COMMENT 'Describes how the reference is related to the restriction (contributes to; reason for; existance of; specific value)\n\nNote that this is the direct action (not the grounds for the action covered in the purpose element). At present, the only action in the understood and tested scope of this resource is \'read\'.\n\nMeaning if Missing - all actions',
   PRIMARY KEY (`provision_id`),
-  INDEX `fk_provision_fhir_codeable_concept1_idx` (`action_cc_id` ASC) ,,
+  INDEX `fk_provision_fhir_codeable_concept1_idx` (`action_cc_id` ASC) ,
   CONSTRAINT `fk_provision_fhir_codeable_concept1`
     FOREIGN KEY (`action_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`))
@@ -1087,10 +1087,10 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`qualification` (
   `practitioner_role_id` INT(11) NULL COMMENT 'Practitioner\'s qualifications unique to this role\\\\\\\\nURL: http://hl7.org/fhir/uv/vhdir/StructureDefinition/qualification',
   `practitioner_id` INT(11) NULL,
   PRIMARY KEY (`qualification_id`),
-  INDEX `fk_qualification_codeable_concept1_idx` (`code_cc_id` ASC) ,,
-  INDEX `fk_qualification_organization2_idx` (`issuing_organization_id` ASC) ,,
-  INDEX `fk_qualification_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_qualification_vhdir_practitioner1_idx` (`practitioner_id` ASC) ,,
+  INDEX `fk_qualification_codeable_concept1_idx` (`code_cc_id` ASC) ,
+  INDEX `fk_qualification_organization2_idx` (`issuing_organization_id` ASC) ,
+  INDEX `fk_qualification_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_qualification_vhdir_practitioner1_idx` (`practitioner_id` ASC) ,
   CONSTRAINT `fk_qualification_codeable_concept1`
     FOREIGN KEY (`code_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -1122,7 +1122,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`qualification_history` (
   `period_end` DATETIME NOT NULL,
   `url` VARCHAR(256) NOT NULL DEFAULT 'http://hl7.org/fhir/uv/vhdir/StructureDefinition/qualification',
   `qualification_id` INT(11) NOT NULL COMMENT 'The qualification to which this history item belongs',
-  INDEX `fk_qualification_history_qualification1_idx` (`qualification_id` ASC) ,,
+  INDEX `fk_qualification_history_qualification1_idx` (`qualification_id` ASC) ,
   PRIMARY KEY (`qualification_history_id`),
   CONSTRAINT `fk_qualification_history_qualification1`
     FOREIGN KEY (`qualification_id`)
@@ -1165,26 +1165,26 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`resource_reference` (
   `healthcare_service_location_id` INT(11) NULL DEFAULT NULL COMMENT 'VhDirLocation',
   `healthcare_service_coverageArea_id` INT(11) NULL DEFAULT NULL COMMENT 'VhDirLocation',
   PRIMARY KEY (`resource_reference_id`),
-  INDEX `fk_resource_reference_vhdir_validation1_idx` (`validation_target_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_network1_idx` (`network_location_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_insurance_plan1_idx` (`insurance_plan_coverageArea_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_insurance_plan2_idx` (`insurance_plan_network_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_insurance_plan3_idx` (`insurance_plan_endpoint_id` ASC) ,,
-  INDEX `fk_resource_reference_plan1_idx` (`plan_coverageArea_id` ASC) ,,
-  INDEX `fk_resource_reference_plan2_idx` (`plan_network_id` ASC) ,,
-  INDEX `fk_resource_reference_coverage1_idx` (`coverage_network_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_careteam1_idx` (`careteam_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_endpoint1_idx` (`endpoint_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_healthcare_service1_idx` (`healthcare_service_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_insurance_plan4_idx` (`insurance_plan_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_location1_idx` (`location_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_network2_idx` (`network_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_organization1_idx` (`organization_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_organization_affiliation1_idx` (`organization_affiliation_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_practitioner1_idx` (`practitioner_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_practitioner_role1_idx` (`practitioner_role_restriction_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_healthcare_service2_idx` (`healthcare_service_location_id` ASC) ,,
-  INDEX `fk_resource_reference_vhdir_healthcare_service3_idx` (`healthcare_service_coverageArea_id` ASC) ,,
+  INDEX `fk_resource_reference_vhdir_validation1_idx` (`validation_target_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_network1_idx` (`network_location_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_insurance_plan1_idx` (`insurance_plan_coverageArea_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_insurance_plan2_idx` (`insurance_plan_network_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_insurance_plan3_idx` (`insurance_plan_endpoint_id` ASC) ,
+  INDEX `fk_resource_reference_plan1_idx` (`plan_coverageArea_id` ASC) ,
+  INDEX `fk_resource_reference_plan2_idx` (`plan_network_id` ASC) ,
+  INDEX `fk_resource_reference_coverage1_idx` (`coverage_network_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_careteam1_idx` (`careteam_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_endpoint1_idx` (`endpoint_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_healthcare_service1_idx` (`healthcare_service_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_insurance_plan4_idx` (`insurance_plan_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_location1_idx` (`location_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_network2_idx` (`network_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_organization1_idx` (`organization_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_organization_affiliation1_idx` (`organization_affiliation_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_practitioner1_idx` (`practitioner_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_practitioner_role1_idx` (`practitioner_role_restriction_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_healthcare_service2_idx` (`healthcare_service_location_id` ASC) ,
+  INDEX `fk_resource_reference_vhdir_healthcare_service3_idx` (`healthcare_service_coverageArea_id` ASC) ,
   CONSTRAINT `fk_resource_reference_vhdir_validation1`
     FOREIGN KEY (`validation_target_id`)
     REFERENCES `spd_scrubbed`.`vhdir_validation` (`validation_id`),
@@ -1304,8 +1304,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`specific_cost` (
   `category_cc_id` INT(11) NOT NULL,
   `plan_id` INT(11) NULL DEFAULT NULL COMMENT 'Specific costs',
   PRIMARY KEY (`specific_cost_id`),
-  INDEX `fk_specific_cost_fhir_codeable_concept1_idx` (`category_cc_id` ASC) ,,
-  INDEX `fk_specific_cost_plan1_idx` (`plan_id` ASC) ,,
+  INDEX `fk_specific_cost_fhir_codeable_concept1_idx` (`category_cc_id` ASC) ,
+  INDEX `fk_specific_cost_plan1_idx` (`plan_id` ASC) ,
   CONSTRAINT `fk_specific_cost_fhir_codeable_concept1`
     FOREIGN KEY (`category_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -1329,8 +1329,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`specific_cost_benefit` (
   `type_cc_id` INT(11) NOT NULL COMMENT 'Binding: VhDir Insurance Plan Benefit Type (example)',
   `specific_cost_id` INT(11) NULL,
   PRIMARY KEY (`cost_benefit_id`),
-  INDEX `fk_cost_benefit_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,,
-  INDEX `fk_cost_benefit_specific_cost1_idx` (`specific_cost_id` ASC) ,,
+  INDEX `fk_cost_benefit_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,
+  INDEX `fk_cost_benefit_specific_cost1_idx` (`specific_cost_id` ASC) ,
   CONSTRAINT `fk_cost_benefit_fhir_codeable_concept1`
     FOREIGN KEY (`type_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -1354,9 +1354,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`specific_cost_benefit_cost` (
   `value` INT(11) NULL DEFAULT NULL,
   `cost_benefit_id` INT(11) NULL DEFAULT NULL COMMENT 'The specific cost benefit to which this belongs',
   PRIMARY KEY (`cost_benefit_individual_cost_id`),
-  INDEX `fk_cost_benefit_individual_cost_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,,
-  INDEX `fk_cost_benefit_individual_cost_cost_benefit1_idx` (`cost_benefit_id` ASC) ,,
-  INDEX `fk_cost_benefit_individual_cost_fhir_codeable_concept2_idx` (`applicability_cc_id` ASC) ,,
+  INDEX `fk_cost_benefit_individual_cost_fhir_codeable_concept1_idx` (`type_cc_id` ASC) ,
+  INDEX `fk_cost_benefit_individual_cost_cost_benefit1_idx` (`cost_benefit_id` ASC) ,
+  INDEX `fk_cost_benefit_individual_cost_fhir_codeable_concept2_idx` (`applicability_cc_id` ASC) ,
   CONSTRAINT `fk_cost_benefit_individual_cost_cost_benefit1`
     FOREIGN KEY (`cost_benefit_id`)
     REFERENCES `spd_scrubbed`.`specific_cost_benefit` (`cost_benefit_id`),
@@ -1394,14 +1394,14 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`telecom` (
   `organization_id` INT(11) NULL COMMENT 'A contact detail for the organization',
   `organization_affiliation_id` INT(11) NULL,
   PRIMARY KEY (`telecom_id`),
-  INDEX `telecom_practitioner_id_idx` (`practitioner_id` ASC) ,,
-  INDEX `fk_telecom_careteam1_idx` (`careteam_id` ASC) ,,
-  INDEX `fk_telecom_healthcare_service1_idx` (`healthcare_service_id` ASC) ,,
-  INDEX `fk_telecom_location1_idx` (`location_id` ASC) ,,
-  INDEX `fk_telecom_contact1_idx` (`contact_id` ASC) ,,
-  INDEX `fk_telecom_resource_reference1_idx` (`contactpoint_intermediary` ASC) ,,
-  INDEX `fk_telecom_vhdir_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_telecom_vhdir_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,,
+  INDEX `telecom_practitioner_id_idx` (`practitioner_id` ASC) ,
+  INDEX `fk_telecom_careteam1_idx` (`careteam_id` ASC) ,
+  INDEX `fk_telecom_healthcare_service1_idx` (`healthcare_service_id` ASC) ,
+  INDEX `fk_telecom_location1_idx` (`location_id` ASC) ,
+  INDEX `fk_telecom_contact1_idx` (`contact_id` ASC) ,
+  INDEX `fk_telecom_resource_reference1_idx` (`contactpoint_intermediary` ASC) ,
+  INDEX `fk_telecom_vhdir_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_telecom_vhdir_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,
   CONSTRAINT `fk_telecom_careteam1`
     FOREIGN KEY (`careteam_id`)
     REFERENCES `spd_scrubbed`.`vhdir_careteam` (`careteam_id`),
@@ -1449,8 +1449,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`trust_framework` (
   `value_cc_id` INT(11) NULL DEFAULT NULL COMMENT 'Trust framework\nBinding: VhDir Digital Certificate Trust Framework Value Set (example)',
   `url` VARCHAR(256) NULL,
   PRIMARY KEY (`trust_framework_id`),
-  INDEX `fk_trust_framework_digital_certificate1_idx` (`digital_certificate_id` ASC) ,,
-  INDEX `fk_trust_framework_codeable_concept1_idx` (`value_cc_id` ASC) ,,
+  INDEX `fk_trust_framework_digital_certificate1_idx` (`digital_certificate_id` ASC) ,
+  INDEX `fk_trust_framework_codeable_concept1_idx` (`value_cc_id` ASC) ,
   CONSTRAINT `fk_trust_framework_codeable_concept1`
     FOREIGN KEY (`value_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -1474,7 +1474,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`use_case` (
   `url` VARCHAR(256) NOT NULL DEFAULT 'http://hl7.org/fhir/uv/vhdir/StructureDefinition/endpoint-usecase',
   `endpoint_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`use_case_id`),
-  INDEX `fk_use_case_vhdir_endpoint1_idx` (`endpoint_id` ASC) ,,
+  INDEX `fk_use_case_vhdir_endpoint1_idx` (`endpoint_id` ASC) ,
   CONSTRAINT `fk_use_case_fhir_codeable_concept1`
     FOREIGN KEY (`type_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -1498,8 +1498,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`validator` (
   `attestation_signature` VARCHAR(45) NULL COMMENT 'Validator signature\n\nShould be a signature reference.',
   `validation_id` INT(11) NULL COMMENT 'The validation to which this validator belongs.',
   PRIMARY KEY (`validator_id`),
-  INDEX `fk_validator_vhdir_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_validator_vhdir_validation1_idx` (`validation_id` ASC) ,,
+  INDEX `fk_validator_vhdir_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_validator_vhdir_validation1_idx` (`validation_id` ASC) ,
   CONSTRAINT `fk_validator_vhdir_organization1`
     FOREIGN KEY (`organization_id`)
     REFERENCES `spd_scrubbed`.`vhdir_organization` (`organization_id`)
@@ -1529,9 +1529,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_careteam` (
   `managing_organization_id` INT(11) NULL DEFAULT NULL COMMENT 'The organization responsible for the care team.\nAllows for multiple organizations to collaboratively manage cross-organizational, longitudinal care plan.',
   `encounter_id` INT(11) NULL DEFAULT NULL COMMENT 'The Encounter during which this CareTeam was created or to which the creation of this record is tightly associated.\nThis will typically be the encounter the event occurred within, but some activities may be initiated prior to or after the official completion of an encounter but still be tied to the context of the encounter.',
   PRIMARY KEY (`careteam_id`),
-  INDEX `fk_careteam_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_careteam_encounter1_idx` (`encounter_id` ASC) ,,
-  INDEX `fk_careteam_organization1_idx` (`managing_organization_id` ASC) ,,
+  INDEX `fk_careteam_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_careteam_encounter1_idx` (`encounter_id` ASC) ,
+  INDEX `fk_careteam_organization1_idx` (`managing_organization_id` ASC) ,
   CONSTRAINT `fk_careteam_encounter1`
     FOREIGN KEY (`encounter_id`)
     REFERENCES `spd_scrubbed`.`encounter_reference` (`encounter_id`),
@@ -1575,18 +1575,18 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_endpoint` (
   `insurance_plan_id` INT(11) NULL DEFAULT NULL COMMENT 'Technical endpoint',
   `organization_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`endpoint_id`),
-  INDEX `fk_endpoint_practitioner1_idx` (`practitioner_id` ASC) ,,
-  INDEX `fk_endpoint_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_endpoint_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,,
-  INDEX `fk_endpoint_careteam1_idx` (`careteam_id` ASC) ,,
-  INDEX `fk_endpoint_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_endpoint_healthcare_service1_idx` (`healthcare_service_id` ASC) ,,
-  INDEX `fk_endpoint_location1_idx` (`location_id` ASC) ,,
-  INDEX `fk_endpoint_network1_idx` (`network_id` ASC) ,,
-  INDEX `fk_endpoint_insurance_plan1_idx` (`insurance_plan_id` ASC) ,,
-  INDEX `fk_vhdir_endpoint_vhdir_organization1_idx` (`managing_organization_id` ASC) ,,
-  INDEX `fk_vhdir_endpoint_vhdir_organization2_idx` (`organization_id` ASC) ,,
-  INDEX `fk_vhdir_endpoint_telecom1_idx` (`telecom_id` ASC) ,,
+  INDEX `fk_endpoint_practitioner1_idx` (`practitioner_id` ASC) ,
+  INDEX `fk_endpoint_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_endpoint_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,
+  INDEX `fk_endpoint_careteam1_idx` (`careteam_id` ASC) ,
+  INDEX `fk_endpoint_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_endpoint_healthcare_service1_idx` (`healthcare_service_id` ASC) ,
+  INDEX `fk_endpoint_location1_idx` (`location_id` ASC) ,
+  INDEX `fk_endpoint_network1_idx` (`network_id` ASC) ,
+  INDEX `fk_endpoint_insurance_plan1_idx` (`insurance_plan_id` ASC) ,
+  INDEX `fk_vhdir_endpoint_vhdir_organization1_idx` (`managing_organization_id` ASC) ,
+  INDEX `fk_vhdir_endpoint_vhdir_organization2_idx` (`organization_id` ASC) ,
+  INDEX `fk_vhdir_endpoint_telecom1_idx` (`telecom_id` ASC) ,
   CONSTRAINT `fk_endpoint_careteam1`
     FOREIGN KEY (`careteam_id`)
     REFERENCES `spd_scrubbed`.`vhdir_careteam` (`careteam_id`),
@@ -1654,11 +1654,11 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_healthcare_service` (
   `careteam_id` INT(11) NULL DEFAULT NULL COMMENT 'Services provided by the care team\\\\\\\\nURL: http://hl7.org/fhir/uv/vhdir/StructureDefinition/healthcareservice-reference',
   `name` VARCHAR(512) NULL COMMENT 'Description of service as presented to a consumer while searching',
   PRIMARY KEY (`healthcare_service_id`),
-  INDEX `fk_healthcare_service_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_healthcare_service_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,,
-  INDEX `fk_healthcare_service_careteam1_idx` (`careteam_id` ASC) ,,
-  INDEX `fk_healthcare_service_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_healthcare_service_organization1_idx` (`provided_by_organization_id` ASC) ,,
+  INDEX `fk_healthcare_service_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_healthcare_service_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,
+  INDEX `fk_healthcare_service_careteam1_idx` (`careteam_id` ASC) ,
+  INDEX `fk_healthcare_service_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_healthcare_service_organization1_idx` (`provided_by_organization_id` ASC) ,
   CONSTRAINT `fk_healthcare_service_careteam1`
     FOREIGN KEY (`careteam_id`)
     REFERENCES `spd_scrubbed`.`vhdir_careteam` (`careteam_id`),
@@ -1696,10 +1696,10 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_insurance_plan` (
   `ownedBy_reference_id` INT(11) NOT NULL COMMENT 'Plan Issuer VhDir_Organization',
   `administeredBy_reference_id` INT(11) NOT NULL COMMENT 'Product administrator reference  VhDir_Organization',
   PRIMARY KEY (`insurance_plan_id`),
-  INDEX `fk_insurance_plan_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_insurance_plan_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_vhdir_insurance_plan_resource_reference1_idx` (`ownedBy_reference_id` ASC) ,,
-  INDEX `fk_vhdir_insurance_plan_resource_reference2_idx` (`administeredBy_reference_id` ASC) ,,
+  INDEX `fk_insurance_plan_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_insurance_plan_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_vhdir_insurance_plan_resource_reference1_idx` (`ownedBy_reference_id` ASC) ,
+  INDEX `fk_vhdir_insurance_plan_resource_reference2_idx` (`administeredBy_reference_id` ASC) ,
   CONSTRAINT `fk_insurance_plan_meta_data1`
     FOREIGN KEY (`meta_data_id`)
     REFERENCES `spd_scrubbed`.`fhir_meta_data` (`meta_data_id`),
@@ -1752,20 +1752,20 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_location` (
   `qualification_where_valid_id` INT(11) NULL COMMENT 'Where a qualification is valid',
   `physical_type_cc_id` INT(11) NULL DEFAULT NULL COMMENT 'Physical form of the location\nBinding: LocationType (example)',
   PRIMARY KEY (`location_id`),
-  INDEX `fk_location_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_location_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,,
-  INDEX `fk_location_careteam1_idx` (`careteam_id` ASC) ,,
-  INDEX `fk_location_healthcare_service1_idx` (`healthcare_service_id` ASC) ,,
-  INDEX `fk_location_healthcare_service2_idx` (`healthcare_service_coverage_area_id` ASC) ,,
-  INDEX `fk_location_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_location_address1_idx` (`address_id` ASC) ,,
-  INDEX `fk_location_organization1_idx` (`managing_organization_id` ASC) ,,
-  INDEX `fk_location_location1_idx` (`part_of_location_id` ASC) ,,
-  INDEX `fk_location_network1_idx` (`network_reference_id` ASC) ,,
-  INDEX `fk_location_insurance_plan1_idx` (`insurance_plan_coverage_area_id` ASC) ,,
-  INDEX `fk_vhdir_location_plan1_idx` (`plan_coverage_area_id` ASC) ,,
-  INDEX `fk_vhdir_location_qualification1_idx` (`qualification_where_valid_id` ASC) ,,
-  INDEX `fk_vhdir_location_fhir_codeable_concept1_idx` (`physical_type_cc_id` ASC) ,,
+  INDEX `fk_location_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_location_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,
+  INDEX `fk_location_careteam1_idx` (`careteam_id` ASC) ,
+  INDEX `fk_location_healthcare_service1_idx` (`healthcare_service_id` ASC) ,
+  INDEX `fk_location_healthcare_service2_idx` (`healthcare_service_coverage_area_id` ASC) ,
+  INDEX `fk_location_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_location_address1_idx` (`address_id` ASC) ,
+  INDEX `fk_location_organization1_idx` (`managing_organization_id` ASC) ,
+  INDEX `fk_location_location1_idx` (`part_of_location_id` ASC) ,
+  INDEX `fk_location_network1_idx` (`network_reference_id` ASC) ,
+  INDEX `fk_location_insurance_plan1_idx` (`insurance_plan_coverage_area_id` ASC) ,
+  INDEX `fk_vhdir_location_plan1_idx` (`plan_coverage_area_id` ASC) ,
+  INDEX `fk_vhdir_location_qualification1_idx` (`qualification_where_valid_id` ASC) ,
+  INDEX `fk_vhdir_location_fhir_codeable_concept1_idx` (`physical_type_cc_id` ASC) ,
   CONSTRAINT `fk_location_address1`
     FOREIGN KEY (`address_id`)
     REFERENCES `spd_scrubbed`.`address` (`address_id`),
@@ -1873,12 +1873,12 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_network` (
   `coverage_id` INT(11) NULL DEFAULT NULL,
   `plan_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`network_id`),
-  INDEX `fk_network_practitioner_role1_idx` (`practitioner_role_id` ASC) ,,
-  INDEX `fk_network_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,,
-  INDEX `fk_network_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_vhdir_network_coverage1_idx` (`coverage_id` ASC) ,,
-  INDEX `fk_vhdir_network_plan1_idx` (`plan_id` ASC) ,,
-  INDEX `fk_vhdir_network_resource_reference1_idx` (`part_of_resource_reference_id` ASC) ,,
+  INDEX `fk_network_practitioner_role1_idx` (`practitioner_role_id` ASC) ,
+  INDEX `fk_network_organization_affiliation1_idx` (`organization_affiliation_id` ASC) ,
+  INDEX `fk_network_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_vhdir_network_coverage1_idx` (`coverage_id` ASC) ,
+  INDEX `fk_vhdir_network_plan1_idx` (`plan_id` ASC) ,
+  INDEX `fk_vhdir_network_resource_reference1_idx` (`part_of_resource_reference_id` ASC) ,
   CONSTRAINT `fk_network_meta_data1`
     FOREIGN KEY (`meta_data_id`)
     REFERENCES `spd_scrubbed`.`fhir_meta_data` (`meta_data_id`),
@@ -1918,8 +1918,8 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_organization` (
   `partOf_organization_name` VARCHAR(512) NULL,
   `partOf_organization_id` INT(11) NULL DEFAULT NULL COMMENT 'Reference(VhDir Organization)\nThe organization of which this organization forms a part',
   PRIMARY KEY (`organization_id`),
-  INDEX `fk_organization_organization1_idx` (`partOf_organization_id` ASC) ,,
-  INDEX `fk_organization_meta_data1_idx` (`meta_data_id` ASC) ,,
+  INDEX `fk_organization_organization1_idx` (`partOf_organization_id` ASC) ,
+  INDEX `fk_organization_meta_data1_idx` (`meta_data_id` ASC) ,
   CONSTRAINT `fk_organization_meta_data1`
     FOREIGN KEY (`meta_data_id`)
     REFERENCES `spd_scrubbed`.`fhir_meta_data` (`meta_data_id`),
@@ -1986,10 +1986,10 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_organization_affiliation` (
   `organization_id` INT(11) NULL DEFAULT NULL COMMENT 'Resource Reference: Organization where the role is available',
   `participating_organization_id` INT(11) NULL DEFAULT NULL COMMENT 'Resurce Reference: Organization that provides/performs the role (e.g. providing services or is a member of)',
   PRIMARY KEY (`organization_affiliation_id`),
-  INDEX `fk_organization_affiliation_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_organization_affiliation_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_organization_affiliation_organization2_idx` (`participating_organization_id` ASC) ,,
-  UNIQUE INDEX `active_UNIQUE` (`active` ASC) ,,
+  INDEX `fk_organization_affiliation_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_organization_affiliation_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_organization_affiliation_organization2_idx` (`participating_organization_id` ASC) ,
+  UNIQUE INDEX `active_UNIQUE` (`active` ASC) ,
   CONSTRAINT `fk_organization_affiliation_meta_data1`
     FOREIGN KEY (`meta_data_id`)
     REFERENCES `spd_scrubbed`.`fhir_meta_data` (`meta_data_id`),
@@ -2059,7 +2059,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_practitioner` (
   `birthDate` DATE NULL DEFAULT NULL COMMENT 'The date on which the practitioner was born',
   `photo` VARCHAR(45) NULL DEFAULT NULL COMMENT 'Image of the person',
   PRIMARY KEY (`practitioner_id`),
-  INDEX `fk_practitioner_meta_data1_idx` (`meta_data_id` ASC) ,,
+  INDEX `fk_practitioner_meta_data1_idx` (`meta_data_id` ASC) ,
   CONSTRAINT `fk_practitioner_meta_data1`
     FOREIGN KEY (`meta_data_id`)
     REFERENCES `spd_scrubbed`.`fhir_meta_data` (`meta_data_id`))
@@ -2122,9 +2122,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_practitioner_role` (
   `organization_id` INT(11) NULL DEFAULT NULL COMMENT 'Organization where the roles are available',
   `availability_exceptions` VARCHAR(512) NULL DEFAULT NULL COMMENT 'Description of availability exceptions',
   PRIMARY KEY (`practitioner_role_id`),
-  INDEX `fk_practitioner_role_organization1_idx` (`organization_id` ASC) ,,
-  INDEX `fk_practitioner_role_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_practitioner_role_practitioner1_idx` (`practitioner_id` ASC) ,,
+  INDEX `fk_practitioner_role_organization1_idx` (`organization_id` ASC) ,
+  INDEX `fk_practitioner_role_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_practitioner_role_practitioner1_idx` (`practitioner_id` ASC) ,
   CONSTRAINT `fk_practitioner_role_meta_data1`
     FOREIGN KEY (`meta_data_id`)
     REFERENCES `spd_scrubbed`.`fhir_meta_data` (`meta_data_id`),
@@ -2190,9 +2190,9 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_restriction` (
   `date_time` DATETIME NULL DEFAULT NULL COMMENT 'date/time of last update for this restriction',
   `provision_id` INT(11) NULL DEFAULT NULL COMMENT 'Access rights',
   PRIMARY KEY (`restriction_id`),
-  INDEX `fk_restriction_meta_data1_idx` (`meta_data_id` ASC) ,,
-  INDEX `fk_restriction_codeable_concept1_idx` (`scope_cc_id` ASC) ,,
-  INDEX `fk_vhdir_restriction_provision1_idx` (`provision_id` ASC) ,,
+  INDEX `fk_restriction_meta_data1_idx` (`meta_data_id` ASC) ,
+  INDEX `fk_restriction_codeable_concept1_idx` (`scope_cc_id` ASC) ,
+  INDEX `fk_vhdir_restriction_provision1_idx` (`provision_id` ASC) ,
   CONSTRAINT `fk_restriction_codeable_concept1`
     FOREIGN KEY (`scope_cc_id`)
     REFERENCES `spd_scrubbed`.`fhir_codeable_concept` (`codeable_concept_id`),
@@ -2227,7 +2227,7 @@ CREATE TABLE IF NOT EXISTS `spd_scrubbed`.`vhdir_validation` (
   `attestation_id` INT(11) NOT NULL COMMENT 'Information about the entity attesting to information',
   `validator_organization_id` INT(11) NULL DEFAULT NULL COMMENT 'Reference to the organization validating information',
   PRIMARY KEY (`validation_id`),
-  INDEX `fk_vhdir_validation_attestation1_idx` (`attestation_id` ASC) ,,
+  INDEX `fk_vhdir_validation_attestation1_idx` (`attestation_id` ASC) ,
   CONSTRAINT `fk_vhdir_validation_attestation1`
     FOREIGN KEY (`attestation_id`)
     REFERENCES `spd_scrubbed`.`attestation` (`attestation_id`))

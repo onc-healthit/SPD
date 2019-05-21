@@ -21,6 +21,7 @@ public class Geocoding {
 	
 	static public boolean LIMIT_REACHED = false; 
 	static public Connection zipconnection = null;
+	static public boolean DO_GEOCODE_TEST = false;
 
 	static public Connection openConnection() {
 		zipconnection = DatabaseUtil.getZipConnection();
@@ -169,5 +170,20 @@ public class Geocoding {
 		return null;
 	}
 	
-
+    static public void basicTest() {
+    	System.out.println("Running Geocode tests");
+		try {
+			ErrorReport.writeGeoCodeMsg("Geocode Testing", "46224", "", "We know this is valid");
+			Geocoding.geocodePostalCode("46224", null); // We know this is valid;
+			ErrorReport.writeGeoCodeMsg("Geocode Testing", "096030300", "", "We know this is not valid");
+			Geocoding.geocodePostalCode("096030300", null);
+			ErrorReport.writeGeoCodeMsg("Geocode Testing", "96297", "", "We know this is not valid");
+			Geocoding.geocodePostalCode("96297", null);
+		}
+		catch (Exception e) {
+			ErrorReport.writeGeoCodeMsg("Geocode Testing", "", "Geocoding error", e.getMessage());
+			e.printStackTrace();
+		}
+    }
+			
 }

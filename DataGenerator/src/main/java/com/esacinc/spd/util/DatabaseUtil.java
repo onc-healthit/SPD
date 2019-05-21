@@ -16,9 +16,9 @@ public class DatabaseUtil {
 	//public static String dbPassword = "root";
 
 	//public static String connectionUrl = "jdbc:mysql://localhost:3306/spd";
-	public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd";
+	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_scrubbed";
-	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small";
+	public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_small_scrubbed";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium";
 	//public static String connectionUrl = "jdbc:mysql://65.111.255.73:3306/spd_medium_scrubbed";
@@ -29,7 +29,7 @@ public class DatabaseUtil {
 	
 	public DatabaseUtil() { }
 
-	static public Connection getConnection() {
+	static public Connection getConnection() { 
 		// Connect to the DB
 		Connection connection = null;
 		try {
@@ -49,6 +49,7 @@ public class DatabaseUtil {
 	
 	static public Connection getZipConnection() {
 		// Connect to the DB
+		System.out.println("Opening SPD Zipcodes connection to " + zipConnectionUrl);
 		Connection connection = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -94,4 +95,33 @@ public class DatabaseUtil {
 			}
 		}
 	}
+	
+	static public Connection openAllConnections() {
+		System.out.println("Opening SPD Database connection to " + connectionUrl);
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			if (connection == null) {
+				ErrorReport.writeError("Database","", "SPD Schema",  "Unable to open connection to " + connectionUrl);
+			}
+		}
+		catch (Exception e) {
+			ErrorReport.writeError("Database","", "SPD Schema",  e.getMessage());
+		}
+		try {
+			Geocoding.openConnection();  // Open a connection to the zipcode database in case we need it.
+		}
+		catch (Exception e) {
+			// Doesn't matter too much, really, if we can't open a connection to the zipcode db. We seldom need it anyway.
+			ErrorReport.writeError("Database","", "Zipcode Schema",  e.getMessage());
+		}
+		return connection;
+	}
+	
+	static public void closeAllConnections(Connection spdSchemaConnction) {
+		System.out.println("Closing SPD Database connection to " + DatabaseUtil.connectionUrl);
+		closeConnection(spdSchemaConnction);
+		Geocoding.closeConnection();
+	}
+	
 }

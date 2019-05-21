@@ -261,20 +261,22 @@ const spdTelecomModel = spddb.define('telecom', {
 });
 spdTelecomModel.removeAttribute('id');
 
-const spdOrgContactModel = spddb.define('organization_contact', {
-	organization_contact_id: { type: Sequelize.INTEGER,
+const spdContactModel = spddb.define('contact', {
+	contact_id: { type: Sequelize.INTEGER,
 						primaryKey: true },
-	purpose_id: { type: Sequelize.INTEGER },
+	purpose_cc_id: { type: Sequelize.INTEGER },
 	name_id: { type: Sequelize.INTEGER },
 	address_id: { type: Sequelize.INTEGER },
+	insurance_plan_id: { type: Sequelize.INTEGER },
+	network_id: { type: Sequelize.INTEGER },
 	organization_id: { type: Sequelize.INTEGER },
 }, {
 	timestamps: false,
 	underscored: true,
 	freezeTableName: true,
-	tableName: 'organization_contact'	
+	tableName: 'contact'	
 });
-spdOrgContactModel.removeAttribute('id');
+spdContactModel.removeAttribute('id');
 
 const spdNameModel = spddb.define('name', {
 	name_id: { type: Sequelize.INTEGER,
@@ -452,16 +454,16 @@ spdOrgModel.hasMany(spdAddressModel, {foreignKey: 'organization_id', sourceKey: 
 spdAddressModel.belongsTo(spdOrgModel, {foreignKey: 'organization_id', targetKey: 'organization_id'});
 spdOrgModel.hasMany(spdTelecomModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
 spdTelecomModel.belongsTo(spdOrgModel, {foreignKey: 'organization_id', targetKey: 'organization_id'});
-spdOrgModel.hasMany(spdOrgContactModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
-spdOrgContactModel.belongsTo(spdOrgModel, {foreignKey: 'organization_id', targetKey: 'organization_id'});
-spdOrgContactModel.hasOne(spdNameModel, {foreignKey: 'name_id', sourceKey: 'name_id'});
+spdOrgModel.hasMany(spdContactModel, {foreignKey: 'organization_id', sourceKey: 'organization_id'});
+spdContactModel.belongsTo(spdOrgModel, {foreignKey: 'organization_id', targetKey: 'organization_id'});
+spdContactModel.hasOne(spdNameModel, {foreignKey: 'name_id', sourceKey: 'name_id'});
 
 
 
 const Organization = spddb.models.vhdir_organization;
 const Address = spddb.models.address;
 const Telecom = spddb.models.telecom;
-const Contact = spddb.models.organization_contact;
+const Contact = spddb.models.contact;
 const Name = spddb.models.name;
 const Provider = spddb.models.vhdir_practitioner;
 const Network = spddb.models.vhdir_network;

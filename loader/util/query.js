@@ -226,7 +226,7 @@ export const query = {
 					{
 					system: "phone",
 					value: res[0].authorized_official_telephone,
-					organization_contact_id: contactCreated.organization_contact_id,
+					contact_id: contactCreated.contact_id,
 					organization_id: orgCreated.organization_id
 					});
 
@@ -243,7 +243,7 @@ export const query = {
 		var plans = await InsurancePlan.findAll({
 			order: [['PlanMarketingName']],
 			offset: 0, 
-			limit: 500});
+			limit: 20});
 		var currentName = '';
 		for (var i = 0; i < plans.length; i++) {
 			console.log("Plan Name: "+plans[i].PlanMarketingName);
@@ -475,7 +475,7 @@ export const query = {
 	async getNetworks() {
 		var cciioQuery = "SELECT NetworkId, SourceName, IssuerId,"+
 			" NetworkName, StateCode FROM cciio.network"+
-			" WHERE SourceName='HIOS' ";
+			" WHERE SourceName='HIOS' limit 0, 20";
 		var res = await cciiodb.query(cciioQuery, { model: Cciio } );
 		var nwId = '', names = [], owner = null, org = null, orgId = null, orgName = null ;
 		for (var i = 0; i < res.length; i++) {
@@ -635,7 +635,7 @@ export const query = {
 		"order by `Provider Organization Name (Legal Business Name)` , "+
 		"`Provider Other Organization Name`, `Other Provider Identifier_1`, "+
 		"`Provider First Line Business Mailing Address`, "+
-        "`Provider First Line Business Practice Location Address` limit 3900, 10000";
+        "`Provider First Line Business Practice Location Address` limit 0, 20";
 		var res = await npidb.query(npiQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		var lbn = "", olbn = null, oid = null, fmailing = "", floc = "", nameToUse = null;
@@ -703,7 +703,7 @@ export const query = {
 					{
 					system: "phone",
 					value: res[i].authorized_official_telephone,
-					organization_contact_id: contactExisting.organization_contact_id,
+					contact_id: contactExisting.contact_id,
 					organization_id: exist.organization_id
 					});
 				}*/
@@ -872,7 +872,7 @@ export const query = {
 			{
 			system: "phone",
 			value: res[i].authorized_official_telephone,
-			organization_contact_id: contactCreated.organization_contact_id,
+			contact_id: contactCreated.contact_id,
 			organization_id: orgCreated.organization_id
 			});
 			
@@ -938,7 +938,7 @@ export const query = {
 		"`Is Sole Proprietor` as is_sole_proprietor "+
 		"FROM nppes.npi WHERE `Entity Type Code` = 1 "+
 		"order by `Provider Last Name (Legal Name)`, `Provider First Name`, `Provider Middle Name` "+
-		"limit 12000, 2000";
+		"limit 0, 20";
 		var res = await npidb.query(providerQuery, { model: Npi } );
 		//console.log("NPI result: "+JSON.stringify(res));
 		for (var i = 0; i < res.length; i++) {

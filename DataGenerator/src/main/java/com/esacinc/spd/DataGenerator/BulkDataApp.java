@@ -21,7 +21,7 @@ import com.esacinc.spd.model.VhDirCareTeam;
 //import com.esacinc.spd.model.VhDirInsurancePlan;
 //import com.esacinc.spd.model.VhDirHealthcareService;
 //import com.esacinc.spd.model.VhDirOrganizationAffiliation;
-//import com.esacinc.spd.model.VhDirPractitionerRole;
+import com.esacinc.spd.model.VhDirPractitionerRole;
 //import com.esacinc.spd.model.VhDirRestriction;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ErrorReport;
@@ -345,25 +345,25 @@ public class BulkDataApp {
 
 		if (DO_ALL || DO_PRACTITIONERROLES) {
 			ErrorReport.writeInfo("DO_PRACTITIONERROLES","","","");
-			/*
+			
 			try{
 				// Get and write Practitioner Roles
 				System.out.println("Generate Practitioner_Role resources...");
 				BulkPractitionerRoleBuilder prBuilder = new BulkPractitionerRoleBuilder();
-				List<VhDirPractitionerRole> roles = prBuilder.getPractitionerRoles(connection);
-				outputRoleList(roles);  
+				List<VhDirPractitionerRole> practitionerroles = prBuilder.getPractitionerRoles(connection);
+				outputPractitionerRoleList(practitionerroles);  
 			    ErrorReport.setCursor("", "");
-				ErrorReport.writeInfo("","","",String.format("%d Practitioner Roles Collected", roles.size()));
+				ErrorReport.writeInfo("","","",String.format("%d Practitioner Roles Collected", practitionerroles.size()));
 			}	
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERROLES", e.getMessage());
 				e.printStackTrace();
 			}
 			catch (ParseException e) {
-				ErrorReport.writeError("BulkDataApp", "", "Parsse error in DO_PRACTITIONERROLES", e.getMessage());
+				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_PRACTITIONERROLES", e.getMessage());
 				e.printStackTrace();
 			} 
-			*/ 
+			
 		}
 
 		if (DO_ALL || DO_RESTRICTIONS) {
@@ -482,6 +482,49 @@ public class BulkDataApp {
 		catch (NullPointerException e) {
 			ErrorReport.writeError("BulkDataApp", "outputPractitionerList", "null pointer", e.getMessage());
 			System.err.println("NULL POINTER EXCEPTION writing practitioner list: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+	}
+	
+	private static void outputPractitionerRoleList(List<VhDirPractitionerRole>practitionerroles) {
+		FhirContext ctx = FhirContext.forR4();
+		IParser jsonParser = ctx.newJsonParser();
+		int cnt = 0;
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERROLES));
+			BufferedWriter pp_writer = null;
+			if (FILE_PRACTITIONERS_PP != null &&  !FILE_PRACTITIONERS_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERS_PP));
+			}
+			for (VhDirPractitionerRole prac : practitionerroles) {
+				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
+					break;
+				}
+
+				String nwJson = jsonParser.encodeResourceToString(prac);
+				writer.write(nwJson);
+				writer.write("\n");
+
+				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
+				maybePrettyPrintToConsole(prettyJson, cnt, "PRACTITIONER");
+				
+				cnt++;
+			}
+			writer.close();
+			if (pp_writer != null) {
+				pp_writer.close();
+			}
+
+		}
+		catch (IOException e) {
+			ErrorReport.writeError("BulkDataApp", "outputPractitionerRoleList", "IOException", e.getMessage());
+			System.err.println("EXCEPTION writing practitionerrole list: " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (NullPointerException e) {
+			ErrorReport.writeError("BulkDataApp", "outputPractitionerRoleList", "null pointer", e.getMessage());
+			System.err.println("NULL POINTER EXCEPTION writing practitionerrole list: " + e.getMessage());
 			e.printStackTrace();
 		}
 

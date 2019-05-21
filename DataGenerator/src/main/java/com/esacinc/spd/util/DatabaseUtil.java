@@ -29,7 +29,7 @@ public class DatabaseUtil {
 	
 	public DatabaseUtil() { }
 
-	static public Connection getConnection() {
+	static public Connection getConnection() { 
 		// Connect to the DB
 		Connection connection = null;
 		try {

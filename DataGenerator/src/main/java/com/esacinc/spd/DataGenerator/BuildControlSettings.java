@@ -2,6 +2,7 @@ package com.esacinc.spd.DataGenerator;
 
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ErrorReport;
+import com.esacinc.spd.util.Geocoding;
 import com.esacinc.spd.util.PropertiesUtil;
 
 /**
@@ -21,7 +22,6 @@ public class BuildControlSettings {
 	public static int        MAX_ENTRIES =    10;      // Control how many entries we process in each section and output. -1 means ALL. 
 	protected static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
 	protected static int     PP_NTH_CONSOLE = 10;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
-	protected static boolean DO_GEOTEST =     false;     // Run some geocode testing.  Probably always false
 
 	// Which VhDir resources to generate...
 	protected static boolean DO_ALL = false;   // If true, process all resource type, regardless of settings below
@@ -38,7 +38,6 @@ public class BuildControlSettings {
 	protected static boolean DO_ORGANIZATIONAFFILIATIONS = false;
 	// TODO
 	protected static boolean DO_PRACTITIONERROLES = false;
-	
 
 	// Which VhDir resource files to generate...
 	protected static String FILE_ORGANIZATIONS = "Organization.ndjson";
@@ -91,7 +90,6 @@ public class BuildControlSettings {
 			MAX_ENTRIES =    PropertiesUtil.getPropertyInteger("MAX_ENTRIES",MAX_ENTRIES);      
 			MAX_PP_ENTRIES = PropertiesUtil.getPropertyInteger("MAX_PP_ENTRIES",MAX_PP_ENTRIES);   
 			PP_NTH_CONSOLE = PropertiesUtil.getPropertyInteger("PP_NTH_CONSOLE",PP_NTH_CONSOLE);
-			DO_GEOTEST =     PropertiesUtil.getPropertyBoolean("DO_GEOTEST",DO_GEOTEST);
 			
 			// Re-Initialize the variables we use to control what resources we actually process...
 			DO_ALL = PropertiesUtil.getPropertyBoolean("DO_ALL",DO_ALL);
@@ -142,6 +140,10 @@ public class BuildControlSettings {
 	
 			DatabaseUtil.connectionUrl = PropertiesUtil.getPropertyString("connectionUrl", DatabaseUtil.connectionUrl);
 			DatabaseUtil.zipConnectionUrl = PropertiesUtil.getPropertyString("zipConnectionUrl", DatabaseUtil.zipConnectionUrl);
+			
+			// Re-Initialize whether we want to do a couple basic tests of the Geocode function. (Probably we don't.)
+			Geocoding.DO_GEOCODE_TEST =  PropertiesUtil.getPropertyBoolean("DO_GEOTEST",Geocoding.DO_GEOCODE_TEST);
+
 		}
 	}
 

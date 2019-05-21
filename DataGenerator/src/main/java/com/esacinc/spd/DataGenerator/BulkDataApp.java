@@ -49,25 +49,13 @@ public class BulkDataApp extends BuildControlSettings {
 		}
 		ErrorReport.writeMessage("C","Setup","Control Variables", "", "" ,String.format("Process all resource types: %s, Max Entries: %d, Max Pretty Print Entries: %d, Print Nth of each Resource to console: %d", (DO_ALL)?"Yes":"No", MAX_ENTRIES, MAX_PP_ENTRIES, PP_NTH_CONSOLE));
 		ErrorReport.writeMessage("C","Setup","DB Conections", "", "" ,String.format("SPD: %s, ZipCodes: %s, ", DatabaseUtil.connectionUrl, DatabaseUtil.zipConnectionUrl));
-		// Open a connection to the databases that we will use throughout.
-		Connection connection = DatabaseUtil.getConnection();
-		if (connection == null) {
-			return;
-		}
-		Geocoding.openConnection();  // Open a connection to the zipcode database in case we need it.
+		
+		// Open connections to the databases that we will use throughout.
+		Connection connection = DatabaseUtil.openAllConnections();
 
 		// Testing some geocode stuff.
-		if (DO_GEOTEST)
-		{
-			try {
-				Geocoding.geocodePostalCode("46224", null); // We know this is valid;
-				Geocoding.geocodePostalCode("096030300", null);
-				Geocoding.geocodePostalCode("96297", null);
-			}
-			catch (Exception e) {
-				ErrorReport.writeError("Geocode Testing", "", "Geocoding error", e.getMessage());
-				e.printStackTrace();
-			}
+		if (Geocoding.DO_GEOCODE_TEST) {
+			Geocoding.basicTest();
 		}
 		
 		
@@ -324,9 +312,8 @@ public class BulkDataApp extends BuildControlSettings {
 			} 
 		}
 
-		System.out.println("\nClosing SPD Database connection to " + DatabaseUtil.connectionUrl);
-		DatabaseUtil.closeConnection(connection);
-		Geocoding.closeConnection();
+		
+		DatabaseUtil.closeAllConnections(connection);
 		
 		ErrorReport.setCursor("", "");
 		System.out.println("\n\nFHIR Resource generation complete.");

@@ -8,7 +8,7 @@ import java.util.Properties;
 public class PropertiesUtil {
 
 	private static Properties properties = null;
-	public static String PROPERTIES_FILENAME = "SPD_settings.properties";
+	public static String PROPERTIES_FILENAME = "SPD_Settings.properties";
 	
 	public PropertiesUtil() { }
 

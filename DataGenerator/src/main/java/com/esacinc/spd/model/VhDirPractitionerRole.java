@@ -67,6 +67,7 @@ public class VhDirPractitionerRole extends PractitionerRole {
 	/**
 	 * Add the qualification
 	 */
+	
 	@Child(name="qualification", type = {VhDirQualification.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/qualification", definedLocally=false, isModifier=false)
 	@Description(shortDefinition="Qualification for the organization")
@@ -157,7 +158,7 @@ public class VhDirPractitionerRole extends PractitionerRole {
 	    this.networkReference.add(t);
 	    return this;
 	}
-	
+
 	
 	public List<VhDirQualification> getQualification() {
 		return qualification;

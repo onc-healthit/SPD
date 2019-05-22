@@ -8,7 +8,7 @@
   },
   "identifier": [
     {
-      "id": "22",
+      "id": "42",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -16,6 +16,7 @@
         }
       ],
       "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
       "value": "INN001"
     }
   ],
@@ -25,6 +26,371 @@
     "BEST Life and Health National Network",
     "DenteMax",
     "Dentegra PPO"
+  ],
+  "address": [
+    {
+      "id": "82",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "1",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "2",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "44",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN001"
+    }
+  ],
+  "active": true,
+  "name": "DentaQuest USA Insurance Company-LA",
+  "alias": [
+    "DentaQuest USA Insurance Company-LA",
+    "Delta Dental PPO"
+  ],
+  "address": [
+    {
+      "id": "84",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "2",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "3",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "45",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN005"
+    }
+  ],
+  "active": true,
+  "name": "HMO Louisiana HMOPOS Vision Dental",
+  "alias": [
+    "HMO Louisiana HMOPOS Vision Dental"
+  ],
+  "address": [
+    {
+      "id": "85",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "2",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "4",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "46",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN006"
+    }
+  ],
+  "active": true,
+  "name": "Blue Connect Vision Dental",
+  "alias": [
+    "Blue Connect Vision Dental"
+  ],
+  "address": [
+    {
+      "id": "86",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "2",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "5",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "47",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN007"
+    }
+  ],
+  "active": true,
+  "name": "Community Blue Vision Dental",
+  "alias": [
+    "Community Blue Vision Dental"
+  ],
+  "address": [
+    {
+      "id": "87",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "2",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "6",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "49",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN008"
+    }
+  ],
+  "active": true,
+  "name": "Signature Blue Vision Dental",
+  "alias": [
+    "Signature Blue Vision Dental"
+  ],
+  "address": [
+    {
+      "id": "89",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "3",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "7",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "51",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN001"
+    }
+  ],
+  "active": true,
+  "name": "Renaissance Dental",
+  "alias": [
+    "Renaissance Dental",
+    "HumanaDental PPO/Traditional Preferred",
+    "Vantage Tier 1 Network"
+  ],
+  "address": [
+    {
+      "id": "91",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "4",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "8",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "53",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN002"
+    }
+  ],
+  "active": true,
+  "name": "Verity HealthNet Network",
+  "alias": [
+    "Verity HealthNet Network"
+  ],
+  "address": [
+    {
+      "id": "93",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "5",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "9",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "55",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN001"
+    }
+  ],
+  "active": true,
+  "name": "DenteMax",
+  "alias": [
+    "DenteMax",
+    "PDP PLUS",
+    "BEST Life and Health National Network",
+    "DentalGuard Preferred - Individual",
+    "Preferred Care PPO Vision Dental"
+  ],
+  "address": [
+    {
+      "id": "95",
+      "use": "work",
+      "state": "LA"
+    }
+  ],
+  "partOf": {
+    "id": "6",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-network",
+  "id": "10",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "56",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "LAN002"
+    }
+  ],
+  "active": true,
+  "name": "United Concordia Dental",
+  "alias": [
+    "United Concordia Dental"
+  ],
+  "address": [
+    {
+      "id": "96",
+      "use": "work",
+      "state": "MO"
+    }
   ],
   "partOf": {
     "id": "1",

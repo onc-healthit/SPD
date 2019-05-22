@@ -43,6 +43,7 @@ import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
 import com.esacinc.spd.model.VhDirNote;
 import com.esacinc.spd.model.VhDirPrimarySource;
+import com.esacinc.spd.model.VhDirQualification;
 
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
@@ -412,7 +413,7 @@ public class ResourceFactory {
 		VhDirEndpoint ep = new VhDirEndpoint();
 		ep.setId(resultset.getString("endpoint_id"));
 		ep.setRank(new IntegerType(resultset.getInt("rank")));
-		ep.setStatus(EndpointStatus.valueOf(resultset.getString("status")));
+		ep.setStatus(EndpointStatus.fromCode(resultset.getString("status")));
 		ep.setConnectionType(makeCoding(resultset.getString("connectionType"),resultset.getString("connectionType"),"http://terminology.hl7.org/CodeSystem/endpoint-connection-type",false));
 		ep.setName(resultset.getString("name"));
 		ep.setPeriod(makePeriod(resultset.getDate("period_start"),resultset.getDate("period_start")));
@@ -556,8 +557,9 @@ public class ResourceFactory {
 		return ps;
 	}
 
-	public static PractitionerQualificationComponent getQualification(ResultSet resultset, Connection connection) throws SQLException {
+	public static PractitionerQualificationComponent getPractitionerQualification(ResultSet resultset, Connection connection) throws SQLException {
 		PractitionerQualificationComponent qu = new PractitionerQualificationComponent();
+		qu.setId(resultset.getString("qualification_id"));
 		qu.setCode(getCodeableConcept(resultset.getInt("code_cc_id"),connection));
 		qu.setPeriod(makePeriod(resultset.getDate("period_start"),resultset.getDate("period_end")));
 		qu.setIssuer(getResourceReference(resultset.getInt("issuing_organization_id"),connection));
@@ -567,6 +569,28 @@ public class ResourceFactory {
 			qu.addIdentifier(identifier);
 		}
 
+		// TODO add qualification history
+		return qu;
+	}
+
+	public static VhDirQualification getVhDirQualification(ResultSet resultset, Connection connection) throws SQLException {
+		VhDirQualification qu = new VhDirQualification();
+		qu.setId(resultset.getString("qualification_id"));
+		qu.setCode(getCodeableConcept(resultset.getInt("code_cc_id"),connection));
+		qu.setPeriod(makePeriod(resultset.getDate("period_start"),resultset.getDate("period_end")));
+		qu.setIssuer(getResourceReference(resultset.getInt("issuing_organization_id"),connection));
+	    ResultSet identifierResults = DatabaseUtil.runQuery(connection, "SELECT * from identifier where qualification_id = ?", resultset.getInt("qualification_id"));
+		while(identifierResults.next()) {
+			VhDirIdentifier identifier = getIdentifier(identifierResults.getInt("identifier_id"), connection);
+			qu.addIdentifier(identifier);
+		}
+	    ResultSet whereValidResults = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where qualification_where_valid_id = ?", resultset.getInt("qualification_id"));
+		while(whereValidResults.next()) {
+			Reference reference = getResourceReference(whereValidResults.getInt("resource_reference_id"), connection);
+			qu.addWhereValid(reference);
+		}
+		
+		qu.setUrl(resultset.getString("url"));
 		// TODO add qualification history
 		return qu;
 	}

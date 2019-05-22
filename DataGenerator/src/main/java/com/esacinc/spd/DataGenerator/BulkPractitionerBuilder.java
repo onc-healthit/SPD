@@ -107,7 +107,7 @@ public class BulkPractitionerBuilder {
 		else {
 			// Otherwise, let's try to handle the db value in the normal way...
 			try {
-				prac.setGender(AdministrativeGender.valueOf(gender));
+				prac.setGender(AdministrativeGender.fromCode(gender));
 			}
 			catch (IllegalArgumentException e){
 				// If we get an error, then it may just be that the db has "f" or "m" as the gender. At least we can handle that case...
@@ -166,7 +166,7 @@ public class BulkPractitionerBuilder {
 	private void handleQualifications(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
 	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from qualification where practitioner_id = ?", pracId);
 		while(resultset.next()) {
-			PractitionerQualificationComponent qu = ResourceFactory.getQualification(resultset, connection);
+			PractitionerQualificationComponent qu = ResourceFactory.getPractitionerQualification(resultset, connection);
 			prac.addQualification(qu);
 		}
 	}

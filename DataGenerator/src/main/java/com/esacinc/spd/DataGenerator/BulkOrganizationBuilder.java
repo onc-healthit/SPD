@@ -18,6 +18,8 @@ import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.model.VhDirDigitalCertificate;
 import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirOrganization;
+import com.esacinc.spd.model.VhDirPractitionerRole;
+import com.esacinc.spd.model.VhDirQualification;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
@@ -63,6 +65,7 @@ public class BulkOrganizationBuilder {
 				org.addDigitalcertficate(cert);
 			}
 			
+        	handleQualifications(connection, org, orgId);
 			
 			// Handle the identifiers
 			handleIdentifiers(connection, org, orgId);
@@ -239,5 +242,19 @@ public class BulkOrganizationBuilder {
 		}
 	}
 
-
+	/**
+	 * Handles all the elements of the qualifications for Organizations
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleQualifications(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from qualification where organization_id = ?", orgId);
+		while(resultset.next()) {
+			VhDirQualification qu = ResourceFactory.getVhDirQualification(resultset, connection);
+			org.addQualification(qu);
+		}
+	}
 }

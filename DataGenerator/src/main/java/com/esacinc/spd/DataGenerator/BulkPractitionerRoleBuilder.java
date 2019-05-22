@@ -8,15 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
+import org.hl7.fhir.r4.model.Reference;
 
-import com.esacinc.spd.model.VhDirAvailableTime;
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.model.VhDirPractitionerRole;
 import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirNewpatientprofile;
 import com.esacinc.spd.model.VhDirNewpatients;
+import com.esacinc.spd.model.VhDirPractitionerRole;
+import com.esacinc.spd.model.VhDirQualification;
+import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.util.ContactFactory;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.DigitalCertificateFactory;
@@ -64,8 +65,14 @@ public class BulkPractitionerRoleBuilder {
 
 			// Handle the restrictions
          	handleRestrictions(connection, pr, prId);
+         	
+         	handleQualifications(connection, pr, prId);
 
          	handleNewPatients(connection, pr, prId);
+
+         	handleNetworks(connection, pr, prId);
+
+         	handleNewPatientProfiles(connection, pr, prId);
 
          	handleIdentifiers(connection, pr, prId);
 
@@ -95,6 +102,39 @@ public class BulkPractitionerRoleBuilder {
 	}
 
 	
+	/**
+	 * Handles all the  Neetwork references  for PractitionerRoles
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleNetworks(Connection connection, VhDirPractitionerRole pr, int prId) throws SQLException {
+		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from vhdir_network where practitioner_role_id = ?", prId);
+		// TODO PractitionerRole networks shoujld really be resource references, but the model points directlyt to networks.
+		// So, we'll just make a resource reference from the network ids
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("network_id"),"VhDirNetwork", null, "Provider Network" );
+			pr.addLocation(ref);
+		}
+	}
+
+	/**
+	 * Handles all the elements of the new patient specs  for Locations
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleNewPatientProfiles(Connection connection, VhDirPractitionerRole pr, int prId) throws SQLException {
+		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from new_patient_profile where practitioner_role_id = ?", prId);
+		while(resultset.next()) {
+			VhDirNewpatientprofile np = ResourceFactory.getNewPatientprofile(resultset);
+			pr.addNewpatientprofile(np);
+		}
+	}
 
 	/**
 	 * Handles all the  Specialties  for PractitionerRoles
@@ -160,9 +200,11 @@ public class BulkPractitionerRoleBuilder {
 	 * @throws SQLException
 	 */
 	private void handleLocations(Connection connection, VhDirPractitionerRole pr, int prId) throws SQLException {
-		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from resource_reference where practitioner_role_location_id = ?", prId);
+		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from vhdir_location where practitioner_role_id = ?", prId);
+		// TODO PractitionerRole networks shoujld really be resource references, but the model points directlyt to networks.
+		// So, we'll just make a resource reference from the network ids
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
+			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("location_id"),"VhDirLocation", null, "Location" );
 			pr.addLocation(ref);
 		}
 	}
@@ -177,9 +219,11 @@ public class BulkPractitionerRoleBuilder {
 	 */
 	private void handleHealthcareServices(Connection connection, VhDirPractitionerRole pr, int prId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from vhdir_healthcare_service where practitioner_role_id = ?", prId);
+		// TODO PractitionerRole networks shoujld really be resource references, but the model points directlyt to networks.
+		// So, we'll just make a resource reference from the network ids
 		while(resultset.next()) {
-			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
-			pr.addLocation(ref);
+			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("healthcare_service_id"),"VhDirHealthcareService", null, "Healthcare Service" );
+			pr.addHealthcareService(ref);
 		}
 	}
 	
@@ -280,4 +324,21 @@ public class BulkPractitionerRoleBuilder {
 			pr.addEndpoint(ref);
 		}
 	}
+	
+	/**
+	 * Handles all the elements of the qualifications for PractitionerRoless
+	 * 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleQualifications(Connection connection, VhDirPractitionerRole pr, int prId) throws SQLException {
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from qualification where practitioner_role_id = ?", prId);
+		while(resultset.next()) {
+			VhDirQualification qu = ResourceFactory.getVhDirQualification(resultset, connection);
+			pr.addQualification(qu);
+		}
+	}
+
 }

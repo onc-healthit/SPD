@@ -8,7 +8,7 @@
   },
   "identifier": [
     {
-      "id": "38",
+      "id": "58",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -16,10 +16,11 @@
         }
       ],
       "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
       "value": "32225MT0080003-01"
     },
     {
-      "id": "39",
+      "id": "59",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -27,10 +28,11 @@
         }
       ],
       "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
       "value": "32225MT0120003-00"
     },
     {
-      "id": "40",
+      "id": "60",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -38,10 +40,11 @@
         }
       ],
       "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
       "value": "32225MT0120003-01"
     },
     {
-      "id": "41",
+      "id": "61",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -49,10 +52,11 @@
         }
       ],
       "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
       "value": "32225MT0080003-03"
     },
     {
-      "id": "42",
+      "id": "62",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -60,10 +64,11 @@
         }
       ],
       "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
       "value": "32225MT0080003-00"
     },
     {
-      "id": "43",
+      "id": "63",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -71,6 +76,7 @@
         }
       ],
       "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
       "value": "32225MT0080003-02"
     }
   ],
@@ -79,5 +85,652 @@
   "period": {
     "start": "2019-01-01T00:00:00-07:00",
     "end": "2019-12-31T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "2",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "64",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080004-01"
+    },
+    {
+      "id": "65",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080004-00"
+    },
+    {
+      "id": "66",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080004-02"
+    },
+    {
+      "id": "67",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120004-00"
+    },
+    {
+      "id": "68",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080004-03"
+    },
+    {
+      "id": "69",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120004-01"
+    }
+  ],
+  "status": "active",
+  "name": "Access Care Bronze Plus",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00",
+    "end": "2019-12-31T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "3",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "70",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120005-01"
+    },
+    {
+      "id": "71",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120005-00"
+    },
+    {
+      "id": "72",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080005-00"
+    },
+    {
+      "id": "73",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080005-01"
+    },
+    {
+      "id": "74",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080005-02"
+    },
+    {
+      "id": "75",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080005-03"
+    }
+  ],
+  "status": "active",
+  "name": "Access Care Expanded Bronze",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00",
+    "end": "2019-12-31T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "4",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "76",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080001-00"
+    },
+    {
+      "id": "77",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080001-01"
+    },
+    {
+      "id": "351",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120001-00"
+    },
+    {
+      "id": "352",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080001-02"
+    },
+    {
+      "id": "353",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080001-03"
+    },
+    {
+      "id": "354",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120001-01"
+    }
+  ],
+  "status": "active",
+  "name": "Access Care Gold",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00",
+    "end": "2019-12-31T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "5",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "status": "active",
+  "name": "Access Care Gold",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00",
+    "end": "2019-12-31T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "6",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "355",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120002-01"
+    },
+    {
+      "id": "356",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080002-04"
+    },
+    {
+      "id": "357",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080002-05"
+    },
+    {
+      "id": "358",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080002-06"
+    },
+    {
+      "id": "359",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080002-02"
+    },
+    {
+      "id": "360",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080002-03"
+    },
+    {
+      "id": "361",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0120002-00"
+    },
+    {
+      "id": "362",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080002-00"
+    },
+    {
+      "id": "363",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "32225MT0080002-01"
+    }
+  ],
+  "status": "active",
+  "name": "Access Care Silver",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00",
+    "end": "2019-12-31T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "7",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "7",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "365",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300001-00"
+    },
+    {
+      "id": "366",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300001-01"
+    }
+  ],
+  "status": "active",
+  "name": "Advantage EPO Gold 100  $25/$45",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "34",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "34",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "8",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "367",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300003-00"
+    },
+    {
+      "id": "368",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300003-01"
+    }
+  ],
+  "status": "active",
+  "name": "Advantage EPO Gold 100/80",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "34",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "34",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "9",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "369",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300007-00"
+    },
+    {
+      "id": "370",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300007-01"
+    }
+  ],
+  "status": "active",
+  "name": "Advantage EPO HSA Bronze 100 Compatible",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "34",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "34",
+    "type": "vhdir_organization"
+  }
+}
+{
+  "resourceType": "vhdir-insuranceplan",
+  "id": "10",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan"
+    ]
+  },
+  "identifier": [
+    {
+      "id": "371",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300004-00"
+    },
+    {
+      "id": "372",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "91661NJ2300004-01"
+    }
+  ],
+  "status": "active",
+  "name": "Advantage EPO Silver 100/70",
+  "period": {
+    "start": "2019-01-01T00:00:00-07:00"
+  },
+  "ownedBy": {
+    "id": "34",
+    "type": "vhdir_organization"
+  },
+  "administeredBy": {
+    "id": "34",
+    "type": "vhdir_organization"
   }
 }

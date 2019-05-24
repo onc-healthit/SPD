@@ -387,6 +387,68 @@ const spdInsurancePlanModel = spddb.define('vhdir_insurance_plan', {
 });
 spdInsurancePlanModel.removeAttribute('id');
 
+const spdHealthcareSvcModel = spddb.define('vhdir_healthcare_service', {
+	healthcare_service_id: { type: Sequelize.INTEGER,
+				primaryKey: true},
+	meta_data_id: { type: Sequelize.INTEGER },
+	active: { type: Sequelize.STRING },
+	comment: { type: Sequelize.STRING },
+	extra_details: { type: Sequelize.STRING },
+	photo: { type: Sequelize.STRING },
+	appointment_required: { type: Sequelize.STRING },
+	availability_exceptions: { type: Sequelize.STRING },
+	provided_by_organization_id: { type: Sequelize.INTEGER },
+	practitioner_role_id: { type: Sequelize.INTEGER },
+	organization_affiliation_id: { type: Sequelize.INTEGER },
+	careteam_id: { type: Sequelize.INTEGER },
+	name: { type: Sequelize.STRING },
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'vhdir_insurance_plan'	
+});
+spdHealthcareSvcModel.removeAttribute('id');
+
+const spdRestrictionModel = spddb.define('vhdir_restriction', {
+	restriction_id,: { type: Sequelize.INTEGER,
+				primaryKey: true } 
+	meta_data_id: { type: Sequelize.INTEGER }, 
+	status: { type: Sequelize.STRING }, 
+	scope_cc_id: { type: Sequelize.INTEGER }, 
+	date_time: { type: Sequelize.DATE }, 
+	provision_id: { type: Sequelize.INTEGER },
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'vhdir_restriction'	
+});
+spdRestrictionModel.removeAttribute('id');
+
+const spdValidationModel = spddb.define('vhdir_validation', {
+	validation_id,: { type: Sequelize.INTEGER,
+				primaryKey: true } 
+	meta_data_id: { type: Sequelize.INTEGER },
+	need_cc_id: { type: Sequelize.INTEGER },
+	target_location: { type: Sequelize.STRING },
+	status: { type: Sequelize.STRING },
+	status_date: { type: Sequelize.DATE },
+	validation_type_cc_id: { type: Sequelize.INTEGER },
+	frequency: { type: Sequelize.STRING },
+	last_performed: { type: Sequelize.DATE },
+	next_scheduled: { type: Sequelize.DATE },
+	failure_action_cc_id: { type: Sequelize.INTEGER },
+	attestation_id: { type: Sequelize.INTEGER },
+	validator_organization_id: { type: Sequelize.INTEGE },
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'vhdir_validation'	
+});
+spdValidationModel.removeAttribute('id');
+
 const spdOrgAliasModel = spddb.define('organization_alias', {
   organization_alias_id: { type: Sequelize.INTEGER,
 				primaryKey: true},
@@ -470,9 +532,12 @@ const Network = spddb.models.vhdir_network;
 const Identifier = spddb.models.identifier;
 const Reference = spddb.models.resource_reference;
 const SpdInsurancePlan = spddb.models.vhdir_insurance_plan;
+const spdHealthcareSvc = spddb.models.vhdir_healthcare_service
+const SpdRestriction = spddb.models.vhdir_restriction;
+const SpdValidation = spddb.models.vhdir_validation;
 const OrgAlias = spddb.models.organization_alias;
 const ProviderRole = spddb.models.vhdir_practitioner_role;
 const FhirCodeableConcept = spddb.models.fhir_codeable_concept
 
 
-export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias, ProviderRole, FhirCodeableConcept};
+export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias, ProviderRole, FhirCodeableConcept, spdHealthcareSvc, SpdRestriction, SpdValidation};

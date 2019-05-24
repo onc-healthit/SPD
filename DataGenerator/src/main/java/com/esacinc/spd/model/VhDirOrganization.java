@@ -40,10 +40,10 @@ public class VhDirOrganization extends Organization {
 	/**
 	 * Add the qualification
 	 */
-	//@Child(name="qualification", type = {VhDirQualification.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
-	//@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/qualification", definedLocally=false, isModifier=false)
-	//@Description(shortDefinition="Qualification for the organization")
-	//private List<VhDirQualification> qualification;
+	@Child(name="qualification", type = {VhDirQualification.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/qualification", definedLocally=false, isModifier=false)
+	@Description(shortDefinition="Qualification for the organization")
+	private List<VhDirQualification> qualification;
 	
      
     /**
@@ -108,7 +108,6 @@ public class VhDirOrganization extends Organization {
 	    return this;
 	}
 
-	/*
 	public List<VhDirQualification> getQualification() {
 		return qualification;
 	}
@@ -125,7 +124,7 @@ public class VhDirOrganization extends Organization {
 	    this.qualification.add(t);
 	    return this;
 	}
-*/
+
 
 	
 	   

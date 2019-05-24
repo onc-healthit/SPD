@@ -10,6 +10,10 @@ import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.HealthcareService.DaysOfWeek;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
+import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
+import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
+
 import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.TimeType;
@@ -265,6 +269,23 @@ public class ContactFactory {
 		at.setId(resultset.getString("available_time_id"));
 		return at;
 	}
+	
+	/**
+	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * @param resultset
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	static public PractitionerRoleAvailableTimeComponent getPractitionerRoleAvailableTime(ResultSet resultset) throws SQLException {
+		PractitionerRoleAvailableTimeComponent at = _makePRAvailableTime(resultset.getString("days_of_week"),
+				                                                        resultset.getBoolean("all_day"),
+				                                                        resultset.getString("available_start_time"),
+				                                                        resultset.getString("available_end_time"));
+		// makeAvailableTime only sets the data elements, not the id.
+		at.setId(resultset.getString("available_time_id"));
+		return at;
+	}
 
 	/**
 	 * Get a VhDirAvailableTime from a resultsetat current cursor
@@ -275,6 +296,22 @@ public class ContactFactory {
 	 */
 	static public HealthcareServiceNotAvailableComponent getNotAvailableTime(ResultSet resultset) throws SQLException {
 		HealthcareServiceNotAvailableComponent nat =new HealthcareServiceNotAvailableComponent();
+		nat.setId(resultset.getString("unavailable_time_id"));
+		nat.setDescription(resultset.getString("description"));
+		Period per = ResourceFactory.makePeriod(resultset.getDate("during_start_time"), resultset.getDate("during_end_time"));
+		nat.setDuring(per);
+		return nat;
+	}
+	
+	/**
+	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * @param resultset
+	 * @param connection
+	 * @return
+	 * @throws SQLException
+	 */
+	static public PractitionerRoleNotAvailableComponent getPRNotAvailableTime(ResultSet resultset) throws SQLException {
+		PractitionerRoleNotAvailableComponent nat =new PractitionerRoleNotAvailableComponent();
 		nat.setId(resultset.getString("unavailable_time_id"));
 		nat.setDescription(resultset.getString("description"));
 		Period per = ResourceFactory.makePeriod(resultset.getDate("during_start_time"), resultset.getDate("during_end_time"));
@@ -303,6 +340,31 @@ public class ContactFactory {
 			for (String d : days) {
 				try {
 					at.addDaysOfWeek(DaysOfWeek.fromCode(d));
+				}
+				catch (Exception e){
+					// Bad day value. Don't do anything.
+					System.err.println("Bad Day of Week value: " + d + " in getAvailableTime");
+					System.err.println("   " + e.getMessage());
+					ErrorReport.writeWarning("AvailableTime", "" , "Bad day of week value in: " + daysString, e.getMessage());
+
+				}
+			}
+		}
+		return at;
+	}
+	
+	static public PractitionerRoleAvailableTimeComponent _makePRAvailableTime(String daysString, boolean allDay, String startTime, String endTime) {
+		PractitionerRoleAvailableTimeComponent at =new PractitionerRoleAvailableTimeComponent();
+		at.setAllDay(allDay);
+		if (!at.getAllDay()) {
+			at.setAvailableStartTime(startTime);
+			at.setAvailableEndTime(endTime);
+		}
+		if (daysString != null && !daysString.isEmpty()) {
+			String[] days = daysString.split(";");
+			for (String d : days) {
+				try {
+					at.addDaysOfWeek(PractitionerRole.DaysOfWeek.fromCode(d));
 				}
 				catch (Exception e){
 					// Bad day value. Don't do anything.

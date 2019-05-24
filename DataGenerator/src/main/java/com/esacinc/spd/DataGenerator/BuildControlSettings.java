@@ -14,19 +14,19 @@ import com.esacinc.spd.util.PropertiesUtil;
  */
 public class BuildControlSettings {
 
-	protected static boolean RE_INITIALIZE = false;
+	protected static boolean RE_INITIALIZE = true;
 	
 	// Database connection and querying are handled in DatabaseUtils.java
 	
-	protected static boolean DO_REPORTING =   false;   // false means no error report file generated.
-	public static int        MAX_ENTRIES =    10;      // Control how many entries we process in each section and output. -1 means ALL. 
+	protected static boolean DO_REPORTING =   true;   // false means no error report file generated.
+	public static int        MAX_ENTRIES =    5;      // Control how many entries we process in each section and output. -1 means ALL. 
 	protected static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
-	protected static int     PP_NTH_CONSOLE = 10;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
+	protected static int     PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
 	// Which VhDir resources to generate...
 	protected static boolean DO_ALL = false;   // If true, process all resource type, regardless of settings below
 	protected static boolean DO_ORGANIZATIONS = false;
-	protected static boolean DO_PRACTITIONERS = false;
+	protected static boolean DO_PRACTITIONERS = true;
 	protected static boolean DO_NETWORKS = false;
 	protected static boolean DO_LOCATIONS = false;
 	protected static boolean DO_VALIDATIONS = false;
@@ -36,8 +36,7 @@ public class BuildControlSettings {
 	protected static boolean DO_INSURANCEPLANS = false;
 	protected static boolean DO_RESTRICTIONS = false;
 	protected static boolean DO_ORGANIZATIONAFFILIATIONS = false;
-	// TODO
-	protected static boolean DO_PRACTITIONERROLES = false;
+	protected static boolean DO_PRACTITIONERROLES = true;
 
 	// Which VhDir resource files to generate...
 	protected static String FILE_ORGANIZATIONS = "Organization.ndjson";

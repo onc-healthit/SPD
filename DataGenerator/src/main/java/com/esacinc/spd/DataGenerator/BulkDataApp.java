@@ -424,8 +424,8 @@ public class BulkDataApp extends BuildControlSettings {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERROLES));
 			BufferedWriter pp_writer = null;
-			if (FILE_PRACTITIONERS_PP != null &&  !FILE_PRACTITIONERS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERS_PP));
+			if (FILE_PRACTITIONERROLES_PP != null &&  !FILE_PRACTITIONERROLES_PP.isEmpty()){
+				pp_writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERROLES_PP));
 			}
 			for (VhDirPractitionerRole prac : practitionerroles) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -437,7 +437,7 @@ public class BulkDataApp extends BuildControlSettings {
 				writer.write("\n");
 
 				String prettyJson = maybePrettyPrintToFile(pp_writer, nwJson, cnt ); // Note: returns pretty print version of input json
-				maybePrettyPrintToConsole(prettyJson, cnt, "PRACTITIONER");
+				maybePrettyPrintToConsole(prettyJson, cnt, "PRACTITIONER ROLE");
 				
 				cnt++;
 			}

@@ -1,41 +1,14 @@
 MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
-C |Setup |ErrorReport | | |Generation Time: Tue May 21 18:43:35 MDT 2019
+C |Setup |ErrorReport | | |Generation Time: Wed May 29 10:01:16 MDT 2019
 C |Setup |Control Variables | | |Build Control variables re-initialized from properties in file: SPD_Settings.properties 
-C |Setup |Control Variables | | |Process all resource types: Yes, Max Entries: -1, Max Pretty Print Entries: 10, Print Nth of each Resource to console: 0
+C |Setup |Control Variables | | |Process all resource types: No, Max Entries: 1, Max Pretty Print Entries: 10, Print Nth of each Resource to console: 0
 C |Setup |DB Conections | | |SPD: jdbc:mysql://65.111.255.73:3306/spd_small, ZipCodes: jdbc:mysql://65.111.255.73:3306/zipcode, 
 I |  |DO_ORGANIZATIONS | | |
-I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Thu May 21 18:43:37 MDT 2020
-I |VhDirOrganization(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Thu May 21 18:43:38 MDT 2020
-I |VhDirOrganization(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Thu May 21 18:43:38 MDT 2020
-G |VhDirOrganization(id: 131)  |VhDirGeoLocation |postalCode: 6002 |Invalid postal code |Must be at least 5 characters. Unable to geolocate
-G |VhDirOrganization(id: 139)  |VhDirGeoLocation |postalCode: 2129 |Invalid postal code |Must be at least 5 characters. Unable to geolocate
-G |VhDirOrganization(id: 154)  |VhDirGeoLocation |postalCode: 7105 |Invalid postal code |Must be at least 5 characters. Unable to geolocate
-I |  | | | |157 Organizations Collected
-I |  |DO_PRACTITIONERS | | |
-I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Thu May 21 18:45:26 MDT 2020
-I |VhDirPractitioner(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Thu May 21 18:45:26 MDT 2020
-I |VhDirPractitioner(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Thu May 21 18:45:27 MDT 2020
-I |  | | | |120 Practitioners Collected
-I |  |DO_NETWORKS | | |
-I |  | | | |57 Networks Collected
-I |  |DO_LOCATIONS | | |
-I |  | | | |0 Locations Collected
-I |  |DO_VALIDATIONS | | |
-I |  | | | |0 Validations Collected
-I |  |DO_ENDPOINTS | | |
-I |  | | | |0 Endpoints Collected
-I |  |DO_CARETEAMS | | |
-I |  | | | |0 CareTeams Collected
-I |  |DO_HEALTHCARESERVICES | | |
-I |  | | | |0 Healthcare Services Collected
-I |  |DO_INSURANCEPLANS | | |
-I |  | | | |14 Insurance Plans Collected
+I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Fri May 29 10:01:18 MDT 2020
+I |  | | | |1 Organizations Collected
 I |  |DO_ORGANIZATIONAFFILIATIONS | | |
 I |  | | | |0 Organization Affiliations Collected
 I |  |DO_PRACTITIONERROLES | | |
-I |VhDirPractitionerRole(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Thu May 21 18:49:24 MDT 2020
-I |VhDirPractitionerRole(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Thu May 21 18:49:25 MDT 2020
-I |  | | | |2 Practitioner Roles Collected
-I |  |DO_RESTRICTIONS | | |
-I |  | | | |0 Restrictions Collected
-I |  |END | | |Wrote 0 error, 0 warning, 3 geocode, and 32 info messages
+I |VhDirPractitionerRole(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Fri May 29 10:01:20 MDT 2020
+I |  | | | |1 Practitioner Roles Collected
+I |  |END | | |Wrote 0 error, 0 warning, 0 geocode, and 8 info messages

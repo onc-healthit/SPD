@@ -1,13 +1,12 @@
 package com.esacinc.spd.model;
 
-import java.util.List;
-
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultPrimarySourceComponent;
-
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
 import ca.uhn.fhir.model.api.annotation.Description;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultPrimarySourceComponent;
+
+import java.util.List;
 
 @DatatypeDef(name="vhdir-primarysource")
 public class VhDirPrimarySource extends VerificationResultPrimarySourceComponent {

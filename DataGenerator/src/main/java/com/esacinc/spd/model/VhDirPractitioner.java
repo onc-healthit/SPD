@@ -1,15 +1,15 @@
 package com.esacinc.spd.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hl7.fhir.r4.model.Practitioner;
-import org.hl7.fhir.r4.model.Reference;
-
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import org.hl7.fhir.r4.model.Practitioner;
+import org.hl7.fhir.r4.model.Reference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
    The VhDirPractioner profile extends the base FHIR Practitioner resource.
@@ -34,7 +34,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 */
 
 @ResourceDef(name="vhdir-practitioner", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-Practitioner")
-public class VhDirPractitioner extends Practitioner { 
+public class VhDirPractitioner extends Practitioner implements IDigitalCertificate {
 	private static final long serialVersionUID = 1L;
     
 

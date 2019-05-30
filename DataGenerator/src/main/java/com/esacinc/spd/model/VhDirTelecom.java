@@ -1,25 +1,25 @@
 package com.esacinc.spd.model;
 
+import ca.uhn.fhir.model.api.annotation.Child;
+import ca.uhn.fhir.model.api.annotation.DatatypeDef;
+import ca.uhn.fhir.model.api.annotation.Description;
+import ca.uhn.fhir.model.api.annotation.Extension;
+import ca.uhn.fhir.util.ElementUtil;
+import com.esacinc.spd.model.complex_extensions.IAvailableTime;
+import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.Reference;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.ContactPoint;
-import org.hl7.fhir.r4.model.Reference;
-import ca.uhn.fhir.model.api.annotation.Child;
-import ca.uhn.fhir.model.api.annotation.Description;
-import ca.uhn.fhir.model.api.annotation.Extension;
-import ca.uhn.fhir.model.api.annotation.DatatypeDef;
-
-import ca.uhn.fhir.util.ElementUtil;
-
 @DatatypeDef(name="vhdir-telecom")
-public class VhDirTelecom extends ContactPoint {
+public class VhDirTelecom extends ContactPoint implements IAvailableTime {
 	private static final long serialVersionUID = 1L;
     
 	/**
 	 * Add the contactpoint-viaintermediary extension
 	 */
-	@Child(name="viaintermediary", type = {Reference.class})
+	@Child(name="viaintermediary")
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-viaintermediary", definedLocally=false, isModifier=false)
     @Description(shortDefinition="intermediary for contact")
     protected Reference viaintermediary;
@@ -28,8 +28,8 @@ public class VhDirTelecom extends ContactPoint {
 	/**
 	 * Add the contact point available time
 	 */
-    @Child(name = "availabletime", type = {VhDirAvailableTime.class}, order=2, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=false)
-	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime", definedLocally=false, isModifier=false)
+    @Child(name = "availabletime", order=2, min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=false)
+	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime", definedLocally=true, isModifier=false)
     @Description(shortDefinition="A contact detail for the organization", formalDefinition="A contact detail for the organization." )
     protected List<VhDirAvailableTime> availabletime;
 	
@@ -70,5 +70,5 @@ public class VhDirTelecom extends ContactPoint {
     public boolean isEmpty() {
         return super.isEmpty() && ElementUtil.isEmpty(viaintermediary, availabletime);
     }
-    
+
 }

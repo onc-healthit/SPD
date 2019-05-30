@@ -1,8 +1,7 @@
 package com.esacinc.spd.model;
 
-import org.hl7.fhir.r4.model.Extension;
-
 import ca.uhn.fhir.model.api.annotation.DatatypeDef;
+import org.hl7.fhir.r4.model.Extension;
 
 
 @DatatypeDef(name="vhdir-newpatientprofile")

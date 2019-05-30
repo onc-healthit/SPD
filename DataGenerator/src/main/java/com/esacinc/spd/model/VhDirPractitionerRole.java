@@ -1,24 +1,26 @@
 package com.esacinc.spd.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hl7.fhir.r4.model.Element;
-import org.hl7.fhir.r4.model.PractitionerRole;
-import org.hl7.fhir.r4.model.Reference;
-
-
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import org.hl7.fhir.r4.model.Element;
+import org.hl7.fhir.r4.model.PractitionerRole;
+import org.hl7.fhir.r4.model.Reference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 
 */
 
 @ResourceDef(name="vhdir-practitionerrole", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-practitionerrole")
-public class VhDirPractitionerRole extends PractitionerRole { 
+public class VhDirPractitionerRole extends PractitionerRole
+		implements IDigitalCertificate, IQualification, INewPatients {
 	private static final long serialVersionUID = 1L;
     
 
@@ -46,7 +48,7 @@ public class VhDirPractitionerRole extends PractitionerRole {
     @Child(name = "newpatients", type = {Element.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients", definedLocally=false, isModifier=false)
     @Description(shortDefinition="Whether the location is accepting new patients", formalDefinition="Whether the location is accepting new patients" )
-    protected List<VhDirNewpatients> newpatients;
+    protected List<VhDirNewPatients> newpatients;
     
     /**
      * A list of new patient profile strings
@@ -91,19 +93,19 @@ public class VhDirPractitionerRole extends PractitionerRole {
 	}
 
 
-	public List<VhDirNewpatients> getNewpatients() {
+	public List<VhDirNewPatients> getNewpatients() {
 		return newpatients;
 	}
 
-	public void setNewpatients(List<VhDirNewpatients> val) {
+	public void setNewpatients(List<VhDirNewPatients> val) {
 		this.newpatients = val;
 	}
 	
-	public VhDirPractitionerRole addNewpatients(VhDirNewpatients t) {
+	public VhDirPractitionerRole addNewpatients(VhDirNewPatients t) {
 	    if (t == null)
 	      return this;
 	    if (this.newpatients == null)
-	      this.newpatients = new ArrayList<VhDirNewpatients>();
+	      this.newpatients = new ArrayList<VhDirNewPatients>();
 	    this.newpatients.add(t);
 	    return this;
 	}

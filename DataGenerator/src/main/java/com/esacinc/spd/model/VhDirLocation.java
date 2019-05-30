@@ -3,6 +3,8 @@ package com.esacinc.spd.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.esacinc.spd.model.complex_extensions.IEhr;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Element;
 import org.hl7.fhir.r4.model.Location;
@@ -19,7 +21,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 */
 
 @ResourceDef(name="vhdir-location", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location")
-public class VhDirLocation extends Location { 
+public class VhDirLocation extends Location implements INewPatients, IEhr {
 	private static final long serialVersionUID = 1L;
     
 
@@ -54,7 +56,7 @@ public class VhDirLocation extends Location {
     @Child(name = "newpatients", type = {Element.class},  min=0, max=Child.MAX_UNLIMITED, modifier=false, summary=true)
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients", definedLocally=false, isModifier=false)
     @Description(shortDefinition="Whether the location is accepting new patients", formalDefinition="Whether the location is accepting new patients" )
-    protected List<VhDirNewpatients> newpatients;
+    protected List<VhDirNewPatients> newpatients;
 
 	/**
      * A list of new patient profile strings
@@ -121,19 +123,19 @@ public class VhDirLocation extends Location {
 	    return this;
 	}
 
-	public List<VhDirNewpatients> getNewpatients() {
+	public List<VhDirNewPatients> getNewpatients() {
 		return newpatients;
 	}
 
-	public void setNewpatients(List<VhDirNewpatients> val) {
+	public void setNewpatients(List<VhDirNewPatients> val) {
 		this.newpatients = val;
 	}
 	
-	public VhDirLocation addNewpatients(VhDirNewpatients t) {
+	public VhDirLocation addNewpatients(VhDirNewPatients t) {
 	    if (t == null)
 	      return this;
 	    if (this.newpatients == null)
-	      this.newpatients = new ArrayList<VhDirNewpatients>();
+	      this.newpatients = new ArrayList<VhDirNewPatients>();
 	    this.newpatients.add(t);
 	    return this;
 	}

@@ -1,26 +1,24 @@
 package com.esacinc.spd.util;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import com.esacinc.spd.model.VhDirContact;
+import com.esacinc.spd.model.VhDirTelecom;
+import com.esacinc.spd.model.complex_extensions.IAvailableTime;
 import org.hl7.fhir.r4.model.CodeType;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.r4.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.r4.model.HealthcareService.DaysOfWeek;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
 import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
+import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.PractitionerRole;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
-
-import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
-import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.TimeType;
 
-import com.esacinc.spd.model.VhDirAvailableTime;
-import com.esacinc.spd.model.VhDirContact;
-import com.esacinc.spd.model.VhDirTelecom;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * This class has static public methods for contacts and telecoms (extended from HAPI contactPoints) from the database.
@@ -48,7 +46,7 @@ import com.esacinc.spd.model.VhDirTelecom;
  * @author dandonahue
  *
  */
-public class ContactFactory {
+public class ContactFactory implements IAvailableTime {
 
 	
 	public ContactFactory() { }
@@ -110,11 +108,11 @@ public class ContactFactory {
 		// viaIntermediary - resource reference (extension)
 		telecom.setViaintermediary(ResourceFactory.getResourceReference(resultset.getInt("contactpoint_intermediary"),connection));
 		
-		// Available times -  list of VhDirAvailableTime (extension)
+		// Available times -  list of VhDirTelecom.VhDirAvailableTime (extension)
 		if (connection != null) {
 			ResultSet timesResultset = DatabaseUtil.runQuery(connection,"select * from available_time where telecom_id = ?", resultset.getInt("telecom_id"));
 			while (timesResultset.next()) {
-				VhDirAvailableTime available = makeAvailableTime(timesResultset.getString("days_of_week"),
+				VhDirTelecom.VhDirAvailableTime available = makeAvailableTime(timesResultset.getString("days_of_week"),
 						timesResultset.getBoolean("all_day"),
 						timesResultset.getString("available_start_time"),
 						timesResultset.getString("available_end_time"));
@@ -213,8 +211,8 @@ public class ContactFactory {
     // AVAILABLE TIMES  &  NOT AVAILABLE TIMES
 	//-------------------------------------------------------------------------------------------------------------
 
-	static public VhDirAvailableTime getAvailableTime(ResultSet resultset) throws SQLException {
-		VhDirAvailableTime available = makeAvailableTime(resultset.getString("days_of_week"),
+	static public VhDirTelecom.VhDirAvailableTime getAvailableTime(ResultSet resultset) throws SQLException {
+		VhDirTelecom.VhDirAvailableTime available = makeAvailableTime(resultset.getString("days_of_week"),
 				resultset.getBoolean("all_day"),
 				resultset.getString("available_start_time"),
 				resultset.getString("available_end_time"));
@@ -254,7 +252,7 @@ public class ContactFactory {
 	}
 
 	/**
-	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * Get a VhDirTelecom.VhDirAvailableTime from a resultsetat current cursor
 	 * @param resultset
 	 * @param connection
 	 * @return
@@ -271,7 +269,7 @@ public class ContactFactory {
 	}
 	
 	/**
-	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * Get a VhDirTelecom.VhDirAvailableTime from a resultsetat current cursor
 	 * @param resultset
 	 * @param connection
 	 * @return
@@ -288,7 +286,7 @@ public class ContactFactory {
 	}
 
 	/**
-	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * Get a VhDirTelecom.VhDirAvailableTime from a resultsetat current cursor
 	 * @param resultset
 	 * @param connection
 	 * @return
@@ -304,7 +302,7 @@ public class ContactFactory {
 	}
 	
 	/**
-	 * Get a VhDirAvailableTime from a resultsetat current cursor
+	 * Get a VhDirTelecom.VhDirAvailableTime from a resultsetat current cursor
 	 * @param resultset
 	 * @param connection
 	 * @return

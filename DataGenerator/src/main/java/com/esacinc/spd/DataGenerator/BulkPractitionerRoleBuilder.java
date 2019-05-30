@@ -1,5 +1,17 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirNewpatientprofile;
+import com.esacinc.spd.model.VhDirPractitionerRole;
+import com.esacinc.spd.model.VhDirTelecom;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import com.esacinc.spd.util.*;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
+import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
+import org.hl7.fhir.r4.model.Reference;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,25 +19,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
-import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
-import org.hl7.fhir.r4.model.Reference;
 
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirNewpatientprofile;
-import com.esacinc.spd.model.VhDirNewpatients;
-import com.esacinc.spd.model.VhDirPractitionerRole;
-import com.esacinc.spd.model.VhDirQualification;
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
-
-
-public class BulkPractitionerRoleBuilder {
+public class BulkPractitionerRoleBuilder implements IQualification, INewPatients {
 	
 	
 	/**
@@ -239,7 +234,7 @@ public class BulkPractitionerRoleBuilder {
 	private void handleNewPatients(Connection connection, VhDirPractitionerRole pr, int prId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from new_patients where practitioner_role_id = ?", prId);
 		while(resultset.next()) {
-			VhDirNewpatients np = ResourceFactory.getNewPatients(resultset,connection);
+			VhDirNewPatients np = ResourceFactory.getNewPatients(resultset,connection);
 			pr.addNewpatients(np);
 		}
 	}

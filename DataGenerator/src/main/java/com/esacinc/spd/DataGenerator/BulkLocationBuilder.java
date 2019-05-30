@@ -1,12 +1,15 @@
 package com.esacinc.spd.DataGenerator;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirLocation;
+import com.esacinc.spd.model.VhDirNewpatientprofile;
+import com.esacinc.spd.model.VhDirTelecom;
+import com.esacinc.spd.model.complex_extensions.IEhr;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
+import com.esacinc.spd.util.ContactFactory;
+import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
+import com.esacinc.spd.util.ResourceFactory;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
 import org.hl7.fhir.r4.model.Location.LocationPositionComponent;
@@ -14,18 +17,14 @@ import org.hl7.fhir.r4.model.Location.LocationStatus;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 
-import com.esacinc.spd.model.VhDirEhr;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirLocation;
-import com.esacinc.spd.model.VhDirNewpatientprofile;
-import com.esacinc.spd.model.VhDirNewpatients;
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class BulkLocationBuilder {
+public class BulkLocationBuilder implements INewPatients, IEhr {
 	
 	
 	/**
@@ -177,7 +176,7 @@ public class BulkLocationBuilder {
 	private void handleNewPatients(Connection connection, VhDirLocation loc, int locId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from new_patients where location_id = ?", locId);
 		while(resultset.next()) {
-			VhDirNewpatients np = ResourceFactory.getNewPatients(resultset,connection);
+			VhDirNewPatients np = ResourceFactory.getNewPatients(resultset,connection);
 			loc.addNewpatients(np);
 		}
 	}

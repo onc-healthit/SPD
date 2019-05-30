@@ -1,8 +1,7 @@
 package com.esacinc.spd.model;
 
-import org.hl7.fhir.r4.model.Consent;
-
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
+import org.hl7.fhir.r4.model.Consent;
 
 /**
  * The VhDir restriciton profile builds on Consent, and only removes fields. No new extensions are defined.

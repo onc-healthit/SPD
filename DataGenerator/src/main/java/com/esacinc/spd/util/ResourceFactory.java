@@ -1,5 +1,25 @@
 package com.esacinc.spd.util;
 
+import com.esacinc.spd.model.*;
+import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
+import com.esacinc.spd.model.complex_extensions.IEhr;
+import com.esacinc.spd.model.complex_extensions.IEndpointUseCase;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import org.hl7.fhir.r4.model.Address.AddressType;
+import org.hl7.fhir.r4.model.Address.AddressUse;
+import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
+import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityComponent;
+import org.hl7.fhir.r4.model.HumanName.NameUse;
+import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
+import org.hl7.fhir.r4.model.Location.DaysOfWeek;
+import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
+import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,49 +29,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import org.hl7.fhir.r4.model.Address.AddressType;
-import org.hl7.fhir.r4.model.Address.AddressUse;
-import org.hl7.fhir.r4.model.BooleanType;
-import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
-import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityComponent;
-import org.hl7.fhir.r4.model.HumanName;
-import org.hl7.fhir.r4.model.HumanName.NameUse;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Location.DaysOfWeek;
-import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
-import org.hl7.fhir.r4.model.Period;
-import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Signature;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.UriType;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
-
-import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirEhr;
-import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirEndpointUseCase;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
-import com.esacinc.spd.model.VhDirNewpatientprofile;
-import com.esacinc.spd.model.VhDirNewpatients;
-import com.esacinc.spd.model.VhDirNote;
-import com.esacinc.spd.model.VhDirPrimarySource;
-import com.esacinc.spd.model.VhDirQualification;
-
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
  * several other resources.
  * @author dandonahue
  *
  */
-public class ResourceFactory {
+public class ResourceFactory implements IQualification, INewPatients, IEndpointUseCase, IEhr {
 
 	///////////////   GET METHODS  ////////////////////////////////////////////////////////////////
     // Get methods are those methods that create resources from data obtained from the database,
@@ -449,7 +433,7 @@ public class ResourceFactory {
 		uc.setId(ucId);
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from use_case where use_case_id = ?", Integer.valueOf(ucId)); 
 		while(resultset.next()) {
-			uc.setCaseType(getCodeableConcept(resultset.getInt("type_cc_id"),connection));
+			uc.setType(getCodeableConcept(resultset.getInt("type_cc_id"),connection));
 			uc.setStandard(new UriType(resultset.getString("standard")));
 			// uc.setUrl (Url is handled automatically in the class definition)
 			return uc; // We are expecting only one.
@@ -467,7 +451,7 @@ public class ResourceFactory {
 		if (url == null || url.isEmpty()) {
 			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr";
 		}
-		ehr.setUrl(url);
+//		ehr.setUrl(url);
 		ehr.setDeveloper(new StringType(resultset.getString("developer")));
 		ehr.setProduct(new StringType(resultset.getString("product")));
 		ehr.setVersion(new StringType(resultset.getString("version")));
@@ -484,15 +468,15 @@ public class ResourceFactory {
 		return ehr;
 	}
 
-	public static VhDirNewpatients getNewPatients(ResultSet resultset, Connection connection ) throws SQLException {
-		VhDirNewpatients np = new VhDirNewpatients();
+	public static VhDirNewPatients getNewPatients(ResultSet resultset, Connection connection ) throws SQLException {
+		VhDirNewPatients np = new VhDirNewPatients();
 		String url = resultset.getString("url");
 		if (url == null || url.isEmpty()) {
 			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients";
 		}
-		np.setUrl(url);
+//		np.setUrl(url);
 		np.setId(resultset.getString("new_patients_id"));
-		np.setAcceptingPatients(new BooleanType(resultset.getBoolean("accepting_patient")));
+		np.setAcceptingPatients(resultset.getBoolean("accepting_patient"));
 		// Note: the network_resource_reference_id points to a row in the resource_reference table. 
 		String nwrk = resultset.getString("network_resource_reference_id");
 		if (nwrk != null && !nwrk.isEmpty()) {
@@ -590,7 +574,7 @@ public class ResourceFactory {
 			qu.addWhereValid(reference);
 		}
 		
-		qu.setUrl(resultset.getString("url"));
+//		qu.setUrl(resultset.getString("url"));
 		// TODO add qualification history
 		return qu;
 	}

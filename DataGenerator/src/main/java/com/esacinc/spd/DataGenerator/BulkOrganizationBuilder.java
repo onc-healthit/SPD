@@ -1,5 +1,14 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.*;
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import com.esacinc.spd.util.*;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,26 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.StringType;
-
-import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirAlias;
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.model.VhDirDigitalCertificate;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirOrganization;
-import com.esacinc.spd.model.VhDirPractitionerRole;
-import com.esacinc.spd.model.VhDirQualification;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
-
-public class BulkOrganizationBuilder {
+public class BulkOrganizationBuilder implements IDigitalCertificate, IQualification {
 	
 	
 	/**

@@ -1,5 +1,14 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.VhDirEndpoint;
+import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirTelecom;
+import com.esacinc.spd.model.complex_extensions.IEndpointUseCase;
+import com.esacinc.spd.util.*;
+import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
+import org.hl7.fhir.r4.model.IntegerType;
+import org.hl7.fhir.r4.model.Reference;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,21 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Reference;
-
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirEndpointUseCase;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
-
-public class BulkEndpointBuilder {
+public class BulkEndpointBuilder implements IEndpointUseCase {
 	
 	
 	/**

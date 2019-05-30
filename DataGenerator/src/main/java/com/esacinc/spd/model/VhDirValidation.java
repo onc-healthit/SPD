@@ -1,8 +1,7 @@
 package com.esacinc.spd.model;
 
-import org.hl7.fhir.r4.model.VerificationResult;
-
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
+import org.hl7.fhir.r4.model.VerificationResult;
 
 /**
  * The VhDir Validation profile does not add extensions or remove elements. It only modifies the 

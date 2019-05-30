@@ -52,15 +52,14 @@ public class BulkPractitionerRoleBuilder {
 
 			pr.setActive(resultSet.getBoolean("active"));
 			pr.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"), resultSet.getDate("period_end")));
-			pr.setPractitioner(ResourceFactory.getResourceReference(resultSet.getInt("practitioner_id"), connection));
-			pr.setOrganization(ResourceFactory.getResourceReference(resultSet.getInt("organization_id"), connection));
+			pr.setPractitioner(ResourceFactory.makeResourceReference(resultSet.getString("practitioner_id"), "vhdir_practitioner", null, "Practitioner"));
+			pr.setOrganization(ResourceFactory.makeResourceReference(resultSet.getString("organization_id"), "vhdir_organization", null, "Organization"));
 			pr.setAvailabilityExceptions(resultSet.getString("availability_exceptions"));	
 
 			// Add a digital certificate to the first 3 organizations
-			int certCount = 0;
-         	if (certCount < DigitalCertificateFactory.MAX_CERTS) {
+         	if (cnt < DigitalCertificateFactory.MAX_CERTS) {
          		// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-         		pr.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null));
+         		pr.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(cnt, "role", "auth", "other", "x.509v3", null));
          	}
 
 			// Handle the restrictions

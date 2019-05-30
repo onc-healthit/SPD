@@ -1,9 +1,40 @@
 MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
-C |Setup |ErrorReport | | |Generation Time: Thu May 30 11:35:29 MDT 2019
+C |Setup |ErrorReport | | |Generation Time: Thu May 30 12:15:37 MDT 2019
 C |Setup |Control Variables | | |Build Control variables re-initialized from properties in file: SPD_Settings.properties 
-C |Setup |Control Variables | | |Process all resource types: No, Max Entries: -1, Max Pretty Print Entries: 20, Print Nth of each Resource to console: 0
+C |Setup |Control Variables | | |Process all resource types: Yes, Max Entries: 10, Max Pretty Print Entries: 20, Print Nth of each Resource to console: 0
 C |Setup |DB Conections | | |SPD: jdbc:mysql://65.111.255.73:3306/spd_medium, ZipCodes: jdbc:mysql://65.111.255.73:3306/zipcode, 
+I |  |DO_ORGANIZATIONS | | |
+I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Sat May 30 12:15:40 MDT 2020
+I |VhDirOrganization(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Sat May 30 12:15:41 MDT 2020
+I |VhDirOrganization(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Sat May 30 12:15:41 MDT 2020
+I |  | | | |10 Organizations Collected
+I |  |DO_PRACTITIONERS | | |
+I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Sat May 30 12:15:49 MDT 2020
+I |VhDirPractitioner(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Sat May 30 12:15:50 MDT 2020
+I |VhDirPractitioner(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Sat May 30 12:15:50 MDT 2020
+I |  | | | |10 Practitioners Collected
+I |  |DO_NETWORKS | | |
+I |  | | | |10 Networks Collected
 I |  |DO_LOCATIONS | | |
-I |  | | | |18 Locations Collected
-I |  |END | | |Wrote 0 error, 0 warning, 0 geocode, and 2 info messages
-I |  |END | | |Elapsed time: 0 hours, 0 minutes, 14 seconds
+I |  | | | |10 Locations Collected
+I |  |DO_VALIDATIONS | | |
+I |  | | | |0 Validations Collected
+I |  |DO_ENDPOINTS | | |
+I |  | | | |0 Endpoints Collected
+I |  |DO_CARETEAMS | | |
+I |  | | | |10 CareTeams Collected
+I |  |DO_HEALTHCARESERVICES | | |
+I |  | | | |0 Healthcare Services Collected
+I |  |DO_INSURANCEPLANS | | |
+I |  | | | |10 Insurance Plans Collected
+I |  |DO_ORGANIZATIONAFFILIATIONS | | |
+I |  | | | |0 Organization Affiliations Collected
+I |  |DO_PRACTITIONERROLES | | |
+I |VhDirPractitionerRole(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Sat May 30 12:16:22 MDT 2020
+I |VhDirPractitionerRole(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Sat May 30 12:16:23 MDT 2020
+I |VhDirPractitionerRole(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Sat May 30 12:16:23 MDT 2020
+I |  | | | |10 Practitioner Roles Collected
+I |  |DO_RESTRICTIONS | | |
+I |  | | | |0 Restrictions Collected
+I |  |END | | |Wrote 0 error, 0 warning, 0 geocode, and 33 info messages
+I |  |END | | |Elapsed time: 0 hours, 0 minutes, 52 seconds

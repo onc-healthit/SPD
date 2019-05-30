@@ -1,11 +1,11 @@
-import os
 import random
 
 import toolz
 from oslash import Just, List
 
-from utils.common import load_csv
-from utils.scrubbing import re_remove, re_split, remove_unwanted, breakdown, pick_other, strip_non_characters
+from nppes_data_generators.utils.common import load_vocabulary
+from nppes_data_generators.utils.scrubbing import re_remove, re_split, remove_unwanted, breakdown, pick_other, \
+    strip_non_characters
 
 
 @toolz.curry
@@ -40,7 +40,7 @@ def scrub_token(non_identifiables, names, token):
 @toolz.curry
 def scrub_list(non_identifiables, restricted_non_identifiables, names, token_list):
     """
-    Some name aren't really made of any identifiable vocabulary, so we recursively give it one more try with an
+    Some names aren't really made of any identifiable vocabulary, so we recursively give it one more try with an
     narrower collection of terms, and if we still can't scrub it we return an empty tuple.
 
     Example:
@@ -48,23 +48,26 @@ def scrub_list(non_identifiables, restricted_non_identifiables, names, token_lis
     :return: A tuple of synthesized tokens
     """
     scrubbed_list = tuple(_ for _ in (scrub_token(non_identifiables, names, _) for _ in token_list) if _)
-    return scrub_list(restricted_non_identifiables, [], names, token_list) if token_list and scrubbed_list == token_list \
-        else scrubbed_list if any(map(lambda _: _ in names or _ in restricted_non_identifiables, scrubbed_list)) \
+    res = scrub_list(restricted_non_identifiables, [], names, token_list) if token_list and scrubbed_list == token_list \
+        else scrubbed_list if all(map(lambda _: _ in names or _ in non_identifiables, scrubbed_list)) \
         else tuple()
+    return res
 
 
 @toolz.curry
-def append_taxonomies(taxonomies, tokens):
+def append_taxonomies(taxonomies, names, tokens):
     """
-    Would skip and prepend between 0 and 2 random names if the tokens list is self-sufficient (i.e. at least 2 tokens),
-    would append all taxonomies and prepend 2 names otherwise.
+    Would skip and prepend between 0 and 1 random name if the tokens list is self-sufficient (i.e. at least 2 tokens),
+    would append all taxonomies and prepend between 1 and 2 names otherwise.
 
     :param taxonomies:
     :param tokens:
     :return:
     """
-    return (tokens, random.randint(0, 2)) if len(tokens) > 1 or not taxonomies \
-        else (tokens + taxonomies, 2)
+    has_name = bool(names & set(tokens))
+    res = (tokens, random.randint(0, 0 if has_name else 1)) if len(tokens) > 1 or not taxonomies \
+        else (tokens + taxonomies, random.randint(1, 1 if has_name else 2))
+    return res
 
 
 @toolz.curry
@@ -78,7 +81,8 @@ def prepend_names(names, tokens_and_number_of_names):
     """
     tokens, number_of_names = tokens_and_number_of_names
     prefix = tuple(' & '.join(random.sample(names, number_of_names)).split())
-    return tuple(prefix + ('-',) + tokens if prefix else tokens)
+    res = tuple(prefix + ('-',) + tokens if prefix and tokens else tokens or prefix)
+    return res
 
 
 @toolz.curry
@@ -123,7 +127,7 @@ def scrub_tokenized_name(non_identifiables, med_vocab, names, taxonomies, tokens
     """
     return Just(tokens)\
         .map(scrub_list(non_identifiables, med_vocab, names)) \
-        .map(append_taxonomies(taxonomies)) \
+        .map(append_taxonomies(taxonomies, names)) \
         .map(prepend_names(names)) \
         .from_just()
 
@@ -160,21 +164,25 @@ def synthetic_org_name_generator():
 
     :return: Partial :scrub_name with signature `str, list[str] -> str`
     """
-    def load(file):
-        vocabulary = os.path.join(os.path.dirname(__file__), '..', 'vocabulary', 'names')
-        return set(_[0] for _ in load_csv(os.path.join(vocabulary, file)))
+    load_names_vocab = load_vocabulary('names')
 
-    entity_types = load('entity_types.csv')
-    first_names = load('first_names.csv')
-    last_names = load('last_names.csv')
-    med_vocab = load('medical_vocab.csv')
-    name_prefixes = load('name_prefixes.csv')
-    name_suffixes = load('name_suffixes.csv')
-    titles = load('titles.csv')
-    general_vocab = load('general_vocab.csv')
+    entity_types = load_names_vocab('entity_types.csv')
+    first_names = load_names_vocab('first_names.csv')
+    last_names = load_names_vocab('last_names.csv')
+    med_vocab = load_names_vocab('medical_vocab.csv')
+    name_prefixes = load_names_vocab('name_prefixes.csv')
+    name_suffixes = load_names_vocab('name_suffixes.csv')
+    titles = load_names_vocab('titles.csv')
+    general_vocab = load_names_vocab('general_vocab.csv')
 
     names = first_names | last_names
     non_identifiables = entity_types | med_vocab | titles | general_vocab
     acronyms = entity_types | titles | name_prefixes | name_suffixes
 
     return scrub_name(non_identifiables, med_vocab, names, acronyms)
+
+
+
+if __name__ == '__main__':
+    synth = synthetic_org_name_generator()
+    print(synth('BEST Life and Health Insurance Company'.upper()))

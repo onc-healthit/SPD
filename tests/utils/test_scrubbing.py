@@ -1,6 +1,6 @@
 import unittest
 
-from utils.scrubbing import remove_unwanted, strip_non_characters, breakdown, pick_other
+from nppes_data_generators.utils.scrubbing import remove_unwanted, strip_non_characters, breakdown, pick_other
 
 
 class TestScrubbingUtils(unittest.TestCase):

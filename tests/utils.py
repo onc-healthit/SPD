@@ -1,7 +1,7 @@
 import time
 
 
-def timing(f, *args, **kwargs):
+def timing(f):
     '''
     Timing wrapper. Useful to test perfs.
 
@@ -16,8 +16,12 @@ def timing(f, *args, **kwargs):
     :param args: Its arguments
     :return:
     '''
-    start = time.time()
-    res = f(*args, **kwargs)
-    stop = time.time()
-    time_spent = stop - start
-    return time_spent, res
+    def timed(*args, **kwargs):
+        start = time.time()
+        res = f(*args, **kwargs)
+        stop = time.time()
+        time_spent = stop - start
+        print('{} done in {}s'.format(f.__name__, time_spent))
+        return res
+
+    return timed

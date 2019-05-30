@@ -1,9 +1,7 @@
-import os
-
 from toolz import memoize
 
-from utils.common import load_csv
-from utils.scrubbing import pick_other
+from nppes_data_generators.utils.common import load_vocabulary
+from nppes_data_generators.utils.scrubbing import pick_other
 
 
 def synthetic_first_name_generator():
@@ -13,11 +11,19 @@ def synthetic_first_name_generator():
     :return: Memoized partial application of :pick_name
              Its signature is `str -> str`
     """
-    vocabulary = os.path.join(os.path.dirname(__file__), '..', 'vocabulary', 'names')
 
-    first_names = set(_[0] for _ in load_csv(os.path.join(vocabulary, 'first_names.csv')))
+    female_first_names = load_vocabulary('names', 'female_first_names.csv')
 
-    return memoize(pick_other(first_names))
+    male_first_names = load_vocabulary('names', 'male_first_names.csv')
+
+    both = female_first_names & male_first_names
+
+    return memoize(
+        lambda name: pick_other(both if name in both else
+                                female_first_names if name in female_first_names else
+                                male_first_names,
+                                name)
+    )
 
 
 def synthetic_last_name_generator():
@@ -27,8 +33,7 @@ def synthetic_last_name_generator():
     :return: Memoized partial application of :pick_name
              Its signature is `str -> str`
     """
-    vocabulary = os.path.join(os.path.dirname(__file__), '..', 'vocabulary', 'names')
 
-    last_name = set(_[0] for _ in load_csv(os.path.join(vocabulary, 'last_names.csv')))
+    last_names = load_vocabulary('names', 'last_names.csv')
 
-    return memoize(pick_other(last_name))
+    return memoize(pick_other(last_names))

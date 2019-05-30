@@ -15,21 +15,14 @@ def connection(dbname, **kwargs):
 
 def query(cursor, statement, params=None):
     try:
-        try:
-            iter(params)
+        if isinstance(params, (dict, list, tuple)):
             cursor.executemany(statement, params)
-        except TypeError:
+        elif params:
             cursor.execute(statement, params)
+        else:
+            cursor.execute(statement)
         return Just(cursor)
     except mysql.connector.Error as e:
         print(e)
         cursor.close()
         return Nothing()
-
-
-def consume(cursor):
-    try:
-        next(cursor)
-        return consume(cursor)
-    except StopIteration:
-        return

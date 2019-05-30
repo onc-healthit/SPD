@@ -1,9 +1,8 @@
 import csv
 
-import mysql
-from oslash import List, Nothing
 import toolz
-from toolz.curried import first, identity
+from oslash import Nothing
+from toolz.curried import identity
 
 from nppes_data_loaders.connections import connection, query
 
@@ -57,7 +56,7 @@ if __name__ == '__main__':
     nppes_cnx = connection('nppes')
     nppes_cursor = nppes_cnx.cursor()
 
-    with open('static/taxonomy_mappings.csv', newline='') as f:
+    with open('../static/taxonomy_mappings.csv', newline='') as f:
         reader = csv.reader(f)
         taxonomy_dict = {_[0]: _[1] for _ in reader}
 

@@ -8,7 +8,7 @@
   },
   "identifier": [
     {
-      "id": "42",
+      "id": "19866",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -17,21 +17,22 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "INN001"
+      "value": "AKN001"
     }
   ],
   "active": true,
   "name": "BEST Life and Health National Network",
   "alias": [
     "BEST Life and Health National Network",
-    "DenteMax",
-    "Dentegra PPO"
+    "Endeavor Select",
+    "Delta Dental Premier",
+    "Heritage and Dental Choice"
   ],
   "address": [
     {
-      "id": "82",
+      "id": "39727",
       "use": "work",
-      "state": "LA"
+      "state": "AK"
     }
   ],
   "partOf": {
@@ -49,7 +50,7 @@
   },
   "identifier": [
     {
-      "id": "44",
+      "id": "19867",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -58,24 +59,24 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN001"
+      "value": "AKN002"
     }
   ],
   "active": true,
-  "name": "DentaQuest USA Insurance Company-LA",
+  "name": "Endeavor Providence",
   "alias": [
-    "DentaQuest USA Insurance Company-LA",
+    "Endeavor Providence",
     "Delta Dental PPO"
   ],
   "address": [
     {
-      "id": "84",
+      "id": "39728",
       "use": "work",
-      "state": "LA"
+      "state": "AK"
     }
   ],
   "partOf": {
-    "id": "2",
+    "id": "1",
     "type": "vhdir_organization"
   }
 }
@@ -89,7 +90,7 @@
   },
   "identifier": [
     {
-      "id": "45",
+      "id": "19869",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -98,19 +99,19 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN005"
+      "value": "AKN003"
     }
   ],
   "active": true,
-  "name": "HMO Louisiana HMOPOS Vision Dental",
+  "name": "Pioneer",
   "alias": [
-    "HMO Louisiana HMOPOS Vision Dental"
+    "Pioneer"
   ],
   "address": [
     {
-      "id": "85",
+      "id": "39730",
       "use": "work",
-      "state": "LA"
+      "state": "AL"
     }
   ],
   "partOf": {
@@ -128,7 +129,7 @@
   },
   "identifier": [
     {
-      "id": "46",
+      "id": "19870",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -137,19 +138,26 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN006"
+      "value": "ALN001"
     }
   ],
   "active": true,
-  "name": "Blue Connect Vision Dental",
+  "name": "BCBSAL PPO",
   "alias": [
-    "Blue Connect Vision Dental"
+    "BCBSAL PPO",
+    "HumanaDental PPO/Traditional Preferred",
+    "PDP PLUS",
+    "Delta Dental PPO",
+    "BEST Life and Health National Network",
+    "AL PPO Network",
+    "DenteMax",
+    "Bright Health Network"
   ],
   "address": [
     {
-      "id": "86",
+      "id": "39731",
       "use": "work",
-      "state": "LA"
+      "state": "AL"
     }
   ],
   "partOf": {
@@ -167,7 +175,7 @@
   },
   "identifier": [
     {
-      "id": "47",
+      "id": "19872",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -176,23 +184,23 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN007"
+      "value": "ALN002"
     }
   ],
   "active": true,
-  "name": "Community Blue Vision Dental",
+  "name": "Preferred Dental",
   "alias": [
-    "Community Blue Vision Dental"
+    "Preferred Dental"
   ],
   "address": [
     {
-      "id": "87",
+      "id": "39733",
       "use": "work",
-      "state": "LA"
+      "state": "AZ"
     }
   ],
   "partOf": {
-    "id": "2",
+    "id": "3",
     "type": "vhdir_organization"
   }
 }
@@ -206,7 +214,7 @@
   },
   "identifier": [
     {
-      "id": "49",
+      "id": "19874",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -215,23 +223,40 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN008"
+      "value": "AZN001"
     }
   ],
   "active": true,
-  "name": "Signature Blue Vision Dental",
+  "name": "PDP PLUS",
   "alias": [
-    "Signature Blue Vision Dental"
+    "PDP PLUS",
+    "AZ HMO CommunityCare IFP/FFM",
+    "Arizona Connect Network",
+    "DSM USA Insurance Company Inc Marketplace",
+    "Oscar AZ Individual Network",
+    "Bright Health Network - Maricopa County",
+    "Arizona PPO Dental Network",
+    "BEST Life and Health National Network",
+    "HumanaDental PPO/Traditional Preferred",
+    "Kansas City Life Dental Alliance",
+    "AZ PPO Network",
+    "Dentegra PPO",
+    "PimaFocus",
+    "Premier Access Dental",
+    "Premier",
+    "DentalGuard Preferred",
+    "PPO plus Premier",
+    "DenteMax"
   ],
   "address": [
     {
-      "id": "89",
+      "id": "39735",
       "use": "work",
-      "state": "LA"
+      "state": "AZ"
     }
   ],
   "partOf": {
-    "id": "3",
+    "id": "4",
     "type": "vhdir_organization"
   }
 }
@@ -245,7 +270,7 @@
   },
   "identifier": [
     {
-      "id": "51",
+      "id": "19876",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -254,25 +279,26 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN001"
+      "value": "AZN002"
     }
   ],
   "active": true,
-  "name": "Renaissance Dental",
+  "name": "Neighborhood",
   "alias": [
-    "Renaissance Dental",
-    "HumanaDental PPO/Traditional Preferred",
-    "Vantage Tier 1 Network"
+    "Neighborhood",
+    "Bright Health Network - Pima County",
+    "PPO",
+    "Advantage"
   ],
   "address": [
     {
-      "id": "91",
+      "id": "39737",
       "use": "work",
-      "state": "LA"
+      "state": "FL"
     }
   ],
   "partOf": {
-    "id": "4",
+    "id": "5",
     "type": "vhdir_organization"
   }
 }
@@ -286,7 +312,7 @@
   },
   "identifier": [
     {
-      "id": "53",
+      "id": "19878",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -295,23 +321,44 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN002"
+      "value": "FLN001"
     }
   ],
   "active": true,
-  "name": "Verity HealthNet Network",
+  "name": "Dental HMO/Managed Care",
   "alias": [
-    "Verity HealthNet Network"
+    "Dental HMO/Managed Care",
+    "BlueDental Choice PPO",
+    "Ambetter from Sunshine Health",
+    "BEST Life and Health National Network",
+    "NetworkBlue",
+    "HumanaDental PPO/Traditional Preferred",
+    "DentalGuard Preferred - Individual",
+    "LIBERTY Florida Exchange",
+    "BlueCare",
+    "FHCP HMO Network",
+    "Dentegra PPO",
+    "Premier",
+    "PDP PLUS",
+    "Delta Dental PPO",
+    "FL Exchange Network",
+    "DentaQuest of Florida, Inc",
+    "Molina Marketplace",
+    "Renaissance Dental",
+    "Florida PPO Dental Network",
+    "Health First Individual",
+    "EssentialSmile PPO",
+    "Oscar FL Individual Network"
   ],
   "address": [
     {
-      "id": "93",
+      "id": "39739",
       "use": "work",
-      "state": "LA"
+      "state": "FL"
     }
   ],
   "partOf": {
-    "id": "5",
+    "id": "6",
     "type": "vhdir_organization"
   }
 }
@@ -325,7 +372,7 @@
   },
   "identifier": [
     {
-      "id": "55",
+      "id": "19880",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -334,27 +381,30 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN001"
+      "value": "FLN002"
     }
   ],
   "active": true,
-  "name": "DenteMax",
+  "name": "Advantage",
   "alias": [
-    "DenteMax",
-    "PDP PLUS",
-    "BEST Life and Health National Network",
-    "DentalGuard Preferred - Individual",
-    "Preferred Care PPO Vision Dental"
+    "Advantage",
+    "FHCA Individual",
+    "BlueDental Choice Copayment PPO",
+    "DeltaCare USA",
+    "EssentialSmile EPO",
+    "myBlue",
+    "BlueSelect",
+    "Managed DentalGuard - Individual"
   ],
   "address": [
     {
-      "id": "95",
+      "id": "39741",
       "use": "work",
-      "state": "LA"
+      "state": "GA"
     }
   ],
   "partOf": {
-    "id": "6",
+    "id": "7",
     "type": "vhdir_organization"
   }
 }
@@ -368,7 +418,7 @@
   },
   "identifier": [
     {
-      "id": "56",
+      "id": "19882",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
@@ -377,23 +427,37 @@
       ],
       "use": "official",
       "system": "https://www.cms.gov/CCIIO/",
-      "value": "LAN002"
+      "value": "GAN001"
     }
   ],
   "active": true,
-  "name": "United Concordia Dental",
+  "name": "Kaiser Permanente HMO",
   "alias": [
-    "United Concordia Dental"
+    "Kaiser Permanente HMO",
+    "Peach State Health Plan",
+    "Renaissance Dental",
+    "BEST Life and Health National Network",
+    "Delta Dental PPO",
+    "Alliant Health Plans",
+    "GA PPO Network",
+    "DSM USA Insurance Company-GA",
+    "PDP PLUS",
+    "DentalGuard Preferred",
+    "Dominion Choice PPO Network",
+    "DenteMax",
+    "Dentegra PPO",
+    "HumanaDental PPO/Traditional Preferred",
+    "Pathway X, Dental Prime, and Rx Choice Tiered Network"
   ],
   "address": [
     {
-      "id": "96",
+      "id": "39743",
       "use": "work",
-      "state": "MO"
+      "state": "GA"
     }
   ],
   "partOf": {
-    "id": "1",
+    "id": "8",
     "type": "vhdir_organization"
   }
 }

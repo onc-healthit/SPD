@@ -54,7 +54,7 @@ public class BulkLocationBuilder implements INewPatients, IEhr {
 			loc.setDescription(resultSet.getString("description"));
 			loc.setAddress(ResourceFactory.getAddress(resultSet.getInt("address_id"), connection));
 			loc.setPhysicalType(ResourceFactory.getCodeableConcept(resultSet.getInt("physical_type_cc_id"),connection)); 
-			loc.setManagingOrganization(ResourceFactory.getResourceReference(resultSet.getInt("managing_organization_id"), connection));
+			loc.setManagingOrganization(ResourceFactory.makeResourceReference(resultSet.getString("managing_organization_id"), "vhdir_organization",null,"Managing Organization"));
 			loc.setPartOf(ResourceFactory.getResourceReference(resultSet.getInt("part_of_location_id"), connection));
 			loc.setAvailabilityExceptions(resultSet.getString("availability_exceptions"));	
 			loc.addLocation_boundary_geojson(new StringType(resultSet.getString("location_boundary_geojson"))); // TODO we aren't modeling these

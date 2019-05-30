@@ -27,7 +27,7 @@
   ],
   "name": "Acute Physical Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -173,7 +173,7 @@
   ],
   "name": "Acute Physical Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -319,7 +319,7 @@
   ],
   "name": "Physical Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -405,7 +405,7 @@
   ],
   "name": "Stroke Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -536,7 +536,7 @@
   ],
   "name": "Acute Physical Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -682,7 +682,7 @@
   ],
   "name": "Physical Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -768,7 +768,7 @@
   ],
   "name": "Stroke Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -899,7 +899,7 @@
   ],
   "name": "Acute Physical Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -1045,7 +1045,7 @@
   ],
   "name": "Physical Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {
@@ -1131,7 +1131,7 @@
   ],
   "name": "Stroke Rehabilitation",
   "period": {
-    "start": "2019-01-01T00:00:00-07:00"
+    "start": "2019-01-01T00:00:00-05:00"
   },
   "participant": [
     {

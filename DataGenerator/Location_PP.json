@@ -13,18 +13,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 37.533908
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": 126.977495
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 37.533908
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": 126.977495
+          }
+        ]
       }
     ],
     "use": "work",
@@ -61,18 +59,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 37.533908
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": 126.977495
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 37.533908
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": 126.977495
+          }
+        ]
       }
     ],
     "use": "work",
@@ -109,18 +105,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 37.533908
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": 126.977495
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 37.533908
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": 126.977495
+          }
+        ]
       }
     ],
     "use": "work",
@@ -157,18 +151,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 44.412413
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": -72.00996
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 44.412413
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -72.00996
+          }
+        ]
       }
     ],
     "use": "work",
@@ -205,18 +197,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 42.575355
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": -71.99183
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 42.575355
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -71.99183
+          }
+        ]
       }
     ],
     "use": "work",
@@ -253,18 +243,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 39.108704
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": -94.44115
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 39.108704
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -94.44115
+          }
+        ]
       }
     ],
     "use": "work",
@@ -301,18 +289,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 32.169577
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": -110.875093
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 32.169577
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -110.875093
+          }
+        ]
       }
     ],
     "use": "work",
@@ -349,18 +335,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 41.692806
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": -70.93264
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 41.692806
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -70.93264
+          }
+        ]
       }
     ],
     "use": "work",
@@ -397,18 +381,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 29.36273
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": -100.896761
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 29.36273
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -100.896761
+          }
+        ]
       }
     ],
     "use": "work",
@@ -445,18 +427,16 @@
     "extension": [
       {
         "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
-        "valueVhdir-geolocation": {
-          "extension": [
-            {
-              "url": "latitude",
-              "valueDecimal": 41.032675
-            },
-            {
-              "url": "longitude",
-              "valueDecimal": -80.66467
-            }
-          ]
-        }
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 41.032675
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -80.66467
+          }
+        ]
       }
     ],
     "use": "work",

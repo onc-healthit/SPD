@@ -91,7 +91,7 @@ public class BulkOrganizationBuilder {
          	handleAddresses(connection, org, orgId);
 			
 			// Handle the partOf association reference
-         	org.setPartOf(ResourceFactory.getResourceReference(resultSet.getInt("partOf_organization_id"), connection));
+         	org.setPartOf(ResourceFactory.makeResourceReference(resultSet.getString("partOf_organization_id"), "vhdir_organization", null, "Part of Organization"));
 			
 			// Handle contacts
          	handleContacts(connection, org, orgId);

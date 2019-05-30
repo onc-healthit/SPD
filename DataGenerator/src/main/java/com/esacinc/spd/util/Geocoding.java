@@ -163,7 +163,8 @@ public class Geocoding {
 				loc.setLatitude(resultset.getDouble("longitude"));
 				return loc; // expecting only one.
 			}
-			ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Geocoding.geocodeLocalPostalCode", "Postal code not found in local db.");
+			// Too verbose. Don't report this msg.
+			//ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Geocoding.geocodeLocalPostalCode", "Postal code not found in local db.");
 		}
 		else {
 			System.err.println("Unable to open connection to zip schema");

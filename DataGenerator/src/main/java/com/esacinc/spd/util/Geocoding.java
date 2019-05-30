@@ -31,6 +31,7 @@ public class Geocoding {
 	static public void closeConnection() {
 		System.out.println("Closing Zipcode Database connection to " + DatabaseUtil.zipConnectionUrl);
 		DatabaseUtil.closeConnection(zipconnection);
+		zipconnection = null;
 	}
 	
 	/**

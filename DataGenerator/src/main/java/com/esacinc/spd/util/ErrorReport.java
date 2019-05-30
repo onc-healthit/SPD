@@ -113,11 +113,14 @@ public class ErrorReport {
 		}
 	}
 	
-	static public String getSummaryNote() {
+	static public String getSummaryNote(String line2) {
 		String note = "";		
 		if (writer != null) {
 			note = String.format("Wrote %d error, %d warning, %d geocode, and %d info messages", errors, warnings, geocodes, info);
 			writeInfo("END","","",note);
+			if (line2 != null && !line2.isEmpty()) {
+				writeInfo("END","","",line2);
+			}
 		}
 		return note;
 	}

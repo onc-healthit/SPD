@@ -29,11 +29,13 @@ import com.esacinc.spd.model.VhDirPractitionerRole;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ErrorReport;
 import com.esacinc.spd.util.Geocoding;
+import com.esacinc.spd.util.ProgressTimer;
 import com.esacinc.spd.util.PropertiesUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
@@ -43,6 +45,8 @@ public class BulkDataApp extends BuildControlSettings {
     // See BuildControlSettings.java for definitions of all the static variables and other functions used throughout.
 	
 	public static void main(String[] args) {
+		
+		ProgressTimer timer = new ProgressTimer(false);
 		
 		maybeReInitFromProperties(); // in BuildControlSettings
 		
@@ -69,6 +73,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_ORGANIZATIONS) {
 			ErrorReport.writeInfo("DO_ORGANIZATIONS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Organizations
 				System.out.println("Generate Organization resources...");
 				BulkOrganizationBuilder orgBuilder = new BulkOrganizationBuilder();
@@ -76,20 +83,28 @@ public class BulkDataApp extends BuildControlSettings {
 				outputOrganizationList(organizations); 
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Organizations Collected", organizations.size()));
-			}	
-			catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} 
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
 			}
-			catch (ParseException e) {
-				// TODO Auto-generated catch block
+			catch (SQLException e) {
+				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERS", e.getMessage());
 				e.printStackTrace();
-			}  
+				DatabaseUtil.closeAllConnections(connection);
+			} catch (ParseException e) {
+				ErrorReport.writeError("BulkDataApp", "", "PARSE error in DO_PRACTITIONERS", e.getMessage());
+				e.printStackTrace();
+			} 			
 		}
 		
 		if (DO_ALL || DO_PRACTITIONERS) {
 			ErrorReport.writeInfo("DO_PRACTITIONERS","","","");
 			try {
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Practitioners
 				System.out.println("Generate Practitioner resources...");
 	
@@ -98,9 +113,16 @@ public class BulkDataApp extends BuildControlSettings {
 				outputPractitionerList(practitioners); 
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Practitioners Collected", practitioners.size()));
-			} catch (SQLException e) {
+			} 
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
+			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERS", e.getMessage());
 				e.printStackTrace();
+				DatabaseUtil.closeAllConnections(connection);
 			} catch (ParseException e) {
 				ErrorReport.writeError("BulkDataApp", "", "PARSE error in DO_PRACTITIONERS", e.getMessage());
 				e.printStackTrace();
@@ -110,6 +132,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_NETWORKS) {
 			ErrorReport.writeInfo("DO_NETWORKS","","","");
 			try {
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Networks
 				System.out.println("Generate Network resources...");
 	
@@ -118,9 +143,16 @@ public class BulkDataApp extends BuildControlSettings {
 				outputNetworkList(networks); 
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Networks Collected", networks.size()));
-			} catch (SQLException e) {
+			} 
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
+			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_NETWORKS", e.getMessage());
 				e.printStackTrace();
+				DatabaseUtil.closeAllConnections(connection);
 			} catch (ParseException e) {
 				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_NETWORKS", e.getMessage());
 				e.printStackTrace();
@@ -130,6 +162,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_LOCATIONS) {
 			ErrorReport.writeInfo("DO_LOCATIONS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Locations
 				System.out.println("Generate Location resources...");
 				BulkLocationBuilder locBuilder = new BulkLocationBuilder();
@@ -138,9 +173,15 @@ public class BulkDataApp extends BuildControlSettings {
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Locations Collected", locations.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_LOCATIONS", e.getMessage());
 				e.printStackTrace();
+				DatabaseUtil.closeAllConnections(connection);
 			}
 			catch (ParseException e) {
 				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_NETWORKS", e.getMessage());
@@ -151,6 +192,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_VALIDATIONS) {
 			ErrorReport.writeInfo("DO_VALIDATIONS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Validations
 				System.out.println("Generate Validation resources...");
 				BulkValidationBuilder valBuilder = new BulkValidationBuilder();
@@ -158,10 +202,16 @@ public class BulkDataApp extends BuildControlSettings {
 				outputValidationList(validations);  
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Validations Collected", validations.size()));
-			}	
+			}
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_VALIDATIONS", e.getMessage());
 				e.printStackTrace();
+				
 			}
 			catch (ParseException e) {
 				ErrorReport.writeError("BulkDataApp", "", "Parse error in DO_VALIDATIONS", e.getMessage());
@@ -172,6 +222,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_ENDPOINTS) {
 			ErrorReport.writeInfo("DO_ENDPOINTS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Endpoints
 				System.out.println("Generate Endpoint resources...");
 				BulkEndpointBuilder epBuilder = new BulkEndpointBuilder();
@@ -180,6 +233,12 @@ public class BulkDataApp extends BuildControlSettings {
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Endpoints Collected", endpoints.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
+
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_ENDPOINTS", e.getMessage());
 				e.printStackTrace();
@@ -193,6 +252,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_CARETEAMS) {
 			ErrorReport.writeInfo("DO_CARETEAMS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Careteams
 				System.out.println("Generate Careteam resources...");
 				BulkCareTeamBuilder ctBuilder = new BulkCareTeamBuilder();
@@ -201,6 +263,12 @@ public class BulkDataApp extends BuildControlSettings {
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d CareTeams Collected", careteams.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
+
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_CARETEAMS", e.getMessage());
 				e.printStackTrace();
@@ -214,6 +282,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_HEALTHCARESERVICES) {
 			ErrorReport.writeInfo("DO_HEALTHCARESERVICES","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write HeathcareServices
 				System.out.println("Generate Healthcare_Service resources...");
 				BulkHealthcareServiceBuilder hsBuilder = new BulkHealthcareServiceBuilder();
@@ -222,6 +293,11 @@ public class BulkDataApp extends BuildControlSettings {
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Healthcare Services Collected", services.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_HEALTHCARESERVICES", e.getMessage());
 				e.printStackTrace();
@@ -235,6 +311,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_INSURANCEPLANS) {
 			ErrorReport.writeInfo("DO_INSURANCEPLANS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Insurance Planes
 				System.out.println("Generate Insurance_Plan resources...");
 				BulkInsurancePlanBuilder epBuilder = new BulkInsurancePlanBuilder();
@@ -243,6 +322,11 @@ public class BulkDataApp extends BuildControlSettings {
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Insurance Plans Collected", plans.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_INSURANCEPLANS", e.getMessage());
 				e.printStackTrace();
@@ -256,6 +340,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_ORGANIZATIONAFFILIATIONS) {
 			ErrorReport.writeInfo("DO_ORGANIZATIONAFFILIATIONS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Organization Affiliations
 				System.out.println("Generate Organization_Affiliation resources...");
 				BulkOrganizationAffiliationBuilder affBuilder = new BulkOrganizationAffiliationBuilder();
@@ -264,6 +351,11 @@ public class BulkDataApp extends BuildControlSettings {
 			    ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Organization Affiliations Collected", affiliations.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_ORGANIZATIONAFFILIATIONS", e.getMessage());
 				e.printStackTrace();
@@ -278,6 +370,9 @@ public class BulkDataApp extends BuildControlSettings {
 			ErrorReport.writeInfo("DO_PRACTITIONERROLES","","","");
 			
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Practitioner Roles
 				System.out.println("Generate Practitioner_Role resources...");
 				BulkPractitionerRoleBuilder prBuilder = new BulkPractitionerRoleBuilder();
@@ -286,6 +381,11 @@ public class BulkDataApp extends BuildControlSettings {
 			    ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Practitioner Roles Collected", practitionerroles.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in DO_PRACTITIONERROLES", e.getMessage());
 				e.printStackTrace();
@@ -300,6 +400,9 @@ public class BulkDataApp extends BuildControlSettings {
 		if (DO_ALL || DO_RESTRICTIONS) {
 			ErrorReport.writeInfo("DO_RESTRICTIONS","","","");
 			try{
+				if (connection == null) {
+					connection = DatabaseUtil.openAllConnections();
+				}
 				// Get and write Restrictions
 				System.out.println("Generate Restriction resources...");
 				BulkRestrictionBuilder resBuilder = new BulkRestrictionBuilder();
@@ -308,9 +411,15 @@ public class BulkDataApp extends BuildControlSettings {
 				ErrorReport.setCursor("", "");
 				ErrorReport.writeInfo("","","",String.format("%d Restrictions Collected", restrictions.size()));
 			}	
+			catch (CommunicationsException e) {
+				ErrorReport.writeError("BulkDataApp", "", "Communications Exception in DO_NETWORKS", e.getMessage());
+				DatabaseUtil.closeAllConnections(connection);
+				connection = null;
+			}
 			catch (SQLException e) {
 				ErrorReport.writeError("BulkDataApp", "", "SQL error in O_RESTRICTIONS", e.getMessage());
 				e.printStackTrace();
+				DatabaseUtil.closeAllConnections(connection);
 			}
 			catch (ParseException e) {
 				ErrorReport.writeError("BulkDataApp", "", "Parse error in O_RESTRICTIONS", e.getMessage());
@@ -321,10 +430,16 @@ public class BulkDataApp extends BuildControlSettings {
 		
 		DatabaseUtil.closeAllConnections(connection);
 		
+		// Note how long all this took...
+		long elapsed = timer.stop();
+		String elapsedTime = "Elapsed time: " + timer.convertToHours(elapsed);
+		
 		ErrorReport.setCursor("", "");
 		System.out.println("\n\nFHIR Resource generation complete.");
+		System.out.println(elapsedTime);
+		
 		if (DO_REPORTING) {
-			System.out.println("   " + ErrorReport.getSummaryNote());
+			System.out.println("   " + ErrorReport.getSummaryNote(elapsedTime));
 			System.out.println("   See " + ErrorReport.REPORT_FILENAME + " for details.");
 			ErrorReport.close();
 		}

@@ -27,6 +27,8 @@ public class DatabaseUtil {
 
 	public static String zipConnectionUrl = "jdbc:mysql://65.111.255.73:3306/zipcode";
 	
+	public static int MAX_CONNECT_ATTEMPTS = 3;
+	
 	public DatabaseUtil() { }
 
 	static public Connection getConnection() { 
@@ -99,14 +101,22 @@ public class DatabaseUtil {
 	static public Connection openAllConnections() {
 		System.out.println("Opening SPD Database connection to " + connectionUrl);
 		Connection connection = null;
-		try {
-			connection = getConnection();
-			if (connection == null) {
-				ErrorReport.writeError("Database","", "SPD Schema",  "Unable to open connection to " + connectionUrl);
+		for (int attempts = 0; attempts < MAX_CONNECT_ATTEMPTS; attempts++) {
+			try {
+				connection = getConnection();
+				if (connection == null) {
+					ErrorReport.writeError("Database","", "SPD Schema",  "Unable to open connection to " + connectionUrl);
+				}
+			}
+			catch (Exception e) {
+				ErrorReport.writeError("Database","", "SPD Schema",  e.getMessage());
+			}
+			if (connection != null) {
+				break;
 			}
 		}
-		catch (Exception e) {
-			ErrorReport.writeError("Database","", "SPD Schema",  e.getMessage());
+		if (connection == null) {
+			ErrorReport.writeError("Database","", "SPD Schema",  "Unable to open connection to " + connectionUrl + " after " + MAX_CONNECT_ATTEMPTS + " attempts");
 		}
 		try {
 			Geocoding.openConnection();  // Open a connection to the zipcode database in case we need it.

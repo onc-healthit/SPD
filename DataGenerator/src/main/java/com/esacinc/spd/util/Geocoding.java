@@ -154,7 +154,7 @@ public class Geocoding {
 	}
 	
 	static public VhDirGeoLocation geocodeLocalPostalCode(String postalCode) throws SQLException {
-		System.out.println("Calling local geocoding for " + postalCode);
+		//System.out.println("Calling local geocoding for " + postalCode);
 		if (zipconnection != null) {
 			ResultSet resultset = DatabaseUtil.runZipQuery(zipconnection, "select * from zip_codes where zip = ?", postalCode);
 			while (resultset.next()) {

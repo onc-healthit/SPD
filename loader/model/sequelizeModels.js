@@ -158,7 +158,8 @@ const Npi = npidb.models.npi;
 
 const spdOrgModel = spddb.define('vhdir_organization', {
   organization_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
   meta_data_id: { type: Sequelize.INTEGER},
   active: { type: Sequelize.STRING},
   name: { type: Sequelize.STRING },
@@ -175,7 +176,8 @@ spdOrgModel.removeAttribute('id');
 
 const spdProviderModel = spddb.define('vhdir_practitioner', {
   practitioner_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
   meta_data_id: { type: Sequelize.INTEGER},
   active: { type: Sequelize.STRING},
   gender: { type: Sequelize.STRING },
@@ -191,7 +193,8 @@ spdProviderModel.removeAttribute('id');
 
 const spdProviderRoleModel = spddb.define('vhdir_practitioner_role', {
   practitioner_role_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
   meta_data_id: { type: Sequelize.INTEGER},
   active: { type: Sequelize.STRING},
   period_start: { type: Sequelize.STRING },
@@ -209,7 +212,8 @@ spdProviderRoleModel.removeAttribute('id');
 
 const spdAddressModel = spddb.define('address', {
 	address_id: { type: Sequelize.INTEGER,
-				primaryKey: true },
+				primaryKey: true,
+				autoIncrement: true },
 	use: { type: Sequelize.STRING },
 	type: { type: Sequelize.STRING },
 	text: { type: Sequelize.STRING },
@@ -237,7 +241,8 @@ spdAddressModel.removeAttribute('id');
 
 const spdTelecomModel = spddb.define('telecom', {
 	telecom_id: { type: Sequelize.INTEGER,
-					primaryKey: true  },
+					primaryKey: true,
+				autoIncrement: true  },
 	system: { type: Sequelize.STRING },
 	value: { type: Sequelize.STRING },
 	use: { type: Sequelize.STRING },
@@ -263,7 +268,8 @@ spdTelecomModel.removeAttribute('id');
 
 const spdContactModel = spddb.define('contact', {
 	contact_id: { type: Sequelize.INTEGER,
-						primaryKey: true },
+						primaryKey: true,
+				autoIncrement: true },
 	purpose_cc_id: { type: Sequelize.INTEGER },
 	name_id: { type: Sequelize.INTEGER },
 	address_id: { type: Sequelize.INTEGER },
@@ -280,7 +286,8 @@ spdContactModel.removeAttribute('id');
 
 const spdNameModel = spddb.define('name', {
 	name_id: { type: Sequelize.INTEGER,
-						primaryKey: true },
+						primaryKey: true,
+				autoIncrement: true },
 	use: { type: Sequelize.STRING },
 	text: { type: Sequelize.STRING },
 	family: { type: Sequelize.STRING },
@@ -300,7 +307,8 @@ spdNameModel.removeAttribute('id');
 
 const spdNetworkModel = spddb.define('vhdir_network', {
   network_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
   meta_data_id: { type: Sequelize.INTEGER},
   active: { type: Sequelize.STRING},
   name: { type: Sequelize.STRING },
@@ -322,7 +330,8 @@ spdNetworkModel.removeAttribute('id');
 
 const spdIdentifierModel = spddb.define('identifier', {
 	identifier_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
 	identifier_status: { type: Sequelize.STRING },
 	identifier_status_value_code: { type: Sequelize.STRING },
 	use: { type: Sequelize.STRING },
@@ -353,12 +362,14 @@ spdIdentifierModel.removeAttribute('id');
 
 const spdReferenceModel = spddb.define('resource_reference', {
 	resource_reference_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
 	identifier: { type: Sequelize.STRING },
 	reference: { type: Sequelize.STRING },
 	display: { type: Sequelize.STRING },
 	type: { type: Sequelize.INTEGER},  
-	validation_target_id: { type: Sequelize.INTEGER}, 
+	validation_target_id: { type: Sequelize.INTEGER},
+	insurance_plan_network_id: { type: Sequelize.INTEGER},	
 }, {
 	timestamps: false,
 	underscored: true,
@@ -369,7 +380,8 @@ spdReferenceModel.removeAttribute('id');
 
 const spdInsurancePlanModel = spddb.define('vhdir_insurance_plan', {
 	insurance_plan_id: { type: Sequelize.INTEGER,
-				primaryKey: true}, 
+				primaryKey: true,
+				autoIncrement: true}, 
 	meta_data_id: { type: Sequelize.INTEGER}, 
 	status: { type: Sequelize.STRING }, 
 	name: { type: Sequelize.STRING }, 
@@ -389,7 +401,8 @@ spdInsurancePlanModel.removeAttribute('id');
 
 const spdHealthcareSvcModel = spddb.define('vhdir_healthcare_service', {
 	healthcare_service_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
 	meta_data_id: { type: Sequelize.INTEGER },
 	active: { type: Sequelize.STRING },
 	comment: { type: Sequelize.STRING },
@@ -406,13 +419,14 @@ const spdHealthcareSvcModel = spddb.define('vhdir_healthcare_service', {
 	timestamps: false,
 	underscored: true,
 	freezeTableName: true,
-	tableName: 'vhdir_insurance_plan'	
+	tableName: 'vhdir_healthcare_service'	
 });
 spdHealthcareSvcModel.removeAttribute('id');
 
 const spdRestrictionModel = spddb.define('vhdir_restriction', {
-	restriction_id,: { type: Sequelize.INTEGER,
-				primaryKey: true } 
+	restriction_id: { type: Sequelize.INTEGER,
+				primaryKey: true,
+				autoIncrement: true }, 
 	meta_data_id: { type: Sequelize.INTEGER }, 
 	status: { type: Sequelize.STRING }, 
 	scope_cc_id: { type: Sequelize.INTEGER }, 
@@ -426,9 +440,45 @@ const spdRestrictionModel = spddb.define('vhdir_restriction', {
 });
 spdRestrictionModel.removeAttribute('id');
 
+const spdLocationModel = spddb.define('vhdir_location', {
+	location_id: { type: Sequelize.INTEGER,
+					primaryKey: true,
+				autoIncrement: true },
+	meta_data_id: { type: Sequelize.INTEGER },
+	status: { type: Sequelize.STRING },
+	name: { type: Sequelize.STRING },
+	alias: { type: Sequelize.STRING },
+	description: { type: Sequelize.STRING },
+	location_boundary_geojson: { type: Sequelize.STRING },
+	latitude: { type: Sequelize.STRING },
+	longitude: { type: Sequelize.STRING },
+	altitude: { type: Sequelize.STRING },
+	availability_exceptions: { type: Sequelize.STRING },
+	practitioner_role_id: { type: Sequelize.INTEGER },
+	organization_affiliation_id: { type: Sequelize.INTEGER },
+	careteam_id: { type: Sequelize.INTEGER },
+	healthcare_service_id: { type: Sequelize.INTEGER },
+	healthcare_service_coverage_area_id: { type: Sequelize.INTEGER },
+	address_id: { type: Sequelize.INTEGER },
+	managing_organization_id: { type: Sequelize.INTEGER },
+	part_of_location_id: { type: Sequelize.INTEGER },
+	network_reference_id: { type: Sequelize.INTEGER },
+	insurance_plan_coverage_area_id: { type: Sequelize.INTEGER },
+	plan_coverage_area_id: { type: Sequelize.INTEGER },
+	qualification_where_valid_id: { type: Sequelize.INTEGER },
+	physical_type_cc_id: { type: Sequelize.INTEGER },
+}, {
+	timestamps: false,
+	underscored: true,
+	freezeTableName: true,
+	tableName: 'vhdir_location'	
+});
+spdLocationModel.removeAttribute('id');
+
 const spdValidationModel = spddb.define('vhdir_validation', {
-	validation_id,: { type: Sequelize.INTEGER,
-				primaryKey: true } 
+	validation_id: { type: Sequelize.INTEGER,
+				primaryKey: true,
+				autoIncrement: true }, 
 	meta_data_id: { type: Sequelize.INTEGER },
 	need_cc_id: { type: Sequelize.INTEGER },
 	target_location: { type: Sequelize.STRING },
@@ -440,7 +490,7 @@ const spdValidationModel = spddb.define('vhdir_validation', {
 	next_scheduled: { type: Sequelize.DATE },
 	failure_action_cc_id: { type: Sequelize.INTEGER },
 	attestation_id: { type: Sequelize.INTEGER },
-	validator_organization_id: { type: Sequelize.INTEGE },
+	validator_organization_id: { type: Sequelize.INTEGER },
 }, {
 	timestamps: false,
 	underscored: true,
@@ -451,7 +501,8 @@ spdValidationModel.removeAttribute('id');
 
 const spdOrgAliasModel = spddb.define('organization_alias', {
   organization_alias_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
   period_start: { type: Sequelize.DATE},
   period_end: { type: Sequelize.DATE},
   value: { type: Sequelize.STRING },
@@ -467,7 +518,8 @@ spdOrgAliasModel.removeAttribute('id');
 
 const spdFhirCodeableConceptModel = spddb.define('fhir_codeable_concept', {
 	codeable_concept_id: { type: Sequelize.INTEGER,
-				primaryKey: true},
+				primaryKey: true,
+				autoIncrement: true},
 	text: { type: Sequelize.STRING },
 	coding_system: { type: Sequelize.STRING },
 	coding_version: { type: Sequelize.STRING },
@@ -535,9 +587,10 @@ const SpdInsurancePlan = spddb.models.vhdir_insurance_plan;
 const spdHealthcareSvc = spddb.models.vhdir_healthcare_service
 const SpdRestriction = spddb.models.vhdir_restriction;
 const SpdValidation = spddb.models.vhdir_validation;
+const SpdLocation = spddb.models.vhdir_location;
 const OrgAlias = spddb.models.organization_alias;
 const ProviderRole = spddb.models.vhdir_practitioner_role;
 const FhirCodeableConcept = spddb.models.fhir_codeable_concept
 
 
-export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias, ProviderRole, FhirCodeableConcept, spdHealthcareSvc, SpdRestriction, SpdValidation};
+export { Npi, npidb, Organization, Address, Telecom, Contact, Name, Provider, spddb, cciiodb, Cciio, Hios, Network, Identifier, Reference, InsurancePlan, SpdInsurancePlan, OrgAlias, ProviderRole, FhirCodeableConcept, spdHealthcareSvc, SpdRestriction, SpdValidation, SpdLocation};

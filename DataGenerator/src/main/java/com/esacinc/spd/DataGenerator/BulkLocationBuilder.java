@@ -49,6 +49,8 @@ public class BulkLocationBuilder implements INewPatients, IEhr {
 			loc.setId(resultSet.getString("location_id"));
 			ErrorReport.setCursor("VhDirLocation", loc.getId());
 
+			loc.setText(ResourceFactory.makeNarrative("Location (id: " +locId + ")"));
+
 			loc.setName(resultSet.getString("name"));
 			loc.addAlias(resultSet.getString("alias"));
 			loc.setDescription(resultSet.getString("description"));

@@ -14,7 +14,7 @@ import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
-@ResourceDef(name="vhdir-endpoint", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-endpoint")
+@ResourceDef(name="Endpoint", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-endpoint")
 public class VhDirEndpoint extends Endpoint implements IDigitalCertificate, IEndpointUseCase {
 	private static final long serialVersionUID = 1L;
 

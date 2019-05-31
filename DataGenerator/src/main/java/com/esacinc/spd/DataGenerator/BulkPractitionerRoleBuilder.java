@@ -45,6 +45,8 @@ public class BulkPractitionerRoleBuilder implements IQualification, INewPatients
 			pr.setId(resultSet.getString("practitioner_role_id"));
 			ErrorReport.setCursor("VhDirPractitionerRole", pr.getId());
 
+			pr.setText(ResourceFactory.makeNarrative("PractitionerRole (id: " + prId + ")"));
+
 			pr.setActive(resultSet.getBoolean("active"));
 			pr.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"), resultSet.getDate("period_end")));
 			pr.setPractitioner(ResourceFactory.makeResourceReference(resultSet.getString("practitioner_id"), "vhdir_practitioner", null, "Practitioner"));

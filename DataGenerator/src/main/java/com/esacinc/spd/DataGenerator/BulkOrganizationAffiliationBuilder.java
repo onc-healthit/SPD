@@ -44,6 +44,8 @@ public class BulkOrganizationAffiliationBuilder {
 			of.setId(resultSet.getString("organization_affiliation_id"));
 			ErrorReport.setCursor("VhDirOrganizationAffiliation", of.getId());
 
+			of.setText(ResourceFactory.makeNarrative("OrganizationAffiliation (id: " + ofId + ")"));
+
 			of.setActive(resultSet.getBoolean("active"));
 			of.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"), resultSet.getDate("period_end")));
 			// TODO the following two should really be ids into resource reference table, but currently they

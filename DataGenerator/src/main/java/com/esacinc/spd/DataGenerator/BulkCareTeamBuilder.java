@@ -47,6 +47,8 @@ public class BulkCareTeamBuilder {
 			ct.setId(resultSet.getString("careteam_id"));
 			ErrorReport.setCursor("VhDirCareTeam", ct.getId());
 
+			ct.setText(ResourceFactory.makeNarrative("CareTeam (id: " + ctId + ")"));
+
 			ct.setName(resultSet.getString("name"));
 			// TODO Encounter reference, below,  incorrect...model points to an encounter table, which is empty. 
 			// Model should really be a pointer to a resource reference - as the code below expects.

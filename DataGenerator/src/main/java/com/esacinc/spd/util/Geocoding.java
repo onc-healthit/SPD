@@ -122,12 +122,12 @@ public class Geocoding implements IGeoLocation {
 		return loc;
 	}
 	
-	static public VhDirGeoLocation getGeoLocation(Double lat, Double lon, String postalCode, Connection connection)  {
+	static public VhDirGeoLocation getGeoLocation(Double lat, Double lon, String postalCode, Connection connection, String addressId)  {
 		VhDirGeoLocation loc = new VhDirGeoLocation();
 		try {
 			// If we don't have a valid lat/lon, the get one by geo locating the given postalCode
 			if (!LIMIT_REACHED && (lat == null || lon == null || lat == 0.0 || lon == 0.0)) {
-				System.out.println("Geocoding.getGeoLocation:  Calling Geocoding lat-lon for postal code " + postalCode);
+				System.out.println("Geocoding.getGeoLocation:  AddressID: " + addressId + " Calling Geocoding lat-lon for postal code " + postalCode);
 				loc = Geocoding.geocodePostalCode(postalCode, connection);
 			} else {
 				// Otherwise, simply put the lat/lon into a geolocation object.

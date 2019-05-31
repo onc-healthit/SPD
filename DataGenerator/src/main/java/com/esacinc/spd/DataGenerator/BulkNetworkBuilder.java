@@ -43,7 +43,9 @@ public class BulkNetworkBuilder {
 			int nwId = resultSet.getInt("network_id");
 			nw.setId(resultSet.getString("network_id"));
 			ErrorReport.setCursor("VhDirNetwork", nw.getId());
-			 
+
+			nw.setText(ResourceFactory.makeNarrative("Organization (id: " + nwId + ")"));
+
 			nw.setActive(resultSet.getBoolean("active"));
 
 
@@ -128,9 +130,9 @@ public class BulkNetworkBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirNetwork nw, int nwId) throws SQLException {
-	    ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from address where network_id = ?", nwId);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT address_id from address where network_id = ?", nwId);
 		while(resultset.next()) {
-			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
+			VhDirAddress addr = ResourceFactory.getAddress(resultset.getInt("address_id"), connection);
 			nw.addAddress(addr);
 		}
 	}

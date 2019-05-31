@@ -10,7 +10,7 @@ import org.hl7.fhir.r4.model.Consent;
  * @author dandonahue
  *
  */
-@ResourceDef(name="vhdir-restriction", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-restriction")
+@ResourceDef(name="Consent", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-restriction")
 public class VhDirRestriction extends Consent { 
 	private static final long serialVersionUID = 1L;
     

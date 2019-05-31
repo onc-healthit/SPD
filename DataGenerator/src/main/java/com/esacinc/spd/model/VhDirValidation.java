@@ -21,7 +21,7 @@ import org.hl7.fhir.r4.model.VerificationResult;
  * @author dandonahue
  *
  */
-@ResourceDef(name="vhdir-validation", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-validation")
+@ResourceDef(name="VerificationResult", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-validation")
 public class VhDirValidation extends VerificationResult { 
 	private static final long serialVersionUID = 1L;
     

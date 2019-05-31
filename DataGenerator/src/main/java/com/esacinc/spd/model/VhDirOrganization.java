@@ -15,7 +15,7 @@ import org.hl7.fhir.utilities.Utilities;
 import java.util.ArrayList;
 import java.util.List;
 
-@ResourceDef(name="vhdir-organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization")
+@ResourceDef(name="Organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization")
 public class VhDirOrganization extends Organization implements IDigitalCertificate, IQualification {
 	private static final long serialVersionUID = 1L;
     

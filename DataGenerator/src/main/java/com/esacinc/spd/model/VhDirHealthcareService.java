@@ -17,7 +17,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
 */
 
-@ResourceDef(name="vhdir-healthcareservice", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-healthcareservice")
+@ResourceDef(name="HealthcareService", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-healthcareservice")
 public class VhDirHealthcareService extends HealthcareService implements INewPatients {
 	private static final long serialVersionUID = 1L;
     

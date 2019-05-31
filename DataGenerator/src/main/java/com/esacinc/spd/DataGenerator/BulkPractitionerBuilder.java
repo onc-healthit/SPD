@@ -11,8 +11,10 @@ import java.util.List;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.HumanName;
+import org.hl7.fhir.r4.model.Narrative;
 import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
 import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.codesystems.NarrativeStatus;
 
 import com.esacinc.spd.model.VhDirAddress;
 import com.esacinc.spd.model.VhDirTelecom;
@@ -48,7 +50,9 @@ public class BulkPractitionerBuilder {
 			int pracId = resultSet.getInt("practitioner_id");
 			prac.setId(resultSet.getString("practitioner_id"));
 			ErrorReport.setCursor("VhDirPractitioner", prac.getId());
-			 
+
+			prac.setText(ResourceFactory.makeNarrative("Practitioner (id: " + pracId + ")"));
+
 			prac.setActive(resultSet.getBoolean("active"));
 			
 			// Add a digital certificate to the first 3 organizations
@@ -180,9 +184,9 @@ public class BulkPractitionerBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirPractitioner prac, int pracId) throws SQLException {
-	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where practitioner_id = ?", pracId);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT address_id from address where practitioner_id = ?", pracId);
 		while(resultset.next()) {
-			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
+			VhDirAddress addr = ResourceFactory.getAddress(resultset.getInt("address_id"), connection);
 			prac.addAddress(addr);
 		}
 	}

@@ -16,7 +16,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
 */
 
-@ResourceDef(name="vhdir-network", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network")
+@ResourceDef(name="Organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network")
 public class VhDirNetwork extends Organization { 
 	private static final long serialVersionUID = 1L;
     

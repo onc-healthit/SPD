@@ -40,10 +40,12 @@ public class BulkEndpointBuilder implements IEndpointUseCase {
 			int epId = resultSet.getInt("endpoint_id");
 			ep.setId(resultSet.getString("endpoint_id"));
 			ErrorReport.setCursor("VhDirEndpoint", ep.getId());
-			
+
+			ep.setText(ResourceFactory.makeNarrative("Endpoint (id: " + epId + ")"));
+
 			ep.setName(resultSet.getString("name"));
 			ep.setAddress(resultSet.getString("address"));
-			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),resultSet.getString("connectionType"),"Connection Type", false));
+			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),resultSet.getString("connectionType"),"http://terminology.hl7.org/CodeSystem/endpoint-connection-type",false));
 			ep.setRank(new IntegerType(resultSet.getInt("rank")));
 			ep.setManagingOrganization(ResourceFactory.getResourceReference(resultSet.getInt("managing_organization_id"), connection));
 			ep.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"),resultSet.getDate("period_end"))); 

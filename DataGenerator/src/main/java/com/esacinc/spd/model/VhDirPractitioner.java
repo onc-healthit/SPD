@@ -33,7 +33,7 @@ import java.util.List;
 
 */
 
-@ResourceDef(name="vhdir-practitioner", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-Practitioner")
+@ResourceDef(name="Practitioner", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-practitioner")
 public class VhDirPractitioner extends Practitioner implements IDigitalCertificate {
 	private static final long serialVersionUID = 1L;
     

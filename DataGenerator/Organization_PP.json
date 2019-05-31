@@ -1,16 +1,16 @@
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "1",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 1)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
   "extension": [
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
-      "valueString": "327 DEVON DR"
-    },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/digitalcertificate",
       "extension": [
@@ -47,7 +47,7 @@
         },
         {
           "url": "expirationDate",
-          "valueDate": "2020-05-30"
+          "valueDate": "2020-05-31"
         },
         {
           "url": "trustFramework",
@@ -67,15 +67,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -107,8 +100,7 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
@@ -162,7 +154,56 @@
       "rank": 1
     },
     {
-      "id": "2",
+      "id": "10001",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20001",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -212,7 +253,56 @@
       "rank": 2
     },
     {
-      "id": "3",
+      "id": "30001",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40001",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -288,7 +378,7 @@
       "country": "US"
     },
     {
-      "id": "2",
+      "id": "10001",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -330,7 +420,7 @@
       },
       "telecom": [
         {
-          "id": "3",
+          "id": "40001",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -379,12 +469,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "2",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 2)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -427,7 +521,7 @@
         },
         {
           "url": "expirationDate",
-          "valueDate": "2020-05-30"
+          "valueDate": "2020-05-31"
         },
         {
           "url": "trustFramework",
@@ -447,15 +541,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -487,12 +574,11 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "4",
+      "id": "2",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -542,7 +628,56 @@
       "rank": 1
     },
     {
-      "id": "5",
+      "id": "10002",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20002",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -592,7 +727,56 @@
       "rank": 2
     },
     {
-      "id": "6",
+      "id": "30002",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40002",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -643,7 +827,7 @@
   ],
   "address": [
     {
-      "id": "3",
+      "id": "2",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -668,7 +852,7 @@
       "country": "US"
     },
     {
-      "id": "4",
+      "id": "10002",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -710,7 +894,7 @@
       },
       "telecom": [
         {
-          "id": "6",
+          "id": "40002",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -759,12 +943,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "3",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 3)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -807,7 +995,7 @@
         },
         {
           "url": "expirationDate",
-          "valueDate": "2020-05-30"
+          "valueDate": "2020-05-31"
         },
         {
           "url": "trustFramework",
@@ -827,15 +1015,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -867,12 +1048,11 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "7",
+      "id": "3",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -922,7 +1102,7 @@
       "rank": 1
     },
     {
-      "id": "8",
+      "id": "10003",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -972,7 +1152,7 @@
       "rank": 1
     },
     {
-      "id": "9",
+      "id": "20003",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1022,7 +1202,7 @@
       "rank": 2
     },
     {
-      "id": "10",
+      "id": "30003",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1072,7 +1252,7 @@
       "rank": 2
     },
     {
-      "id": "11",
+      "id": "40003",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1123,7 +1303,7 @@
   ],
   "address": [
     {
-      "id": "5",
+      "id": "3",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -1148,7 +1328,7 @@
       "country": "US"
     },
     {
-      "id": "6",
+      "id": "10003",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -1190,7 +1370,7 @@
       },
       "telecom": [
         {
-          "id": "11",
+          "id": "40003",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1239,12 +1419,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "4",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 4)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -1254,15 +1438,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -1294,12 +1471,11 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "12",
+      "id": "4",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1349,7 +1525,56 @@
       "rank": 1
     },
     {
-      "id": "13",
+      "id": "10004",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20004",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1399,7 +1624,56 @@
       "rank": 2
     },
     {
-      "id": "14",
+      "id": "30004",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40004",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1450,7 +1724,7 @@
   ],
   "address": [
     {
-      "id": "7",
+      "id": "4",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -1475,7 +1749,7 @@
       "country": "US"
     },
     {
-      "id": "8",
+      "id": "10004",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -1517,7 +1791,7 @@
       },
       "telecom": [
         {
-          "id": "14",
+          "id": "40004",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1566,12 +1840,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "5",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 5)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -1581,15 +1859,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -1621,12 +1892,109 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "15",
+      "id": "5",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10005",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20005",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1676,7 +2044,56 @@
       "rank": 2
     },
     {
-      "id": "16",
+      "id": "30005",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40005",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1727,7 +2144,7 @@
   ],
   "address": [
     {
-      "id": "9",
+      "id": "5",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -1752,7 +2169,7 @@
       "country": "US"
     },
     {
-      "id": "10",
+      "id": "10005",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -1794,7 +2211,7 @@
       },
       "telecom": [
         {
-          "id": "16",
+          "id": "40005",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1843,12 +2260,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "6",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 6)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -1858,15 +2279,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -1898,12 +2312,109 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "17",
+      "id": "6",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10006",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20006",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -1953,7 +2464,56 @@
       "rank": 2
     },
     {
-      "id": "18",
+      "id": "30006",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40006",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2004,7 +2564,7 @@
   ],
   "address": [
     {
-      "id": "11",
+      "id": "6",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -2029,7 +2589,7 @@
       "country": "US"
     },
     {
-      "id": "12",
+      "id": "10006",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -2071,7 +2631,7 @@
       },
       "telecom": [
         {
-          "id": "18",
+          "id": "40006",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2120,30 +2680,27 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "7",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
   },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 7)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
   "extension": [
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
-      "valueString": "#1 IN HOME CARE, L.L.C.1539 JACKSON AVE STE 120"
+      "valueString": "#1 IN HOME CARE, L.L.C."
     },
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -2175,12 +2732,11 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "19",
+      "id": "7",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2230,7 +2786,56 @@
       "rank": 1
     },
     {
-      "id": "20",
+      "id": "10007",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20007",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2280,7 +2885,56 @@
       "rank": 2
     },
     {
-      "id": "21",
+      "id": "30007",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40007",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2331,7 +2985,7 @@
   ],
   "address": [
     {
-      "id": "13",
+      "id": "7",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -2356,7 +3010,7 @@
       "country": "US"
     },
     {
-      "id": "14",
+      "id": "10007",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -2389,7 +3043,7 @@
     {
       "id": "7",
       "name": {
-        "id": "5",
+        "id": "7",
         "use": "official",
         "family": "JOHNSON",
         "given": [
@@ -2398,7 +3052,7 @@
       },
       "telecom": [
         {
-          "id": "21",
+          "id": "40007",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2447,12 +3101,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "8",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 8)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -2462,15 +3120,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -2502,12 +3153,11 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "22",
+      "id": "8",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2557,7 +3207,56 @@
       "rank": 1
     },
     {
-      "id": "23",
+      "id": "10008",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20008",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2607,7 +3306,56 @@
       "rank": 2
     },
     {
-      "id": "24",
+      "id": "30008",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40008",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2658,7 +3406,7 @@
   ],
   "address": [
     {
-      "id": "15",
+      "id": "8",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -2683,7 +3431,7 @@
       "country": "US"
     },
     {
-      "id": "16",
+      "id": "10008",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -2725,7 +3473,7 @@
       },
       "telecom": [
         {
-          "id": "24",
+          "id": "40008",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2774,12 +3522,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "9",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 9)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -2789,15 +3541,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -2829,12 +3574,11 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "25",
+      "id": "9",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2884,7 +3628,7 @@
       "rank": 1
     },
     {
-      "id": "26",
+      "id": "10009",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2934,7 +3678,7 @@
       "rank": 1
     },
     {
-      "id": "27",
+      "id": "20009",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -2984,7 +3728,7 @@
       "rank": 2
     },
     {
-      "id": "28",
+      "id": "30009",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -3034,7 +3778,7 @@
       "rank": 2
     },
     {
-      "id": "29",
+      "id": "40009",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -3085,7 +3829,7 @@
   ],
   "address": [
     {
-      "id": "17",
+      "id": "9",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -3110,7 +3854,7 @@
       "country": "US"
     },
     {
-      "id": "18",
+      "id": "10009",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -3152,7 +3896,7 @@
       },
       "telecom": [
         {
-          "id": "29",
+          "id": "40009",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -3201,12 +3945,16 @@
   ]
 }
 {
-  "resourceType": "vhdir-organization",
+  "resourceType": "Organization",
   "id": "10",
   "meta": {
     "profile": [
       "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 10)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -3216,15 +3964,8 @@
     {
       "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
       "valueVhdir-alias": {
-        "id": "1",
+        "id": "3",
         "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
-      }
-    },
-    {
-      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
-      "valueVhdir-alias": {
-        "id": "2",
-        "valueString": "976258200"
       }
     }
   ],
@@ -3256,12 +3997,11 @@
     }
   ],
   "alias": [
-    "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
-    "976258200"
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "30",
+      "id": "10",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -3311,7 +4051,56 @@
       "rank": 1
     },
     {
-      "id": "31",
+      "id": "10010",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20010",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -3361,7 +4150,56 @@
       "rank": 2
     },
     {
-      "id": "32",
+      "id": "30010",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40010",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -3412,7 +4250,7 @@
   ],
   "address": [
     {
-      "id": "19",
+      "id": "10",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -3437,7 +4275,7 @@
       "country": "US"
     },
     {
-      "id": "20",
+      "id": "10010",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
@@ -3479,7 +4317,7 @@
       },
       "telecom": [
         {
-          "id": "32",
+          "id": "40010",
           "extension": [
             {
               "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -3521,6 +4359,4225 @@
           ],
           "system": "phone",
           "value": "5135941090",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "11",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 11)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "#LEADWITHLOVE INC."
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "11",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1770016313"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "11",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "5619095354",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10011",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20011",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "5619095354",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30011",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40011",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "5619095354",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "11",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 26.782114
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -80.06528
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "1291 W 2ND ST"
+      ],
+      "state": "FL",
+      "postalCode": "334047205",
+      "country": "US"
+    },
+    {
+      "id": "10011",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 26.782114
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -80.06528
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "1291 W 2ND ST"
+      ],
+      "state": "FL",
+      "postalCode": "334047205",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "11",
+      "name": {
+        "id": "11",
+        "use": "official",
+        "family": "RANSOM",
+        "given": [
+          "LATOYA"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40011",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "5619095354",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "12",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 12)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0026 FOOT SPECIALISTS OF PUGET SOUND, PS"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "12",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1932507191"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "12",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "4256442313",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10012",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20012",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "4256442313",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30012",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40012",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "4254492471",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "12",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 47.562975
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -122.1526
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "4140 FACTORIA BLVD SE SUITE 1B"
+      ],
+      "state": "WA",
+      "postalCode": "98006",
+      "country": "US"
+    },
+    {
+      "id": "10012",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 47.562975
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -122.1526
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "4140 FACTORIA BLVD SE SUITE 1B"
+      ],
+      "state": "WA",
+      "postalCode": "98006",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "12",
+      "name": {
+        "id": "12",
+        "use": "official",
+        "family": "CHU",
+        "given": [
+          "CHARLES"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40012",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "4254492471",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "13",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 13)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027A\u0027 CLASS HOME HEALTH AGENCY, INC."
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "13",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1144490855"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "13",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "9547308800",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10013",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "9547308898",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20013",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "9547308800",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30013",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "9547308898",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40013",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "9547308800",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "13",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 26.122308
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -80.143379
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "PO BOX 590487"
+      ],
+      "state": "FL",
+      "postalCode": "333590487",
+      "country": "US"
+    },
+    {
+      "id": "10013",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 26.13883
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -80.16865
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "3075 W OAKLAND PARK BLVD"
+      ],
+      "state": "FL",
+      "postalCode": "333111221",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "13",
+      "name": {
+        "id": "13",
+        "use": "official",
+        "family": "ELLIOTT",
+        "given": [
+          "SANGAY"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40013",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "9547308800",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "14",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 14)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027A\u0027 HELPING HAND, INC."
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "14",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1225358856"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "14",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "7704656858",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10014",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20014",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "7704656858",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30014",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40014",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "7704656858",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "14",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 33.817438
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -84.13167
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "439 WATSON BAY"
+      ],
+      "state": "GA",
+      "postalCode": "300876195",
+      "country": "US"
+    },
+    {
+      "id": "10014",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 33.817438
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -84.13167
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "439 WATSON BAY"
+      ],
+      "state": "GA",
+      "postalCode": "300876195",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "14",
+      "name": {
+        "id": "14",
+        "use": "official",
+        "family": "STREETER",
+        "given": [
+          "ANDREA"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40014",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "7704656858",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "15",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 15)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027A\u0027 SAFE HANDS TRANSPORTATION LLC"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "15",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1508189457"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "15",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "3366233502",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10015",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "3366233502",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20015",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "3366233502",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30015",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "3366233502",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40015",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "3366233502",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "15",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 36.505996
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -79.74935
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "403 SHERWOOD CT"
+      ],
+      "state": "NC",
+      "postalCode": "272882872",
+      "country": "US"
+    },
+    {
+      "id": "10015",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 36.478349
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -79.55518
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "169 LEISURELAND DR"
+      ],
+      "state": "NC",
+      "postalCode": "273269144",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "15",
+      "name": {
+        "id": "15",
+        "use": "official",
+        "family": "MARTIN",
+        "given": [
+          "CONSTANCE"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40015",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "3366233502",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "16",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 16)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027A\u0027 STREET CLINIC OF CHIROPRACTIC, PLLC"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "16",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1083779102"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "16",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "2539390909",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10016",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "2539391813",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20016",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "2539390909",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30016",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "2539391813",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40016",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "2539390909",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "16",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 47.304221
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -122.21602
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "1020 A ST SE"
+      ],
+      "state": "WA",
+      "postalCode": "980026063",
+      "country": "US"
+    },
+    {
+      "id": "10016",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 47.304221
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -122.21602
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "1020 A ST SE"
+      ],
+      "state": "WA",
+      "postalCode": "980026063",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "16",
+      "name": {
+        "id": "16",
+        "use": "official",
+        "family": "OLSON",
+        "given": [
+          "DONALD"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40016",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "2539390909",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "17",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 17)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027ABSOLUTELY DIVINE\u0027 HOME CARE AGENCY, INC."
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "17",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1154420362"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "17",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "9104858463",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10017",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20017",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "9104858463",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30017",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40017",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "9104858463",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "17",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 35.084163
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -78.953
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "PO BOX 35781"
+      ],
+      "state": "NC",
+      "postalCode": "283030781",
+      "country": "US"
+    },
+    {
+      "id": "10017",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 35.02844
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -78.97037
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "1830 OWEN DR"
+      ],
+      "state": "NC",
+      "postalCode": "283043412",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "reference": "17",
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "17",
+      "name": {
+        "id": "17",
+        "use": "official",
+        "family": "JONES",
+        "given": [
+          "DENISE"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40017",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "9104858463",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "18",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 18)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027ANSWERS,\u0027 PROFESSIONAL COUNSELING SERVICE, LLC"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "18",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1881900637"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "18",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "3072875929",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10018",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20018",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "3072875929",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30018",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40018",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "3072875929",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "18",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 41.141281
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -104.80208
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "3001 HENDERSON DR"
+      ],
+      "state": "WY",
+      "postalCode": "820015840",
+      "country": "US"
+    },
+    {
+      "id": "10018",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 41.141281
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -104.80208
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "3001 HENDERSON DR"
+      ],
+      "state": "WY",
+      "postalCode": "820015840",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "18",
+      "name": {
+        "id": "18",
+        "use": "official",
+        "family": "ALLMAN",
+        "given": [
+          "BARBARA"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40018",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "3072875929",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "19",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 19)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027C\u0027 CASTING CARE"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "19",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1700031077"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "19",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "8047634141",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10019",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20019",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "8047634141",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30019",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40019",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "8042740640",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "19",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 37.405699
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -77.5838
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "5107 BLOSSOMWOOD CT"
+      ],
+      "state": "VA",
+      "postalCode": "238327023",
+      "country": "US"
+    },
+    {
+      "id": "10019",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 37.405699
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -77.5838
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "5107 BLOSSOMWOOD CT"
+      ],
+      "state": "VA",
+      "postalCode": "238327023",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "19",
+      "name": {
+        "id": "19",
+        "use": "official",
+        "family": "JACKSON",
+        "given": [
+          "DORIS"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40019",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "8042740640",
+          "rank": 0
+        }
+      ]
+    }
+  ]
+}
+{
+  "resourceType": "Organization",
+  "id": "20",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 20)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/org-description",
+      "valueString": "\u0027CHYNA CARES\u0027 HEALTH SERVICES"
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "20",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1073837829"
+    }
+  ],
+  "active": true,
+  "type": [
+    {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
+      ]
+    }
+  ],
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+  ],
+  "telecom": [
+    {
+      "id": "20",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "2812511528",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "10020",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "2812511528",
+      "use": "work",
+      "rank": 1
+    },
+    {
+      "id": "20020",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "8327908340",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "30020",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "fax",
+      "value": "2812511528",
+      "use": "work",
+      "rank": 2
+    },
+    {
+      "id": "40020",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "2812511528",
+      "rank": 0
+    }
+  ],
+  "address": [
+    {
+      "id": "20",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 30.024749
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -95.53215
+            }
+          ]
+        }
+      ],
+      "use": "billing",
+      "line": [
+        "20714 SPRINGLIGHT LN"
+      ],
+      "state": "TX",
+      "postalCode": "773793261",
+      "country": "US"
+    },
+    {
+      "id": "10020",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+          "extension": [
+            {
+              "url": "latitude",
+              "valueDecimal": 30.024749
+            },
+            {
+              "url": "longitude",
+              "valueDecimal": -95.53215
+            }
+          ]
+        }
+      ],
+      "use": "work",
+      "line": [
+        "20714 SPRINGLIGHT LN"
+      ],
+      "state": "TX",
+      "postalCode": "773793261",
+      "country": "US"
+    }
+  ],
+  "partOf": {
+    "type": "vhdir_organization",
+    "display": "Part of Organization"
+  },
+  "contact": [
+    {
+      "id": "20",
+      "name": {
+        "id": "20",
+        "use": "official",
+        "family": "LAVERGNE",
+        "given": [
+          "JENEEN"
+        ]
+      },
+      "telecom": [
+        {
+          "id": "40020",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "2812511528",
           "rank": 0
         }
       ]

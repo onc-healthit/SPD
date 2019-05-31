@@ -16,7 +16,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
 */
 
-@ResourceDef(name="vhdir-careteam", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-careteam")
+@ResourceDef(name="CareTeam", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-careteam")
 public class VhDirCareTeam extends CareTeam { 
 	private static final long serialVersionUID = 1L;
     

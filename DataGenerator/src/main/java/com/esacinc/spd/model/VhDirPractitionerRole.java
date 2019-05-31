@@ -18,7 +18,7 @@ import java.util.List;
 
 */
 
-@ResourceDef(name="vhdir-practitionerrole", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-practitionerrole")
+@ResourceDef(name="PractitionerRole", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-practitionerrole")
 public class VhDirPractitionerRole extends PractitionerRole
 		implements IDigitalCertificate, IQualification, INewPatients {
 	private static final long serialVersionUID = 1L;

@@ -14,7 +14,7 @@ import java.util.List;
 
 */
 
-@ResourceDef(name="vhdir-organizationaffiliation", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organizationaffiliation")
+@ResourceDef(name="OrganizationAffiliation", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organizationaffiliation")
 public class VhDirOrganizationAffiliation extends OrganizationAffiliation { 
 	private static final long serialVersionUID = 1L;
     

@@ -43,7 +43,12 @@ public class BulkOrganizationBuilder implements IDigitalCertificate, IQualificat
 			orgId = resultSet.getInt("organization_id");
 			org.setId(resultSet.getString("organization_id"));
 			ErrorReport.setCursor("VhDirOrganization", org.getId());
-						 					
+
+			System.out.println("OrgId: " + orgId);  // temporary debugging for now
+			
+			org.setText(ResourceFactory.makeNarrative("Organization (id: " + orgId + ")"));
+
+			
 			// Handle description
 			org.setDescription(resultSet.getString("description"));
 			
@@ -130,9 +135,9 @@ public class BulkOrganizationBuilder implements IDigitalCertificate, IQualificat
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where organization_id = ?", orgId);
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT address_id from address where organization_id = ?", orgId);
 		while(resultset.next()) {
-			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
+			VhDirAddress addr = ResourceFactory.getAddress(resultset.getInt("address_id"), connection);
 			org.addAddress(addr);
 		}
 	}

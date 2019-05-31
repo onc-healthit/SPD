@@ -1,13 +1,12 @@
 package com.esacinc.spd.util;
 
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import org.hl7.fhir.r4.model.CodeableConcept;
+
 import java.util.Calendar;
 import java.util.Date;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
-
-import com.esacinc.spd.model.VhDirDigitalCertificate;
-
-public class DigitalCertificateFactory {
+public class DigitalCertificateFactory implements IDigitalCertificate {
 
 	static public int MAX_CERTS = 3;   //  Use this to control how many orgs, practitioners, etc will get certs.
 

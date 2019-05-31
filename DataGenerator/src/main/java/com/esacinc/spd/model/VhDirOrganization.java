@@ -1,21 +1,22 @@
 package com.esacinc.spd.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hl7.fhir.r4.model.Organization;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.utilities.Utilities;
-
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
 import ca.uhn.fhir.util.ElementUtil;
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import org.hl7.fhir.r4.model.Organization;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.utilities.Utilities;
 
-@ResourceDef(name="vhdir-organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization")
-public class VhDirOrganization extends Organization {
+import java.util.ArrayList;
+import java.util.List;
+
+@ResourceDef(name="Organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization")
+public class VhDirOrganization extends Organization implements IDigitalCertificate, IQualification {
 	private static final long serialVersionUID = 1L;
     
 	

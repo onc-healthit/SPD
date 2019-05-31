@@ -3,6 +3,8 @@ package com.esacinc.spd.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import com.esacinc.spd.model.complex_extensions.IEndpointUseCase;
 import org.hl7.fhir.r4.model.Endpoint;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
@@ -12,8 +14,8 @@ import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
-@ResourceDef(name="vhdir-endpoint", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-endpoint")
-public class VhDirEndpoint extends Endpoint {
+@ResourceDef(name="Endpoint", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-endpoint")
+public class VhDirEndpoint extends Endpoint implements IDigitalCertificate, IEndpointUseCase {
 	private static final long serialVersionUID = 1L;
 
 	/**

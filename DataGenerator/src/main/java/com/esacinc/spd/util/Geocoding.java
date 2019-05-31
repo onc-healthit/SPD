@@ -1,5 +1,11 @@
 package com.esacinc.spd.util;
 
+import com.esacinc.spd.model.complex_extensions.IGeoLocation;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,13 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.esacinc.spd.model.VhDirGeoLocation;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-public class Geocoding {
+public class Geocoding implements IGeoLocation {
 	
 	static public boolean LIMIT_REACHED = false; 
 	static public Connection zipconnection = null;
@@ -31,6 +31,7 @@ public class Geocoding {
 	static public void closeConnection() {
 		System.out.println("Closing Zipcode Database connection to " + DatabaseUtil.zipConnectionUrl);
 		DatabaseUtil.closeConnection(zipconnection);
+		zipconnection = null;
 	}
 	
 	/**
@@ -59,7 +60,7 @@ public class Geocoding {
 			return null;
 		}
 		// Try to get a geolocation from our local zipcode table...
-		VhDirGeoLocation loc = geocodeLocalPostalCode(postalCode);
+		VhDirGeoLocation loc = geocodeLocalPostalCode(postalCode, connection);
 		// If we couldn't get a loc from the local zipcode table, then try calling an external source...
 		if (loc == null && !LIMIT_REACHED )
 		{
@@ -85,6 +86,7 @@ public class Geocoding {
 					if (l.indexOf("the hourly limit") > -1) {
 						LIMIT_REACHED = true;
 						ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Too Many calls", "Limit reached of 1000 calls in an hour to service api.geonames.org.");
+						break;
 					}
 					JsonElement result = new JsonParser().parse(l);
 				    JsonObject resultObj = result.getAsJsonObject();
@@ -101,14 +103,7 @@ public class Geocoding {
 					    loc.setLongitude(lon);
 				    
 					    // Update all DB records with this postalCode to add lat/lon
-					    if (connection != null) {
-						    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
-						    		postalCode + "%'";
-						    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-						    updateStatement.setDouble(1, lat);
-						    updateStatement.setDouble(2, lon);
-							updateStatement.executeUpdate();
-					    }
+					    updateDatabaseLocs(postalCode, lat, lon, connection);
 				    }
 				}
 				br.close();
@@ -127,13 +122,12 @@ public class Geocoding {
 		return loc;
 	}
 	
-	
-	static public VhDirGeoLocation getGeoLocation(Double lat, Double lon, String postalCode, Connection connection)  {
+	static public VhDirGeoLocation getGeoLocation(Double lat, Double lon, String postalCode, Connection connection, String addressId)  {
 		VhDirGeoLocation loc = new VhDirGeoLocation();
 		try {
 			// If we don't have a valid lat/lon, the get one by geo locating the given postalCode
 			if (!LIMIT_REACHED && (lat == null || lon == null || lat == 0.0 || lon == 0.0)) {
-				System.out.println("Geocoding.getGeoLocation:  Calling Geocoding lat-lon for postal code " + postalCode);
+				System.out.println("Geocoding.getGeoLocation:  AddressID: " + addressId + " Calling Geocoding lat-lon for postal code " + postalCode);
 				loc = Geocoding.geocodePostalCode(postalCode, connection);
 			} else {
 				// Otherwise, simply put the lat/lon into a geolocation object.
@@ -152,17 +146,21 @@ public class Geocoding {
 		
 	}
 	
-	static public VhDirGeoLocation geocodeLocalPostalCode(String postalCode) throws SQLException {
-		System.out.println("Calling local geocoding for " + postalCode);
+	static public VhDirGeoLocation geocodeLocalPostalCode(String postalCode, Connection connection) throws SQLException {
+		//System.out.println("Calling local geocoding for " + postalCode);
 		if (zipconnection != null) {
 			ResultSet resultset = DatabaseUtil.runZipQuery(zipconnection, "select * from zip_codes where zip = ?", postalCode);
 			while (resultset.next()) {
 				VhDirGeoLocation loc = new VhDirGeoLocation();
 				loc.setLatitude(resultset.getDouble("latitude"));
 				loc.setLatitude(resultset.getDouble("longitude"));
+			    // Update all DB records with this postalCode to add lat/lon
+			    updateDatabaseLocs(postalCode, resultset.getDouble("latitude"), resultset.getDouble("longitude"), connection);
+
 				return loc; // expecting only one.
 			}
-			ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Geocoding.geocodeLocalPostalCode", "Postal code not found in local db.");
+			// Too verbose. Don't report this msg.
+			//ErrorReport.writeGeoCodeMsg("VhDirGeoLocation", "postalCode: " + postalCode, "Geocoding.geocodeLocalPostalCode", "Postal code not found in local db.");
 		}
 		else {
 			System.err.println("Unable to open connection to zip schema");
@@ -185,5 +183,20 @@ public class Geocoding {
 			e.printStackTrace();
 		}
     }
-			
+	
+	static protected void updateDatabaseLocs(String postalCode, Double lat, Double lon, Connection connection ) throws SQLException {
+	    // Update all DB records with this postalCode to add lat/lon
+	    if (connection != null) {
+		    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
+		    		postalCode + "%'";
+		    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+		    updateStatement.setDouble(1, lat);
+		    updateStatement.setDouble(2, lon);
+			updateStatement.executeUpdate();
+	    }
+
+	}
+	
+	
+
 }

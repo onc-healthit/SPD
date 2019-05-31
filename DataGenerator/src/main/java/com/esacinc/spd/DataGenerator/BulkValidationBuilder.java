@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Duration;
+import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.Timing;
+import org.hl7.fhir.r4.model.Timing.TimingRepeatComponent;
+import org.hl7.fhir.r4.model.Timing.UnitsOfTime;
 import org.hl7.fhir.r4.model.VerificationResult.Status;
 import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultPrimarySourceComponent;
 import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
 
-import com.esacinc.spd.model.VhDirPrimarySource;
 import com.esacinc.spd.model.VhDirValidation;
 import com.esacinc.spd.util.DatabaseUtil;
 import com.esacinc.spd.util.ErrorReport;
@@ -44,6 +48,8 @@ public class BulkValidationBuilder {
 			val.setId(resultSet.getString("validation_id"));
 			ErrorReport.setCursor("VhDirValidation", val.getId());
 
+			val.setText(ResourceFactory.makeNarrative("VerificationResult (id: " + valId + ")"));
+
 			val.setNeed(ResourceFactory.getCodeableConcept(resultSet.getInt("need_cc_id"),connection));
 			val.addTargetLocation(resultSet.getString("target_location"));
 			val.setStatusDate(resultSet.getDate("status_date")); 
@@ -55,6 +61,8 @@ public class BulkValidationBuilder {
 
 			handleStatus(resultSet, val);
 			
+			handleTargets(connection,val, valId);
+			
 			handleValidationProcesses(connection, val, valId);
 
 			handleFrequency(connection, resultSet, val,valId);
@@ -63,7 +71,7 @@ public class BulkValidationBuilder {
 			
 			handleAttestation(connection, resultSet, val);
 			
-			handleValidators(connection, resultSet, val);
+			handleValidators(connection, val, valId);
 			
 			validations.add(val);
 			
@@ -122,9 +130,31 @@ public class BulkValidationBuilder {
 	 */
 	private void handleFrequency(Connection connection, ResultSet resultSet, VhDirValidation val, int valId) throws SQLException {
 		// TODO wow...need to model frequency in db first
-		Timing freq = new Timing();
+		// For now, assume the frequency value in the db is a ;-delimited string containing frequency value and unit. e.g.   "1;wk"
+		Duration dur = new Duration();
+		Timing tim = new Timing();
 		String strFreq = resultSet.getString("frequency");
-		val.setFrequency(freq);
+		String delim = ";";
+		// Check to see if the db string is pipe delimited rather than semicolon delimited...
+		if (strFreq.indexOf("|") > -1) {
+			delim = "|";
+		}
+		try {
+			if (strFreq != null && !strFreq.isEmpty()) {
+				String[] tokens = strFreq.split(delim);
+				dur.setValue(Double.valueOf(tokens[0]));
+				dur.setUnit(tokens[1]);
+				TimingRepeatComponent trc = new TimingRepeatComponent();
+				trc.setDuration(Double.valueOf(tokens[0]));
+			    trc.setDurationUnit(UnitsOfTime.fromCode(tokens[1]));
+			    tim.setRepeat(trc);
+			}
+			val.setFrequency(tim);
+		}
+		catch (Exception e) {
+			System.err.println("Error parsing frequency: " + strFreq + ", " + e.getMessage());
+			ErrorReport.writeError("VhDirValidation", ""+valId, "Frequency error", "Error parsing frequency of " + strFreq + ". Expect a string of form 'val;unit'");
+		}
 	}
 
 	/**
@@ -136,9 +166,9 @@ public class BulkValidationBuilder {
 	 * @throws SQLException
 	 */
 	private void handlePrimarySources(Connection connection, VhDirValidation val, int valId) throws SQLException {
-	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from primary_source where validation_status_cc_id = ?", valId);
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from primary_source where validation_id = ?", valId);
 		while(resultset.next()) {
-			VhDirPrimarySource ps = ResourceFactory.getPrimarySource(resultset,connection);
+			VerificationResultPrimarySourceComponent ps = ResourceFactory.getPrimarySource(resultset,connection);
 			val.addPrimarySource(ps);
 		} 
 	}
@@ -168,12 +198,27 @@ public class BulkValidationBuilder {
 	 * @param valId
 	 * @throws SQLException
 	 */
-	private void handleValidators(Connection connection, ResultSet resultset,  VhDirValidation val) throws SQLException {
-	    ResultSet valset = DatabaseUtil.runQuery(connection, "SELECT * from validator where validation_id = ?", resultset.getInt("validation_id"));
+	private void handleValidators(Connection connection,  VhDirValidation val, int valId) throws SQLException {
+	    ResultSet valset = DatabaseUtil.runQuery(connection, "SELECT * from validator where validation_id = ?", valId);
 		while(valset.next()) {
 			VerificationResultValidatorComponent validator = ResourceFactory.getValidator(valset, connection);
 			val.addValidator(validator);
 		} 
 	}
 
+	/**
+	 * Handles the Targets  for Validations
+	 * 
+	 * @param connection
+	 * @param val
+	 * @param valId
+	 * @throws SQLException
+	 */
+	private void handleTargets(Connection connection, VhDirValidation val, int valId) throws SQLException {
+	    ResultSet valset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where validation_target_id = ?", valId);
+		while(valset.next()) {
+			Reference ref = ResourceFactory.getResourceReference(valset, connection);
+			val.addTarget(ref);
+		} 
+	}
 }

@@ -1,24 +1,15 @@
 package com.esacinc.spd.util;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.hl7.fhir.r4.model.InsurancePlan.CoverageBenefitComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.CoverageBenefitLimitComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanContactComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanCoverageComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanPlanComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanPlanGeneralCostComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.InsurancePlanPlanSpecificCostComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.PlanBenefitComponent;
-import org.hl7.fhir.r4.model.InsurancePlan.PlanBenefitCostComponent;
+import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirTelecom;
+import org.hl7.fhir.r4.model.InsurancePlan.*;
 import org.hl7.fhir.r4.model.Money;
 import org.hl7.fhir.r4.model.Quantity;
 import org.hl7.fhir.r4.model.Reference;
 
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirTelecom;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * This class has static public methods for return various data associated with Insurance Plans from the database.

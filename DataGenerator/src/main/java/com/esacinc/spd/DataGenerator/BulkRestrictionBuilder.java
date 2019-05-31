@@ -42,8 +42,10 @@ public class BulkRestrictionBuilder {
 			// set the id
 			int resId = resultSet.getInt("restriction_id");
 			res.setId(resultSet.getString("restriction_id"));
-			ErrorReport.setCursor("VhDirRestrictio", res.getId());
-			
+			ErrorReport.setCursor("VhDirRestriction", res.getId());
+
+			res.setText(ResourceFactory.makeNarrative("Consent (id: " + resId + ")"));
+
 			res.setScope(ResourceFactory.getCodeableConcept(resultSet.getInt("scope_cc_id"),connection));
 			res.setDateTime(resultSet.getDate("date_time"));	
 			
@@ -164,14 +166,14 @@ public class BulkRestrictionBuilder {
 						code = tokens[0];
 					} 
 					else {
-						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Security_labels: " + labels, "Security labels expected to be a ';' delimited list of code,display pairs");
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Security_labels: " + labels, "Security labels expected to be a ';' delimited list of code,display pairs such as 'U;unrestricted'");
 					}
 					if (tokens.length > 1) {
 						display = tokens[1];
 					}
 					else {
 						display = code;
-						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Security_labels: " + labels, "Security labels expected to be a ';' delimited list of code,display pairs");
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Security_labels: " + labels, "Security labels expected to be a ';' delimited list of code,display pairs such as 'M;moderate'");
 					}
 					Coding labelCode = ResourceFactory.makeCoding(code, display , "http://hl7.org/fhir/ValueSet/security-labels", false);
 					cc.addSecurityLabel(labelCode);
@@ -189,14 +191,14 @@ public class BulkRestrictionBuilder {
 						code = tokens[0];
 					}
 					else {
-						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Purposes: " + purposes, "Purposes expected to be a ';' delimited list of code,display pairs");
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Purposes: " + purposes, "Purposes expected to be a ';' delimited list of code,display pairs such as 'HMARKT;healtcare marketing'");
 					}
 					if (tokens.length > 1) {
 						display = tokens[1];
 					}
 					else {
 						display = code;
-						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Purposes: " + purposes, "Purposes expected to be a ';' delimited list of code,display pairs");
+						ErrorReport.writeWarning("VhDirRestriction", res.getId(), "Purposes: " + purposes, "Purposes expected to be a ';' delimited list of code,display pairs such as 'CAREMGT;care management'");
 					}
 					Coding purposeCode = ResourceFactory.makeCoding(code, display , "http://terminology.hl7.org/ValueSet/v3-PurposeOfUse", false);
 					cc.addPurpose(purposeCode);

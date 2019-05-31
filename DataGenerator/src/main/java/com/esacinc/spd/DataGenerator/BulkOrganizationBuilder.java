@@ -1,5 +1,14 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.*;
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import com.esacinc.spd.util.*;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,26 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.StringType;
-
-import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirAlias;
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.model.VhDirDigitalCertificate;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirOrganization;
-import com.esacinc.spd.model.VhDirPractitionerRole;
-import com.esacinc.spd.model.VhDirQualification;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
-
-public class BulkOrganizationBuilder {
+public class BulkOrganizationBuilder implements IDigitalCertificate, IQualification {
 	
 	
 	/**
@@ -53,7 +43,12 @@ public class BulkOrganizationBuilder {
 			orgId = resultSet.getInt("organization_id");
 			org.setId(resultSet.getString("organization_id"));
 			ErrorReport.setCursor("VhDirOrganization", org.getId());
-						 					
+
+			System.out.println("OrgId: " + orgId);  // temporary debugging for now
+			
+			org.setText(ResourceFactory.makeNarrative("Organization (id: " + orgId + ")"));
+
+			
 			// Handle description
 			org.setDescription(resultSet.getString("description"));
 			
@@ -91,7 +86,7 @@ public class BulkOrganizationBuilder {
          	handleAddresses(connection, org, orgId);
 			
 			// Handle the partOf association reference
-         	org.setPartOf(ResourceFactory.getResourceReference(resultSet.getInt("partOf_organization_id"), connection));
+         	org.setPartOf(ResourceFactory.makeResourceReference(resultSet.getString("partOf_organization_id"), "vhdir_organization", null, "Part of Organization"));
 			
 			// Handle contacts
          	handleContacts(connection, org, orgId);
@@ -140,9 +135,9 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from address where organization_id = ?", orgId);
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT address_id from address where organization_id = ?", orgId);
 		while(resultset.next()) {
-			VhDirAddress addr = ResourceFactory.getAddress(resultset, connection);
+			VhDirAddress addr = ResourceFactory.getAddress(resultset.getInt("address_id"), connection);
 			org.addAddress(addr);
 		}
 	}

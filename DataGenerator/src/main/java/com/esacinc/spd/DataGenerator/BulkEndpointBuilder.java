@@ -1,5 +1,14 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.VhDirEndpoint;
+import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirTelecom;
+import com.esacinc.spd.model.complex_extensions.IEndpointUseCase;
+import com.esacinc.spd.util.*;
+import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
+import org.hl7.fhir.r4.model.IntegerType;
+import org.hl7.fhir.r4.model.Reference;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,21 +16,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Reference;
-
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirEndpointUseCase;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
-
-public class BulkEndpointBuilder {
+public class BulkEndpointBuilder implements IEndpointUseCase {
 	
 	
 	/**
@@ -45,10 +40,12 @@ public class BulkEndpointBuilder {
 			int epId = resultSet.getInt("endpoint_id");
 			ep.setId(resultSet.getString("endpoint_id"));
 			ErrorReport.setCursor("VhDirEndpoint", ep.getId());
-			
+
+			ep.setText(ResourceFactory.makeNarrative("Endpoint (id: " + epId + ")"));
+
 			ep.setName(resultSet.getString("name"));
 			ep.setAddress(resultSet.getString("address"));
-			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),resultSet.getString("connectionType"),"Connection Type", false));
+			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),resultSet.getString("connectionType"),"http://terminology.hl7.org/CodeSystem/endpoint-connection-type",false));
 			ep.setRank(new IntegerType(resultSet.getInt("rank")));
 			ep.setManagingOrganization(ResourceFactory.getResourceReference(resultSet.getInt("managing_organization_id"), connection));
 			ep.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"),resultSet.getDate("period_end"))); 

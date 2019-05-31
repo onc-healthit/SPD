@@ -1,5 +1,17 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirNewpatientprofile;
+import com.esacinc.spd.model.VhDirPractitionerRole;
+import com.esacinc.spd.model.VhDirTelecom;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import com.esacinc.spd.util.*;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
+import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
+import org.hl7.fhir.r4.model.Reference;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,25 +19,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
-import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
-import org.hl7.fhir.r4.model.Reference;
 
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirNewpatientprofile;
-import com.esacinc.spd.model.VhDirNewpatients;
-import com.esacinc.spd.model.VhDirPractitionerRole;
-import com.esacinc.spd.model.VhDirQualification;
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
-
-
-public class BulkPractitionerRoleBuilder {
+public class BulkPractitionerRoleBuilder implements IQualification, INewPatients {
 	
 	
 	/**
@@ -50,17 +45,18 @@ public class BulkPractitionerRoleBuilder {
 			pr.setId(resultSet.getString("practitioner_role_id"));
 			ErrorReport.setCursor("VhDirPractitionerRole", pr.getId());
 
+			pr.setText(ResourceFactory.makeNarrative("PractitionerRole (id: " + prId + ")"));
+
 			pr.setActive(resultSet.getBoolean("active"));
 			pr.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"), resultSet.getDate("period_end")));
-			pr.setPractitioner(ResourceFactory.getResourceReference(resultSet.getInt("practitioner_id"), connection));
-			pr.setOrganization(ResourceFactory.getResourceReference(resultSet.getInt("organization_id"), connection));
+			pr.setPractitioner(ResourceFactory.makeResourceReference(resultSet.getString("practitioner_id"), "vhdir_practitioner", null, "Practitioner"));
+			pr.setOrganization(ResourceFactory.makeResourceReference(resultSet.getString("organization_id"), "vhdir_organization", null, "Organization"));
 			pr.setAvailabilityExceptions(resultSet.getString("availability_exceptions"));	
 
 			// Add a digital certificate to the first 3 organizations
-			int certCount = 0;
-         	if (certCount < DigitalCertificateFactory.MAX_CERTS) {
+         	if (cnt < DigitalCertificateFactory.MAX_CERTS) {
          		// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-         		pr.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null));
+         		pr.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(cnt, "role", "auth", "other", "x.509v3", null));
          	}
 
 			// Handle the restrictions
@@ -239,7 +235,7 @@ public class BulkPractitionerRoleBuilder {
 	private void handleNewPatients(Connection connection, VhDirPractitionerRole pr, int prId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from new_patients where practitioner_role_id = ?", prId);
 		while(resultset.next()) {
-			VhDirNewpatients np = ResourceFactory.getNewPatients(resultset,connection);
+			VhDirNewPatients np = ResourceFactory.getNewPatients(resultset,connection);
 			pr.addNewpatients(np);
 		}
 	}

@@ -1,0 +1,460 @@
+{
+  "resourceType": "vhdir-location",
+  "id": "1",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "121 COMBAT SUPPORT HOSPITAL",
+  "address": {
+    "id": "1190",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 37.533908
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": 126.977495
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "BRIAN ALLGOOD ARMY COMMUNITY HOSPITAL"
+    ],
+    "state": "AP",
+    "postalCode": "96205",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "595",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "2",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "BRIAN ALLGOOD ARMY COMMUNITY HOSPITAL",
+  "address": {
+    "id": "1192",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 37.533908
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": 126.977495
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "121ST COMBAT SUPPORT HOSPITAL"
+    ],
+    "state": "AP",
+    "postalCode": "962055281",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "596",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "3",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "121ST GENERAL HOSPITAL(BRAIN ALLGOOD ARMY COMMUNITY HOSPITAL)",
+  "address": {
+    "id": "1274",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 37.533908
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": 126.977495
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "UNIT 15549 BOX 59"
+    ],
+    "state": "AP",
+    "postalCode": "962055549",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "637",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "4",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "1248 HOSPITAL DRIVE OPERATIONS LLC",
+  "address": {
+    "id": "1342",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 44.412413
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -72.00996
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "1248 HOSPITAL DRIVE"
+    ],
+    "state": "VT",
+    "postalCode": "05819",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "671",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "5",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "32 HOSPITAL HILL ROAD OPERATIONS LLC",
+  "address": {
+    "id": "5790",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 42.575355
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -71.99183
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "32 HOSPITAL HILL RD"
+    ],
+    "state": "MA",
+    "postalCode": "014402302",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "2895",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "6",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "325TH COMBAT SUPPORT HOSPITAL",
+  "address": {
+    "id": "5826",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 39.108704
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -94.44115
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "11101 E INDEPENDENCE AVE"
+    ],
+    "state": "MO",
+    "postalCode": "640541511",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "2913",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "7",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "355TH MEDICAL GROUP-DAVIS MONTHAN AFB HOSPITAL",
+  "address": {
+    "id": "5974",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 32.169577
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -110.875093
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "5405 E GRANITE ST"
+    ],
+    "state": "AZ",
+    "postalCode": "857073004",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "2987",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "8",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "VIBRA HOSPITAL OF SOUTHEASTERN MASSACHUSETTS",
+  "address": {
+    "id": "7184",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 41.692806
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -70.93264
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "4499 ACUSHNET AVE"
+    ],
+    "state": "MA",
+    "postalCode": "027454707",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "3592",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "9",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "47 MDSS-LAUGHLIN HOSPITAL",
+  "address": {
+    "id": "7252",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 29.36273
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -100.896761
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "590 MITCHELL BLVD BLDG 375"
+    ],
+    "state": "TX",
+    "postalCode": "788435242",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "3626",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}
+{
+  "resourceType": "vhdir-location",
+  "id": "10",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-location"
+    ]
+  },
+  "status": "active",
+  "name": "4M HOSPITALIST SERVICES, LLC",
+  "address": {
+    "id": "7462",
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
+        "extension": [
+          {
+            "url": "latitude",
+            "valueDecimal": 41.032675
+          },
+          {
+            "url": "longitude",
+            "valueDecimal": -80.66467
+          }
+        ]
+      }
+    ],
+    "use": "work",
+    "line": [
+      "8401 MARKET ST"
+    ],
+    "state": "OH",
+    "postalCode": "445126725",
+    "country": "US"
+  },
+  "position": {
+    "longitude": 0.0,
+    "latitude": 0.0,
+    "altitude": 0.0
+  },
+  "managingOrganization": {
+    "reference": "3731",
+    "type": "vhdir_organization",
+    "display": "Managing Organization"
+  }
+}

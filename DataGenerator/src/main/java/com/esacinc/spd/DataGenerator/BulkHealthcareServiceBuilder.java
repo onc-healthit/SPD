@@ -1,5 +1,19 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.VhDirHealthcareService;
+import com.esacinc.spd.model.VhDirIdentifier;
+import com.esacinc.spd.model.VhDirTelecom;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
+import com.esacinc.spd.util.ContactFactory;
+import com.esacinc.spd.util.DatabaseUtil;
+import com.esacinc.spd.util.ErrorReport;
+import com.esacinc.spd.util.ResourceFactory;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityComponent;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
+import org.hl7.fhir.r4.model.Reference;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,23 +21,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceAvailableTimeComponent;
-import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityComponent;
-import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceNotAvailableComponent;
-import org.hl7.fhir.r4.model.Reference;
-
-
-import com.esacinc.spd.model.VhDirTelecom;
-import com.esacinc.spd.model.VhDirHealthcareService;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirNewpatients;
-import com.esacinc.spd.util.ContactFactory;
-import com.esacinc.spd.util.DatabaseUtil;
-import com.esacinc.spd.util.ErrorReport;
-import com.esacinc.spd.util.ResourceFactory;
-
-public class BulkHealthcareServiceBuilder {
+public class BulkHealthcareServiceBuilder implements INewPatients {
 	
 	
 	/**
@@ -47,6 +45,8 @@ public class BulkHealthcareServiceBuilder {
 			int hsId = resultSet.getInt("healthcare_service_id");
 			hs.setId(resultSet.getString("healthcare_service_id"));
 			ErrorReport.setCursor("VhDirHealthcareService", hs.getId());
+
+			hs.setText(ResourceFactory.makeNarrative("HealthcareService (id: " + hsId + ")"));
 
 			hs.setActive(resultSet.getBoolean("active"));
 			hs.setProvidedBy(ResourceFactory.getResourceReference(resultSet.getInt("provided_by_organization_id"), connection));
@@ -327,7 +327,7 @@ public class BulkHealthcareServiceBuilder {
 	private void handleNewPatients(Connection connection, VhDirHealthcareService hs, int hsId) throws SQLException {
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from new_patients where healthcare_service_id = ?", hsId);
 		while(resultset.next()) {
-			VhDirNewpatients np = ResourceFactory.getNewPatients(resultset,connection);
+			VhDirNewPatients np = ResourceFactory.getNewPatients(resultset,connection);
 			hs.addNewpatients(np);
 		}
 	}

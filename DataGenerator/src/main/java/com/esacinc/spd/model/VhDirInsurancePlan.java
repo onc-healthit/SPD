@@ -15,7 +15,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
 */
 
-@ResourceDef(name="vhdir-insuranceplan", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan")
+@ResourceDef(name="InsurancePlan", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-insuranceplan")
 public class VhDirInsurancePlan extends InsurancePlan { 
 	private static final long serialVersionUID = 1L;
     

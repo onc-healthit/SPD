@@ -44,6 +44,9 @@ public class BulkInsurancePlanBuilder {
 			int ipId = resultSet.getInt("insurance_plan_id");
 			ip.setId(resultSet.getString("insurance_plan_id"));
 			ErrorReport.setCursor("VhDirInsurancePlan", ip.getId());
+			
+			ip.setText(ResourceFactory.makeNarrative("InsurancePlan (id: " + ipId + ")"));
+
 			try {
 				ip.setStatus(PublicationStatus.fromCode(resultSet.getString("status")));
 			}

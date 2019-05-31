@@ -1,22 +1,20 @@
 package com.esacinc.spd.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hl7.fhir.r4.model.Element;
-import org.hl7.fhir.r4.model.OrganizationAffiliation;
-import org.hl7.fhir.r4.model.Reference;
-
 import ca.uhn.fhir.model.api.annotation.Child;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
+import org.hl7.fhir.r4.model.OrganizationAffiliation;
+import org.hl7.fhir.r4.model.Reference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 
 */
 
-@ResourceDef(name="vhdir-organizationaffiliation", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organizationaffiliation")
+@ResourceDef(name="OrganizationAffiliation", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organizationaffiliation")
 public class VhDirOrganizationAffiliation extends OrganizationAffiliation { 
 	private static final long serialVersionUID = 1L;
     

@@ -28,5 +28,7 @@ DELIMITER //
     
     END LOOP create_affiliation;
     
+    CLOSE org_cursor;
+    
    END//
  DELIMITER ;

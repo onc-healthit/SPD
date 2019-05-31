@@ -1,8 +1,7 @@
 package com.esacinc.spd.model;
 
-import org.hl7.fhir.r4.model.VerificationResult;
-
 import ca.uhn.fhir.model.api.annotation.ResourceDef;
+import org.hl7.fhir.r4.model.VerificationResult;
 
 /**
  * The VhDir Validation profile does not add extensions or remove elements. It only modifies the 
@@ -22,7 +21,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
  * @author dandonahue
  *
  */
-@ResourceDef(name="vhdir-validation", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-validation")
+@ResourceDef(name="VerificationResult", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-validation")
 public class VhDirValidation extends VerificationResult { 
 	private static final long serialVersionUID = 1L;
     

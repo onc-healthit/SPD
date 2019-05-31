@@ -47,11 +47,15 @@ public class BulkCareTeamBuilder {
 			ct.setId(resultSet.getString("careteam_id"));
 			ErrorReport.setCursor("VhDirCareTeam", ct.getId());
 
+			ct.setText(ResourceFactory.makeNarrative("CareTeam (id: " + ctId + ")"));
+
 			ct.setName(resultSet.getString("name"));
+			// TODO Encounter reference, below,  incorrect...model points to an encounter table, which is empty. 
+			// Model should really be a pointer to a resource reference - as the code below expects.
 			ct.setEncounter(ResourceFactory.getResourceReference(resultSet.getInt("encounter_id"), connection));
 			ct.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"), resultSet.getDate("period_end")));
 			//TODO  Note that the base CareTeam resource has managingOrganization 0..*,  wherease VhDir has it as 0..1. Using base for now.
-			ct.setManagingOrganization(ResourceFactory.getResourceReference(resultSet.getInt("managing_organization_id"), connection));
+			ct.setManagingOrganization(ResourceFactory.makeResourceReference(resultSet.getString("managing_organization_id"), "vhdir_organization",null,"Managing Orgaization"));
 
 	        // Handle the status
 	        handleStatus(resultSet,ct);

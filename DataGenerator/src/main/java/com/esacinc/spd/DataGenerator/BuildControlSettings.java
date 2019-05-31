@@ -90,7 +90,7 @@ public class BuildControlSettings {
 			MAX_ENTRIES =    PropertiesUtil.getPropertyInteger("MAX_ENTRIES",MAX_ENTRIES);      
 			MAX_PP_ENTRIES = PropertiesUtil.getPropertyInteger("MAX_PP_ENTRIES",MAX_PP_ENTRIES);   
 			PP_NTH_CONSOLE = PropertiesUtil.getPropertyInteger("PP_NTH_CONSOLE",PP_NTH_CONSOLE);
-			
+
 			// Re-Initialize the variables we use to control what resources we actually process...
 			DO_ALL = PropertiesUtil.getPropertyBoolean("DO_ALL",DO_ALL);
 			DO_ORGANIZATIONS = PropertiesUtil.getPropertyBoolean("DO_ORGANIZATIONS",DO_ORGANIZATIONS);
@@ -140,6 +140,7 @@ public class BuildControlSettings {
 	
 			DatabaseUtil.connectionUrl = PropertiesUtil.getPropertyString("connectionUrl", DatabaseUtil.connectionUrl);
 			DatabaseUtil.zipConnectionUrl = PropertiesUtil.getPropertyString("zipConnectionUrl", DatabaseUtil.zipConnectionUrl);
+			DatabaseUtil.MAX_CONNECT_ATTEMPTS = PropertiesUtil.getPropertyInteger("MAX_CONNECT_ATTEMPTS", DatabaseUtil.MAX_CONNECT_ATTEMPTS);
 			
 			// Re-Initialize whether we want to do a couple basic tests of the Geocode function. (Probably we don't.)
 			Geocoding.DO_GEOCODE_TEST =  PropertiesUtil.getPropertyBoolean("DO_GEOTEST",Geocoding.DO_GEOCODE_TEST);

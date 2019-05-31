@@ -1,49 +1,36 @@
 package com.esacinc.spd.util;
 
+import com.esacinc.spd.model.*;
+import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
+import com.esacinc.spd.model.complex_extensions.IEhr;
+import com.esacinc.spd.model.complex_extensions.IEndpointUseCase;
+import com.esacinc.spd.model.complex_extensions.INewPatients;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import org.hl7.fhir.r4.model.Address.AddressType;
+import org.hl7.fhir.r4.model.Address.AddressUse;
+import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
+import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
+import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityComponent;
+import org.hl7.fhir.r4.model.HumanName.NameUse;
+import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
+import org.hl7.fhir.r4.model.Location.DaysOfWeek;
+import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
+import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultPrimarySourceComponent;
+import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
+import org.hl7.fhir.r4.model.codesystems.NarrativeStatus;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
-import org.hl7.fhir.r4.model.Address.AddressType;
-import org.hl7.fhir.r4.model.Address.AddressUse;
-import org.hl7.fhir.r4.model.BooleanType;
-import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
-import org.hl7.fhir.r4.model.HealthcareService.HealthcareServiceEligibilityComponent;
-import org.hl7.fhir.r4.model.HumanName;
-import org.hl7.fhir.r4.model.HumanName.NameUse;
-import org.hl7.fhir.r4.model.Identifier;
-import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
-import org.hl7.fhir.r4.model.IntegerType;
-import org.hl7.fhir.r4.model.Location.DaysOfWeek;
-import org.hl7.fhir.r4.model.Location.LocationHoursOfOperationComponent;
-import org.hl7.fhir.r4.model.Period;
-import org.hl7.fhir.r4.model.Practitioner.PractitionerQualificationComponent;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.Signature;
-import org.hl7.fhir.r4.model.StringType;
-import org.hl7.fhir.r4.model.UriType;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultAttestationComponent;
-import org.hl7.fhir.r4.model.VerificationResult.VerificationResultValidatorComponent;
-
-import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirEhr;
-import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirEndpointUseCase;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
-import com.esacinc.spd.model.VhDirNewpatientprofile;
-import com.esacinc.spd.model.VhDirNewpatients;
-import com.esacinc.spd.model.VhDirNote;
-import com.esacinc.spd.model.VhDirPrimarySource;
-import com.esacinc.spd.model.VhDirQualification;
 
 /**
  * This utility class contains static methods for creating a number of resources that are used in 
@@ -51,8 +38,48 @@ import com.esacinc.spd.model.VhDirQualification;
  * @author dandonahue
  *
  */
-public class ResourceFactory {
+public class ResourceFactory implements IQualification, INewPatients, IEndpointUseCase, IEhr {
 
+	private static final HashMap<String,String> PROFILE_TO_RESOURCE = new HashMap<String,String>();
+	static {
+		PROFILE_TO_RESOURCE.put("vhdir-careteam","CareTeam");
+		PROFILE_TO_RESOURCE.put("vhdir-endpoint","Endpoint");
+		PROFILE_TO_RESOURCE.put("vhdirhealthcareservice","HealthcareService");
+		PROFILE_TO_RESOURCE.put("vhdir-insuranceplan","InsurancePlan");
+		PROFILE_TO_RESOURCE.put("vhdir-location","Location");
+		PROFILE_TO_RESOURCE.put("vhdir-network","Organization");
+		PROFILE_TO_RESOURCE.put("vhdir-organization","Organization");
+		PROFILE_TO_RESOURCE.put("vhdir-organizationaffiliation","OrganizationAffiliation");
+		PROFILE_TO_RESOURCE.put("vhdir-practitioner","Practitioner");
+		PROFILE_TO_RESOURCE.put("vhdir-practitionerrole","PractitionerRole");
+		PROFILE_TO_RESOURCE.put("vhdir-restriction","Consent");
+		PROFILE_TO_RESOURCE.put("vhdir_validation","VerificationResult");
+		PROFILE_TO_RESOURCE.put("vhdir_careteam","CareTeam");
+		PROFILE_TO_RESOURCE.put("vhdir_endpoint","Endpoint");
+		PROFILE_TO_RESOURCE.put("vhdirhealthcareservice","HealthcareService");
+		PROFILE_TO_RESOURCE.put("vhdir_insuranceplan","InsurancePlan");
+		PROFILE_TO_RESOURCE.put("vhdir_location","Location");
+		PROFILE_TO_RESOURCE.put("vhdir_network","Organization");
+		PROFILE_TO_RESOURCE.put("vhdir_organization","Organization");
+		PROFILE_TO_RESOURCE.put("vhdir_organizationaffiliation","OrganizationAffiliation");
+		PROFILE_TO_RESOURCE.put("vhdir_practitioner","Practitioner");
+		PROFILE_TO_RESOURCE.put("vhdir_practitionerrole","PractitionerRole");
+		PROFILE_TO_RESOURCE.put("vhdir_restriction","Consent");
+		PROFILE_TO_RESOURCE.put("vhdir_validation","VerificationResult");
+		PROFILE_TO_RESOURCE.put("VhDirCareteam","CareTeam");
+		PROFILE_TO_RESOURCE.put("VhDirEndpoint","Endpoint");
+		PROFILE_TO_RESOURCE.put("vhdirHealthcareService","HealthcareService");
+		PROFILE_TO_RESOURCE.put("VhDirInsurancePlan","InsurancePlan");
+		PROFILE_TO_RESOURCE.put("VhDirLocation","Location");
+		PROFILE_TO_RESOURCE.put("VhDirNetwork","Organization");
+		PROFILE_TO_RESOURCE.put("VhDirOrganization","Organization");
+		PROFILE_TO_RESOURCE.put("VhDirOrganizationAffiliation","OrganizationAffiliation");
+		PROFILE_TO_RESOURCE.put("VhDirPractitioner","Practitioner");
+		PROFILE_TO_RESOURCE.put("VhDirPractitionerRole","PractitionerRole");
+		PROFILE_TO_RESOURCE.put("VhDirRestriction","Consent");
+		PROFILE_TO_RESOURCE.put("VhDirValidation","VerificationResult");
+		
+	}
 	///////////////   GET METHODS  ////////////////////////////////////////////////////////////////
     // Get methods are those methods that create resources from data obtained from the database,
 	// often presented in the form of a resultset.
@@ -77,19 +104,30 @@ public class ResourceFactory {
 	}
 
 	static public Reference getResourceReference(ResultSet resulset, Connection connection) throws SQLException{
+		
 		Reference ref = new Reference();
 		ref.setId(resulset.getString("resource_reference_id"));
 		ref.setDisplay(resulset.getString("display"));
-		ref.setReference(resulset.getString("reference"));
+		String resourceName =getProperResourceName(resulset.getString("type")); 
+		String fullReference = String.format("%s/%s", resourceName,resulset.getString("identifier"));
+		ref.setReference(fullReference);
 		// If the reference points to an identifier, go get it from the db....
 		String identifierId = resulset.getString("reference");
 		if (identifierId != null && !identifierId.isEmpty()) {
 			ref.setIdentifier(getIdentifier(Integer.valueOf(ref.getReference()), connection));
 		}
-		ref.setType(resulset.getString("type"));	
+		ref.setType(resourceName);	
 		return ref;
 	}
 
+	static private String getProperResourceName(String profileName) {
+		String resourceName = PROFILE_TO_RESOURCE.get(profileName);
+		if (resourceName == null || resourceName.isEmpty()) {
+			resourceName = profileName;
+		}
+		return resourceName;
+	}
+	
 	/**
 	 * Creates a VhDirIdentifier from the identifier with the given identifierId in the database
 	 * @param identifierId
@@ -245,7 +283,7 @@ public class ResourceFactory {
 			// Set Geolocation
 			Double lat = addrResultset.getDouble("latitude");
 			Double lon = addrResultset.getDouble("longitude");
-			addr.setGeolocation(Geocoding.getGeoLocation(lat, lon, postal,  connection));
+			addr.setGeolocation(Geocoding.getGeoLocation(lat, lon, postal,  connection, addr.getId()));
 			
 		}
 		
@@ -340,7 +378,7 @@ public class ResourceFactory {
 	static public Coding getCommunicationProficiencyCodes(ResultSet codeableConcepts) throws SQLException {
 		Coding coding = new Coding();
 		coding.setId(codeableConcepts.getString(codeableConcepts.getString("codeable_concept_id")));
-		coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
+		coding.setSystem("urn:ietf:bcp:47");
 		coding.setVersion("0.2.0");
 		coding.setDisplay(codeableConcepts.getString("coding_display"));
 		coding.setUserSelected(codeableConcepts.getBoolean("coding_user_selected"));
@@ -449,7 +487,7 @@ public class ResourceFactory {
 		uc.setId(ucId);
 		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from use_case where use_case_id = ?", Integer.valueOf(ucId)); 
 		while(resultset.next()) {
-			uc.setCaseType(getCodeableConcept(resultset.getInt("type_cc_id"),connection));
+			uc.setType(getCodeableConcept(resultset.getInt("type_cc_id"),connection));
 			uc.setStandard(new UriType(resultset.getString("standard")));
 			// uc.setUrl (Url is handled automatically in the class definition)
 			return uc; // We are expecting only one.
@@ -467,7 +505,7 @@ public class ResourceFactory {
 		if (url == null || url.isEmpty()) {
 			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/ehr";
 		}
-		ehr.setUrl(url);
+//		ehr.setUrl(url);
 		ehr.setDeveloper(new StringType(resultset.getString("developer")));
 		ehr.setProduct(new StringType(resultset.getString("product")));
 		ehr.setVersion(new StringType(resultset.getString("version")));
@@ -484,15 +522,15 @@ public class ResourceFactory {
 		return ehr;
 	}
 
-	public static VhDirNewpatients getNewPatients(ResultSet resultset, Connection connection ) throws SQLException {
-		VhDirNewpatients np = new VhDirNewpatients();
+	public static VhDirNewPatients getNewPatients(ResultSet resultset, Connection connection ) throws SQLException {
+		VhDirNewPatients np = new VhDirNewPatients();
 		String url = resultset.getString("url");
 		if (url == null || url.isEmpty()) {
 			url = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/newpatients";
 		}
-		np.setUrl(url);
+//		np.setUrl(url);
 		np.setId(resultset.getString("new_patients_id"));
-		np.setAcceptingPatients(new BooleanType(resultset.getBoolean("accepting_patient")));
+		np.setAcceptingPatients(resultset.getBoolean("accepting_patient"));
 		// Note: the network_resource_reference_id points to a row in the resource_reference table. 
 		String nwrk = resultset.getString("network_resource_reference_id");
 		if (nwrk != null && !nwrk.isEmpty()) {
@@ -527,12 +565,16 @@ public class ResourceFactory {
 		return hrs;
 	}
 	
-	public static VhDirPrimarySource getPrimarySource(ResultSet resultset, Connection connection) throws SQLException {
-		VhDirPrimarySource ps = new VhDirPrimarySource();
+	public static VerificationResultPrimarySourceComponent getPrimarySource(ResultSet resultset, Connection connection) throws SQLException {
+		VerificationResultPrimarySourceComponent ps = new VerificationResultPrimarySourceComponent();
 		int psId = resultset.getInt("primary_source_id");
 		ps.setId(resultset.getString("primary_source_id"));
 		ps.setCanPushUpdates(getCodeableConcept(resultset.getInt("can_push_updates_cc_id"),connection));
 		if (connection != null) {
+			
+			Reference who = getResourceReference(resultset.getInt("who_resource_reference_id"),connection);
+			ps.setWho(who);
+			
 			// Gather the communication method codeable concepts for this primary source
 			ResultSet sqlResultset = DatabaseUtil.runQuery(connection,"SELECT * FROM fhir_codeable_concept WHERE primary_source_communication_method_id = ?",psId);
 			while(sqlResultset.next()) {
@@ -590,7 +632,7 @@ public class ResourceFactory {
 			qu.addWhereValid(reference);
 		}
 		
-		qu.setUrl(resultset.getString("url"));
+//		qu.setUrl(resultset.getString("url"));
 		// TODO add qualification history
 		return qu;
 	}
@@ -601,10 +643,10 @@ public class ResourceFactory {
 		att.setDate(resultset.getDate("date"));
 		att.setSourceIdentityCertificate(resultset.getString("source_identity_certificate"));
 		att.setProxyIdentityCertificate(resultset.getString("proxy_identity_certificate"));
-		Signature sig = makeSignature("signatureType", "mimeType"); // TODO signatures not modeled yet
+		Signature sig = makeSignature("1.2.840.10065.1.12.1.1", "Author's Signature", "mimeType"); // TODO signatures not modeled yet
 		//TODO Signature not modeled in db yet.sig.set
-		att.setSourceSignature(sig);
-		att.setProxySignature(sig);
+		//att.setSourceSignature(sig);
+		//att.setProxySignature(sig);
 		if (connection != null) {
 			att.setWho(getResourceReference(resultset.getInt("who_resource_reference_id"),connection));
 			att.setOnBehalfOf(getResourceReference(resultset.getInt("on_behalf_of_resource_reference_id"),connection));
@@ -618,8 +660,8 @@ public class ResourceFactory {
 		VerificationResultValidatorComponent validator = new VerificationResultValidatorComponent();
 		validator.setId(resultset.getString("validator_id"));
 		validator.setIdentityCertificate(resultset.getString("identity_certificate"));
-		Signature sig = makeSignature("signatureType", "mimeType"); // TODO signatures not modeled yet
-		validator.setAttestationSignature(sig);
+		//Signature sig = makeSignature("1.2.840.10065.1.12.1.6", "Validaton Signature","mimeType"); // TODO signatures not modeled yet
+		//validator.setAttestationSignature(sig);
 		if (connection != null) {
 			validator.setOrganization(getResourceReference(resultset.getInt("organization_id"),connection));
 		}
@@ -731,11 +773,11 @@ public class ResourceFactory {
 	static public CodeableConcept makeCommunicationProficiencyCodes() {
 		CodeableConcept comm_cc = new CodeableConcept();
 		Coding coding = new Coding();
-		coding.setDisplay("Functional Native Proficiency");
-		coding.setSystem("http://hl7.org/fhir/uv/vhdir/CodeSystem/codesystem-languageproficiency");
+		coding.setDisplay("English(Region=United States)");
+		coding.setSystem("urn:ietf:bcp:47");
 		coding.setVersion("0.2.0");
 		coding.setUserSelected(true);
-		coding.setCode("50");
+		coding.setCode("en-US");
 		// Generate a totally random id, prefixed by "x"
 		Random ran = new Random();
 		comm_cc.setId("x"+ ran.nextInt(10000-1 + 1));
@@ -745,7 +787,7 @@ public class ResourceFactory {
 
 	}
 
-	static public Signature makeSignature(String type, String targetFormat ) {
+	static public Signature makeSignature(String type, String display, String targetFormat ) {
 		Signature sig = new Signature();
 		Date inst = new Date();
 		sig.setWhen(inst);
@@ -753,6 +795,7 @@ public class ResourceFactory {
 		try {
 			Coding code = makeCoding(type, type, "http://hl7.org/fhir/ValueSet/signature-type", false);
 			code.setCode(type);
+			code.setDisplay(display);
 			typeList.add(code);
 		}
 		catch (Exception e) {
@@ -760,7 +803,14 @@ public class ResourceFactory {
 		}
 		sig.setType(typeList);
 		sig.setWho(makeResourceReference("1","VhDirPractitioner",null,""));
-		sig.setTargetFormat(targetFormat);
+		sig.setTargetFormat(targetFormat); 
 		return sig;
+	}
+	
+	static public Narrative makeNarrative(String title) {
+		Narrative txt = new Narrative();
+		txt.setStatusAsString(NarrativeStatus.GENERATED.toCode());
+		txt.setDivAsString("<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <h4>" + title + "</h4><p>Insert html in div element that summarizes this resource\n      </p>\n    </div>");
+		return txt;
 	}
 }

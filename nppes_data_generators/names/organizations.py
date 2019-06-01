@@ -180,9 +180,3 @@ def synthetic_org_name_generator():
     acronyms = entity_types | titles | name_prefixes | name_suffixes
 
     return scrub_name(non_identifiables, med_vocab, names, acronyms)
-
-
-
-if __name__ == '__main__':
-    synth = synthetic_org_name_generator()
-    print(synth('BEST Life and Health Insurance Company'.upper()))

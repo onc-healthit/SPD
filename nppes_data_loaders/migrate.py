@@ -14,16 +14,33 @@ if __name__ == '__main__':
     from_ = 'spd_medium'
     to = 'spd_medium_scrubbed'
 
-    timing(
-        SPDETL(migrate_organizations,
-               migrate_organization_alias,
-               migrate_practitioners,
-               migrate_networks,
-               migrate_insurance_plans,
-               copy('resource_reference'),
-               migrate_name,
-               copy('contact'),
-               copy('vhdir_practitioner_role'),
-               migrate_telecom,
-               migrate_address)
-        .run)(from_, to)
+    pipeline = SPDETL(migrate_organizations,
+                      migrate_organization_alias,
+                      copy('vhdir_careteam'),
+                      migrate_practitioners,
+                      migrate_networks,
+                      migrate_insurance_plans,
+                      copy('resource_reference'),
+                      migrate_name,
+                      copy('contact'),
+                      copy('vhdir_practitioner_role'),
+                      migrate_telecom,
+                      migrate_address,
+                      copy('actor'),
+                      copy('attestation'),
+                      copy('care_team_alias'),
+                      copy('fhir_codeable_concept'),
+                      copy('npi_taxonomy'),
+                      copy('participant'),
+                      copy('primary_source'),
+                      copy('provison'),
+                      copy('qualification'),
+                      copy('vhdir_healthcare_service'),
+                      copy('vhdir_location'),
+                      copy('vhdir_organization_affiliation'),
+                      copy('vhdir_restriction'),
+                      copy('vhdir_validation'))
+
+    @timing
+    def go():
+        return pipeline.run(from_, to)

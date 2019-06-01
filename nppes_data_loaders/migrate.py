@@ -11,8 +11,8 @@ from nppes_data_loaders.migration.vhdir_practitioner import migrate_practitioner
 from tests.utils import timing
 
 if __name__ == '__main__':
-    from_ = 'spd_medium'
-    to = 'spd_medium_scrubbed'
+    from_ = 'spd_large'
+    to = 'spd_large_scrubbed'
 
     pipeline = SPDETL(migrate_organizations,
                       migrate_organization_alias,

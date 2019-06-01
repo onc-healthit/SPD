@@ -1,9 +1,0 @@
-MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
-C |Setup |ErrorReport | | |Generation Time: Fri May 31 15:08:24 MDT 2019
-C |Setup |Control Variables | | |Build Control variables re-initialized from properties in file: SPD_Settings.properties 
-C |Setup |Control Variables | | |Process all resource types: No, Max Entries: 10, Max Pretty Print Entries: 20, Print Nth of each Resource to console: 0
-C |Setup |DB Conections | | |SPD: jdbc:mysql://65.111.255.73:3306/spd_small, ZipCodes: jdbc:mysql://65.111.255.73:3306/zipcode, 
-I |  |DO_VALIDATIONS | | |
-I |  | | | |4 Validations Collected
-I |  |END | | |Wrote 0 error, 0 warning, 0 geocode, and 2 info messages
-I |  |END | | |Elapsed time: 0 hours, 0 minutes, 6 seconds

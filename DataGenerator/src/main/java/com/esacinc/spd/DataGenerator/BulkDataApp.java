@@ -63,6 +63,17 @@ public class BulkDataApp extends BuildControlSettings {
 		// Open connections to the databases that we will use throughout.
 		Connection connection = DatabaseUtil.openAllConnections();
 
+		if (Geocoding.PROCESS_GEOCODES_ONLY) {
+			try {
+				Geocoding.doAllGeocoding(connection);
+			}
+			catch (Exception e) {
+				System.err.println("Full geocdoing error");
+				e.printStackTrace();
+			}
+			return;
+		}
+
 		// Testing some geocode stuff.
 		if (Geocoding.DO_GEOCODE_TEST) {
 			Geocoding.basicTest();

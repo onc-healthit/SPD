@@ -144,6 +144,8 @@ public class BuildControlSettings {
 			
 			// Re-Initialize whether we want to do a couple basic tests of the Geocode function. (Probably we don't.)
 			Geocoding.DO_GEOCODE_TEST =  PropertiesUtil.getPropertyBoolean("DO_GEOTEST",Geocoding.DO_GEOCODE_TEST);
+			Geocoding.PROCESS_GEOCODES_ONLY =  PropertiesUtil.getPropertyBoolean("PROCESS_GEOCODES_ONLY",Geocoding.PROCESS_GEOCODES_ONLY);
+			Geocoding.UPDATE_ADDRESSES =  PropertiesUtil.getPropertyBoolean("UPDATE_ADDRESSES",Geocoding.UPDATE_ADDRESSES);
 
 		}
 	}

@@ -19,6 +19,8 @@ import java.sql.SQLException;
 
 public class Geocoding implements IGeoLocation {
 	
+	static public boolean PROCESS_GEOCODES_ONLY=true;
+	static public boolean UPDATE_ADDRESSES = false;
 	static public boolean LIMIT_REACHED = false; 
 	static public Connection zipconnection = null;
 	static public boolean DO_GEOCODE_TEST = false;
@@ -44,7 +46,7 @@ public class Geocoding implements IGeoLocation {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static VhDirGeoLocation geocodePostalCode(String postalCode, Connection connection) throws SQLException {
+	public static VhDirGeoLocation geocodePostalCode(String postalCode, Connection connection, String addressId) throws SQLException {
 		
 		// Don't even bother if we don't have a postal code that is at least 5 characters
 		if (postalCode.length() < 5) {
@@ -60,7 +62,7 @@ public class Geocoding implements IGeoLocation {
 			return null;
 		}
 		// Try to get a geolocation from our local zipcode table...
-		VhDirGeoLocation loc = geocodeLocalPostalCode(postalCode, connection);
+		VhDirGeoLocation loc = geocodeLocalPostalCode(postalCode, connection, addressId);
 		// If we couldn't get a loc from the local zipcode table, then try calling an external source...
 		if (loc == null && !LIMIT_REACHED )
 		{
@@ -102,8 +104,9 @@ public class Geocoding implements IGeoLocation {
 					    loc.setLatitude(lat);
 					    loc.setLongitude(lon);
 				    
-					    // Update all DB records with this postalCode to add lat/lon
-					    updateDatabaseLocs(postalCode, lat, lon, connection);
+					    // Update this DB record with this postalCode to add lat/lon
+					    // updateDatabaseLocs(postalCode, lat, lon, connection);
+					    updateDatabaseLoc(addressId, lat, lon, connection);
 				    }
 				}
 				br.close();
@@ -128,7 +131,7 @@ public class Geocoding implements IGeoLocation {
 			// If we don't have a valid lat/lon, the get one by geo locating the given postalCode
 			if (!LIMIT_REACHED && (lat == null || lon == null || lat == 0.0 || lon == 0.0)) {
 				System.out.println("Geocoding.getGeoLocation:  AddressID: " + addressId + " Calling Geocoding lat-lon for postal code " + postalCode);
-				loc = Geocoding.geocodePostalCode(postalCode, connection);
+				loc = Geocoding.geocodePostalCode(postalCode, connection, addressId);
 			} else {
 				// Otherwise, simply put the lat/lon into a geolocation object.
 				loc = new VhDirGeoLocation();
@@ -146,7 +149,7 @@ public class Geocoding implements IGeoLocation {
 		
 	}
 	
-	static public VhDirGeoLocation geocodeLocalPostalCode(String postalCode, Connection connection) throws SQLException {
+	static public VhDirGeoLocation geocodeLocalPostalCode(String postalCode, Connection connection, String addressId) throws SQLException {
 		//System.out.println("Calling local geocoding for " + postalCode);
 		if (zipconnection != null) {
 			ResultSet resultset = DatabaseUtil.runZipQuery(zipconnection, "select * from zip_codes where zip = ?", postalCode);
@@ -155,7 +158,8 @@ public class Geocoding implements IGeoLocation {
 				loc.setLatitude(resultset.getDouble("latitude"));
 				loc.setLatitude(resultset.getDouble("longitude"));
 			    // Update all DB records with this postalCode to add lat/lon
-			    updateDatabaseLocs(postalCode, resultset.getDouble("latitude"), resultset.getDouble("longitude"), connection);
+			    //updateDatabaseLocs(postalCode, resultset.getDouble("latitude"), resultset.getDouble("longitude"), connection);
+			    updateDatabaseLoc(addressId, resultset.getDouble("latitude"), resultset.getDouble("longitude"), connection);
 
 				return loc; // expecting only one.
 			}
@@ -172,11 +176,11 @@ public class Geocoding implements IGeoLocation {
     	System.out.println("Running Geocode tests");
 		try {
 			ErrorReport.writeGeoCodeMsg("Geocode Testing", "46224", "", "We know this is valid");
-			Geocoding.geocodePostalCode("46224", null); // We know this is valid;
+			Geocoding.geocodePostalCode("46224", null,null); // We know this is valid;
 			ErrorReport.writeGeoCodeMsg("Geocode Testing", "096030300", "", "We know this is not valid");
-			Geocoding.geocodePostalCode("096030300", null);
+			Geocoding.geocodePostalCode("096030300", null,null);
 			ErrorReport.writeGeoCodeMsg("Geocode Testing", "96297", "", "We know this is not valid");
-			Geocoding.geocodePostalCode("96297", null);
+			Geocoding.geocodePostalCode("96297", null,null);
 		}
 		catch (Exception e) {
 			ErrorReport.writeGeoCodeMsg("Geocode Testing", "", "Geocoding error", e.getMessage());
@@ -184,9 +188,10 @@ public class Geocoding implements IGeoLocation {
 		}
     }
 	
+    // Update all addresses that have similar postal codes with lat/lon
 	static protected void updateDatabaseLocs(String postalCode, Double lat, Double lon, Connection connection ) throws SQLException {
 	    // Update all DB records with this postalCode to add lat/lon
-	    if (connection != null) {
+	    if (UPDATE_ADDRESSES &&  connection != null) {
 		    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
 		    		postalCode + "%'";
 		    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
@@ -194,9 +199,38 @@ public class Geocoding implements IGeoLocation {
 		    updateStatement.setDouble(2, lon);
 			updateStatement.executeUpdate();
 	    }
+	}
 
+	// Update a single address with lat/lon
+	static protected void updateDatabaseLoc(String addressId, Double lat, Double lon, Connection connection ) throws SQLException {
+		    // Update all DB records with this postalCode to add lat/lon
+		    if (UPDATE_ADDRESSES && connection != null) {
+			    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE address_id = ?";
+			    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+			    updateStatement.setDouble(1, lat);
+			    updateStatement.setDouble(2, lon);
+			    updateStatement.setString(3, addressId);
+				updateStatement.executeUpdate();
+		    }
 	}
 	
 	
+	static public void doAllGeocoding(Connection connection) throws SQLException {
+		System.out.println("Processing all unset geocodes...");
+		ResultSet addrResultset = DatabaseUtil.runQuery(connection, "SELECT * from address where latitude = 0.0 and longitude = 0.0", null);
+		int cnt = 0;
+		System.out.println("Identified " +addrResultset.getFetchSize() + " addresses for processing");
+		while (addrResultset.next()) {
+			String postal = addrResultset.getString("postalCode");
+			if (postal != null) {
+				Double lat = addrResultset.getDouble("latitude");
+				Double lon = addrResultset.getDouble("longitude");
+				System.out.println("Address: " + addrResultset.getString("address_id") + "(" + lat +"," + lon + ") Zip: " + postal );
+				Geocoding.getGeoLocation(lat, lon, postal,  connection, addrResultset.getString("address_id"));
+				cnt++;
+			}
+		}
+		System.out.println("Done. Examined " + cnt + " address zip codes");
+	}
 
 }

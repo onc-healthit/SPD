@@ -19,7 +19,7 @@ import java.sql.SQLException;
 
 public class Geocoding implements IGeoLocation {
 	
-	static public boolean PROCESS_GEOCODES_ONLY=true;
+	static public boolean PROCESS_GEOCODES_ONLY=false;
 	static public boolean UPDATE_ADDRESSES = false;
 	static public boolean LIMIT_REACHED = false; 
 	static public Connection zipconnection = null;
@@ -129,7 +129,7 @@ public class Geocoding implements IGeoLocation {
 		VhDirGeoLocation loc = new VhDirGeoLocation();
 		try {
 			// If we don't have a valid lat/lon, the get one by geo locating the given postalCode
-			if (!LIMIT_REACHED && (lat == null || lon == null || lat == 0.0 || lon == 0.0)) {
+			if (lat == null || lon == null || lat == 0.0 || lon == 0.0) {
 				System.out.println("Geocoding.getGeoLocation:  AddressID: " + addressId + " Calling Geocoding lat-lon for postal code " + postalCode);
 				loc = Geocoding.geocodePostalCode(postalCode, connection, addressId);
 			} else {
@@ -192,6 +192,7 @@ public class Geocoding implements IGeoLocation {
 	static protected void updateDatabaseLocs(String postalCode, Double lat, Double lon, Connection connection ) throws SQLException {
 	    // Update all DB records with this postalCode to add lat/lon
 	    if (UPDATE_ADDRESSES &&  connection != null) {
+	    	System.out.println("Updating database addresses (zip: " + postalCode + "), lat: " + lat + ", lon: " + lon);
 		    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE postalCode like '" +
 		    		postalCode + "%'";
 		    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
@@ -204,7 +205,8 @@ public class Geocoding implements IGeoLocation {
 	// Update a single address with lat/lon
 	static protected void updateDatabaseLoc(String addressId, Double lat, Double lon, Connection connection ) throws SQLException {
 		    // Update all DB records with this postalCode to add lat/lon
-		    if (UPDATE_ADDRESSES && connection != null) {
+		    if (UPDATE_ADDRESSES && connection != null) {				
+		    	System.out.println("Updating database address (id: " + addressId + "), lat: " + lat + ", lon: " + lon);
 			    String updateQuery = "UPDATE address SET latitude=?, longitude=? WHERE address_id = ?";
 			    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
 			    updateStatement.setDouble(1, lat);
@@ -223,10 +225,7 @@ public class Geocoding implements IGeoLocation {
 		while (addrResultset.next()) {
 			String postal = addrResultset.getString("postalCode");
 			if (postal != null) {
-				Double lat = addrResultset.getDouble("latitude");
-				Double lon = addrResultset.getDouble("longitude");
-				System.out.println("Address: " + addrResultset.getString("address_id") + "(" + lat +"," + lon + ") Zip: " + postal );
-				Geocoding.getGeoLocation(lat, lon, postal,  connection, addrResultset.getString("address_id"));
+				Geocoding.geocodePostalCode(postal,  connection, addrResultset.getString("address_id"));
 				cnt++;
 			}
 		}

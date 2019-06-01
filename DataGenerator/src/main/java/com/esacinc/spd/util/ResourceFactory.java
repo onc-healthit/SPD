@@ -719,9 +719,11 @@ public class ResourceFactory implements IQualification, INewPatients, IEndpointU
 	static public Reference makeResourceReference(String resourceId, String typeUri, Identifier identifier, String display) {
 		Reference ref = new Reference();
 		ref.setDisplay(display);
-		ref.setReference(resourceId);
+		String resourceName =getProperResourceName(typeUri); 
+		String fullReference = String.format("%s/%s", resourceName,resourceId);
+		ref.setReference(fullReference);
 		ref.setIdentifier(identifier);
-		ref.setType(typeUri);
+		ref.setType(resourceName);	
 		return ref;
 	}
 	

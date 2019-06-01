@@ -47,9 +47,8 @@ public class BulkEndpointBuilder implements IEndpointUseCase {
 			ep.setAddress(resultSet.getString("address"));
 			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),resultSet.getString("connectionType"),"http://terminology.hl7.org/CodeSystem/endpoint-connection-type",false));
 			ep.setRank(new IntegerType(resultSet.getInt("rank")));
-			ep.setManagingOrganization(ResourceFactory.getResourceReference(resultSet.getInt("managing_organization_id"), connection));
+			ep.setManagingOrganization(ResourceFactory.makeResourceReference(resultSet.getString("managing_organization_id"), "Organization", null, "Managing Organization"));
 			ep.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"),resultSet.getDate("period_end"))); 
-			ep.setManagingOrganization(ResourceFactory.getResourceReference(resultSet.getInt("managing_organization_id"), connection));
 
 			// Add a digital certificate to the first 3 endpoints
 			int certCount = 0;

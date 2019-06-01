@@ -5,6 +5,59 @@ import Sequelize from 'sequelize';
 const Op = Sequelize.Op;
 
 export const query = {
+	//SPD-161
+	async getOrgTypes() {
+	var insuranceQuery = "SELECT organization_id FROM vhdir_organization where partOf_organization_name is null";
+	for (var iteration = 0; iteration < 122; iteration++) {
+		console.log("OrgType iteration "+ iteration + " start at "+ Date.now());
+		var offsetNew = iteration * 10000;
+		console.log("offset "+ offsetNew);
+		
+		var deptQuery = "SELECT organization_id FROM vhdir_organization where partOf_organization_id is not null and organization_id != partOf_organization_id limit "+offsetNew+", 10000";
+		
+		var provQuery = "SELECT organization_id FROM vhdir_organization where partOf_organization_name = '' or organization_id = partOf_organization_id limit "+offsetNew+", 10000";
+		
+		var provOrgs = await spddb.query(provQuery, {model: Organization});	
+		if (provOrgs != null && provOrgs.length > 0) {
+			//console.log("prov org found: "+ provOrgs.length)
+			var orgProvTypeRecords = provOrgs.map((x, i) => ({
+						coding_system: "http://build.fhir.org/codesystem-organization-type.html",
+						coding_code: "prov",
+						coding_display: "Healthcare Provider",
+						organization_type_id: provOrgs[i].organization_id
+				})
+			);
+			var orgProvTypeCreated = await FhirCodeableConcept.bulkCreate(orgProvTypeRecords);
+		}
+	
+		if (offsetNew < 60000){
+		var deptOrgs = await spddb.query(deptQuery, {model: Organization});			
+		if (deptOrgs != null && deptOrgs.length > 0) {
+			console.log("dept org found: "+ deptOrgs.length)
+			var orgDeptTypeRecords = deptOrgs.map((x, i) => ({
+						coding_system: "http://build.fhir.org/codesystem-organization-type.html",
+						coding_code: "dept",
+						coding_display: "Hospital Department",
+						organization_type_id: deptOrgs[i].organization_id
+				})
+			);
+			var orgDeptTypeCreated = await FhirCodeableConcept.bulkCreate(orgDeptTypeRecords);
+		}
+		}
+	}
+	var insuranceOrgs = await spddb.query(insuranceQuery, {model: Organization});			
+			console.log("insurance org found: "+ insuranceOrgs.length)
+	var orgInsuranceTypeRecords = insuranceOrgs.map((x, i) => ({
+				coding_system: "http://build.fhir.org/codesystem-organization-type.html",
+				coding_code: "ins",
+				coding_display: "Insurance Company",
+				organization_type_id: insuranceOrgs[i].organization_id
+		})
+	);
+	var orgInsuranceTypeCreated = await FhirCodeableConcept.bulkCreate(orgInsuranceTypeRecords);
+
+	},
+
 	//SPD-164
 	async updateHealthcareService(){
 		var healthcareOrgQuery = "SELECT healthcare_service_id FROM vhdir_healthcare_service where name = 'Hospital' limit 0, 5000";

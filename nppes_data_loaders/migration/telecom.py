@@ -12,7 +12,6 @@ def migrate_telecom(connections):
     load_stmt = 'INSERT INTO telecom VALUES ({});'.format(('%s,'*16)[:-1])
 
     @toolz.curry
-    @timing
     def transform(_, telecoms):
 
         def scrub_number(telecom):

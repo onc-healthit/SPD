@@ -25,3 +25,13 @@ def timing(f):
         return res
 
     return timed
+
+
+def verbose(f):
+
+    def log(*args, **kwargs):
+        res = f(*args, **kwargs)
+        print('{} done.'.format(f.__name__))
+        return res
+
+    return log

@@ -4,6 +4,7 @@ from functools import reduce
 from oslash import Just
 
 from nppes_data_loaders.connections import query, connection
+from tests.utils import verbose
 
 
 class SPDETL:
@@ -16,7 +17,9 @@ class SPDETL:
         to_cnx = connection(to)
 
         try:
-            migration = reduce(lambda acc, pipeline: acc | pipeline, self.pipelines, Just((from_cnx, to_cnx)))
+            migration = reduce(lambda acc, pipeline: acc | pipeline,
+                               map(verbose, self.pipelines),
+                               Just((from_cnx, to_cnx)))
 
             if migration.is_just:
                 to_cnx.commit()

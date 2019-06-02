@@ -11,8 +11,8 @@ from nppes_data_loaders.migration.vhdir_practitioner import migrate_practitioner
 from tests.utils import timing
 
 if __name__ == '__main__':
-    from_ = 'spd_large'
-    to = 'spd_large_scrubbed'
+    from_ = 'spd_small'
+    to = 'spd_small_scrubbed'
 
     pipeline = SPDETL(migrate_organizations,
                       migrate_organization_alias,
@@ -20,27 +20,29 @@ if __name__ == '__main__':
                       migrate_practitioners,
                       migrate_networks,
                       migrate_insurance_plans,
-                      copy('resource_reference'),
+                      copy('resource_reference', 'SET FOREIGN_KEY_CHECKS=0;', 'SET FOREIGN_KEY_CHECKS=1;'),
                       migrate_name,
                       copy('contact'),
                       copy('vhdir_practitioner_role'),
                       migrate_telecom,
                       migrate_address,
                       copy('actor'),
+                      copy('fhir_codeable_concept', 'SET FOREIGN_KEY_CHECKS=0;', 'SET FOREIGN_KEY_CHECKS=1;'),
                       copy('attestation'),
                       copy('care_team_alias'),
-                      copy('fhir_codeable_concept'),
                       copy('npi_taxonomy'),
                       copy('participant'),
+                      copy('vhdir_validation'),
                       copy('primary_source'),
-                      copy('provison'),
+                      copy('provision'),
                       copy('qualification'),
                       copy('vhdir_healthcare_service'),
                       copy('vhdir_location'),
                       copy('vhdir_organization_affiliation'),
-                      copy('vhdir_restriction'),
-                      copy('vhdir_validation'))
+                      copy('vhdir_restriction'))
 
     @timing
     def go():
         return pipeline.run(from_, to)
+
+    go()

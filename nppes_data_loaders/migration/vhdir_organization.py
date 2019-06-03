@@ -5,6 +5,7 @@ from nppes_data_generators.names.organizations import synthetic_org_name_generat
 from nppes_data_loaders.etl.etl import SQLJob, SQLPipeline
 from nppes_data_loaders.migration.identifier import migrate_identifier, npi_transformer, \
     hios_issuer_id_transformer
+from tests.utils import timing
 
 '''
 Within the same transaction:
@@ -27,11 +28,15 @@ def migrate_vhdir_organization():
                 partOf_organization_name) VALUES (%s, %s, %s, %s, %s);"""
 
     @toolz.curry
+    @timing
     def transform(_, orgs):
+        print('Entering transform')
         name_synthesizer = synthetic_org_name_generator()
 
         def scrub_org(org):
             organization_id, name, taxonomies, active, partOf_organization_id = org
+            if organization_id % 10000 == 0:
+                print(organization_id)
             return organization_id, name_synthesizer(name, *taxonomies.split(',') if taxonomies else []), active, \
                    partOf_organization_id
 
@@ -40,6 +45,9 @@ def migrate_vhdir_organization():
             partOf_name = (d.get(org[-1])[1],) if d.get(org[-1]) else (None,)
             return org + partOf_name
 
+        '''
+         list(orgs) here to avoid keeping connection writing to net too long
+        '''
         without_partOf_name = {_[0]: _ for _ in map(scrub_org, orgs)}
         with_partOf_name = map(attach_partOf_name(without_partOf_name), without_partOf_name.values())
         return Just(with_partOf_name)

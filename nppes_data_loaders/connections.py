@@ -16,7 +16,9 @@ def connection(dbname, **kwargs):
 def query(cursor, statement, params=None):
     try:
         if isinstance(params, (dict, list, tuple)):
-            cursor.executemany(statement, params)
+            step = 100
+            for i in range(0, len(params), step):
+                cursor.executemany(statement, params[i:i+step])
         elif params:
             cursor.execute(statement, params)
         else:

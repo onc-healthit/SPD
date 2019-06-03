@@ -56,7 +56,11 @@ class SQLPipeline:
         init = query(to_cursor, self.setup).map(lambda _: (from_cursor, _)) if self.setup else \
             Just((from_cursor, to_cursor))
 
-        return reduce(lambda acc, m: acc | m, self.jobs, init) \
+        def reducer(acc, m):
+            to_cnx.commit()
+            return acc | m
+
+        return reduce(reducer, self.jobs, init) \
                | (lambda _: query(to_cursor, self.teardown) if self.teardown else Just(_)) \
                | (lambda _: Just(connections))
 
@@ -72,7 +76,7 @@ class SQLJob:
         from_cursor, to_cursor = cursors
 
         return query(from_cursor, self.extract_stmt) \
-               | self.transform(to_cursor) \
+               | (lambda fc: self.transform(to_cursor, tuple(fc))) \
                | (lambda ts: query(to_cursor, self.load_stmt, tuple(ts) if ts else ts)) \
                | (lambda tc: Just((from_cursor, tc)))
 

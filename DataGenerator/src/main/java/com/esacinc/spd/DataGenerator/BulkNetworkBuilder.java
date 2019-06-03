@@ -34,8 +34,8 @@ public class BulkNetworkBuilder {
 	public List<VhDirNetwork> getNetworks(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirNetwork> networks = new ArrayList<VhDirNetwork>();
-		
-	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_network WHERE network_id > " + BulkDataApp.FROM_ID_NETWORKS + " ORDER BY network_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_network WHERE network_id > " + BulkDataApp.FROM_ID_NETWORKS + " ORDER BY network_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirNetwork nw = new VhDirNetwork();
 		

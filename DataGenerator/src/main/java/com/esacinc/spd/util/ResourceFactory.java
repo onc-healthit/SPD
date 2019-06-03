@@ -40,6 +40,7 @@ import java.util.Random;
  */
 public class ResourceFactory implements IQualification, INewPatients, IEndpointUseCase, IEhr {
 
+	private static final String BASE_IG = "http://hl7.org/fhir/uv/vhdir/StructureDefinition/";
 	private static final HashMap<String,String> PROFILE_TO_RESOURCE = new HashMap<String,String>();
 	static {
 		PROFILE_TO_RESOURCE.put("vhdir-careteam","CareTeam");
@@ -53,10 +54,10 @@ public class ResourceFactory implements IQualification, INewPatients, IEndpointU
 		PROFILE_TO_RESOURCE.put("vhdir-practitioner","Practitioner");
 		PROFILE_TO_RESOURCE.put("vhdir-practitionerrole","PractitionerRole");
 		PROFILE_TO_RESOURCE.put("vhdir-restriction","Consent");
-		PROFILE_TO_RESOURCE.put("vhdir_validation","VerificationResult");
+		PROFILE_TO_RESOURCE.put("vhdir-validation","VerificationResult");
 		PROFILE_TO_RESOURCE.put("vhdir_careteam","CareTeam");
 		PROFILE_TO_RESOURCE.put("vhdir_endpoint","Endpoint");
-		PROFILE_TO_RESOURCE.put("vhdirhealthcareservice","HealthcareService");
+		PROFILE_TO_RESOURCE.put("vhdir_healthcareservice","HealthcareService");
 		PROFILE_TO_RESOURCE.put("vhdir_insuranceplan","InsurancePlan");
 		PROFILE_TO_RESOURCE.put("vhdir_location","Location");
 		PROFILE_TO_RESOURCE.put("vhdir_network","Organization");
@@ -80,6 +81,7 @@ public class ResourceFactory implements IQualification, INewPatients, IEndpointU
 		PROFILE_TO_RESOURCE.put("VhDirValidation","VerificationResult");
 		
 	}
+
 	///////////////   GET METHODS  ////////////////////////////////////////////////////////////////
     // Get methods are those methods that create resources from data obtained from the database,
 	// often presented in the form of a resultset.
@@ -116,7 +118,7 @@ public class ResourceFactory implements IQualification, INewPatients, IEndpointU
 		if (identifierId != null && !identifierId.isEmpty()) {
 			ref.setIdentifier(getIdentifier(Integer.valueOf(ref.getReference()), connection));
 		}
-		ref.setType(resourceName);	
+		ref.setType(getProperResourceURL(resulset.getString("type")));	
 		return ref;
 	}
 
@@ -127,7 +129,12 @@ public class ResourceFactory implements IQualification, INewPatients, IEndpointU
 		}
 		return resourceName;
 	}
-	
+
+	static private String getProperResourceURL(String profileName) {
+		String resourceName = getProperResourceName(profileName).toLowerCase();
+		return BASE_IG + "vhdir-" + resourceName;
+	}
+
 	/**
 	 * Creates a VhDirIdentifier from the identifier with the given identifierId in the database
 	 * @param identifierId
@@ -717,13 +724,16 @@ public class ResourceFactory implements IQualification, INewPatients, IEndpointU
 	 * @return Reference
 	 */
 	static public Reference makeResourceReference(String resourceId, String typeUri, Identifier identifier, String display) {
+		if (resourceId == null || resourceId.isEmpty()) {
+			return null;
+		}
 		Reference ref = new Reference();
 		ref.setDisplay(display);
 		String resourceName =getProperResourceName(typeUri); 
 		String fullReference = String.format("%s/%s", resourceName,resourceId);
 		ref.setReference(fullReference);
 		ref.setIdentifier(identifier);
-		ref.setType(resourceName);	
+		ref.setType(getProperResourceURL(typeUri));	// Assume given typeUri is just really the resource name
 		return ref;
 	}
 	

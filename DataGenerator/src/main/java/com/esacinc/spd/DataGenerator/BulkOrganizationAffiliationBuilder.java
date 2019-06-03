@@ -34,7 +34,8 @@ public class BulkOrganizationAffiliationBuilder {
 	public List<VhDirOrganizationAffiliation> getOrganizationAffiliations(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirOrganizationAffiliation> organizationaffiliations = new ArrayList<VhDirOrganizationAffiliation>();
-	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization_affiliation WHERE organization_affiliation_id > " + BulkDataApp.FROM_ID_ORGANIZATIONAFFILIATIONS + " ORDER BY organization_affiliation_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization_affiliation WHERE organization_affiliation_id > " + BulkDataApp.FROM_ID_ORGANIZATIONAFFILIATIONS + " ORDER BY organization_affiliation_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating organizationaffiliation for id " + resultSet.getInt("organization_affiliation_id"));
 			VhDirOrganizationAffiliation of = new VhDirOrganizationAffiliation();

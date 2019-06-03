@@ -25,6 +25,9 @@ public class DatabaseUtil {
 	
 	public static int MAX_CONNECT_ATTEMPTS = 3;
 	
+	public static int GLOBAL_LIMIT = -1;
+	
+	
 	public DatabaseUtil() { }
 
 	static public Connection getConnection() { 

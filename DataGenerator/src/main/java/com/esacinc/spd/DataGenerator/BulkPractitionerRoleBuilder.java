@@ -8,6 +8,7 @@ import com.esacinc.spd.model.complex_extensions.INewPatients;
 import com.esacinc.spd.model.complex_extensions.IQualification;
 import com.esacinc.spd.util.*;
 import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleAvailableTimeComponent;
 import org.hl7.fhir.r4.model.PractitionerRole.PractitionerRoleNotAvailableComponent;
 import org.hl7.fhir.r4.model.Reference;
@@ -35,7 +36,8 @@ public class BulkPractitionerRoleBuilder implements IQualification, INewPatients
 	public List<VhDirPractitionerRole> getPractitionerRoles(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirPractitionerRole> practitionerroles = new ArrayList<VhDirPractitionerRole>();
-	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner_role WHERE practitioner_role_id > " + BulkDataApp.FROM_ID_PRACTITIONERROLES + " ORDER BY practitioner_role_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner_role WHERE practitioner_role_id > " + BulkDataApp.FROM_ID_PRACTITIONERROLES + " ORDER BY practitioner_role_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating practitionerRole for id " + resultSet.getInt("practitioner_role_id"));
 			VhDirPractitionerRole pr = new VhDirPractitionerRole();
@@ -52,7 +54,7 @@ public class BulkPractitionerRoleBuilder implements IQualification, INewPatients
 			pr.setPractitioner(ResourceFactory.makeResourceReference(resultSet.getString("practitioner_id"), "vhdir_practitioner", null, "Practitioner"));
 			pr.setOrganization(ResourceFactory.makeResourceReference(resultSet.getString("organization_id"), "vhdir_organization", null, "Organization"));
 			pr.setAvailabilityExceptions(resultSet.getString("availability_exceptions"));	
-
+			
 			// Add a digital certificate to the first 3 organizations
          	if (cnt < DigitalCertificateFactory.MAX_CERTS) {
          		// args are:  nthCert, type, use, trustFramework, standard, expirationDate
@@ -160,6 +162,13 @@ public class BulkPractitionerRoleBuilder implements IQualification, INewPatients
 		ResultSet resultset = DatabaseUtil.runQuery(connection,"SELECT * from fhir_codeable_concept where practitioner_role_code_id = ?", prId);
 		while(resultset.next()) {
 			CodeableConcept cc = ResourceFactory.getCodeableConcept(resultset);
+			pr.addCode(cc);
+		}
+		// practitioner code needs at least 1 code codeable_concept. Make one up if needed.
+		if (pr.getCode() == null || pr.getCode().isEmpty()) {
+			CodeableConcept cc = new CodeableConcept();
+			Coding cd = ResourceFactory.makeCoding("158965000", "Medical practitioner", "http://snomed.info/sct", false);
+			cc.addCoding(cd);
 			pr.addCode(cc);
 		}
 	}

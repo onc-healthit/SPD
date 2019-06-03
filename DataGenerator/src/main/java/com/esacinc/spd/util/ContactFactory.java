@@ -100,7 +100,11 @@ public class ContactFactory implements IAvailableTime {
 		}
 
 		// Rank - int
-		telecom.setRank(resultset.getInt("rank"));
+		int rank = resultset.getInt("rank");
+		if (rank == 0) {
+			rank = 1;   // Rank must be non-zero. We don't care what the db says.
+		}
+		telecom.setRank(rank);
 
 		// Period - period
 		telecom.setPeriod(ResourceFactory.makePeriod(resultset.getDate("period_start"), resultset.getDate("period_end")));

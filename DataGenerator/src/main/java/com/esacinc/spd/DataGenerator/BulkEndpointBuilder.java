@@ -5,6 +5,8 @@ import com.esacinc.spd.model.VhDirIdentifier;
 import com.esacinc.spd.model.VhDirTelecom;
 import com.esacinc.spd.model.complex_extensions.IEndpointUseCase;
 import com.esacinc.spd.util.*;
+
+import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Endpoint.EndpointStatus;
 import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Reference;
@@ -31,7 +33,9 @@ public class BulkEndpointBuilder implements IEndpointUseCase {
 	public List<VhDirEndpoint> getEndpoints(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirEndpoint> endpoints = new ArrayList<VhDirEndpoint>();
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_endpoint WHERE endpoint_id > " + BulkDataApp.FROM_ID_ENDPOINTS + " ORDER BY endpoint_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+
+		ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_endpoint WHERE endpoint_id > " + BulkDataApp.FROM_ID_ENDPOINTS + " ORDER BY endpoint_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirEndpoint ep = new VhDirEndpoint();
@@ -45,8 +49,19 @@ public class BulkEndpointBuilder implements IEndpointUseCase {
 
 			ep.setName(resultSet.getString("name"));
 			ep.setAddress(resultSet.getString("address"));
-			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),resultSet.getString("connectionType"),"http://terminology.hl7.org/CodeSystem/endpoint-connection-type",false));
-			ep.setRank(new IntegerType(resultSet.getInt("rank")));
+			// Minor issue....connection type must be camel cased, sort of.
+			String display = resultSet.getString("connectionType");
+		    if ("direct-project".equalsIgnoreCase(display)) {
+		    	display = "Direct Project";
+		    }
+			ep.setConnectionType(ResourceFactory.makeCoding(resultSet.getString("connectionType"),display,"http://terminology.hl7.org/CodeSystem/endpoint-connection-type",false));
+			IntegerType rank = new IntegerType(resultSet.getInt("rank"));
+			// Must have at least one rank
+			if (rank == null || rank.equals(0)) {
+				rank.setValue(1);
+			}
+			ep.setRank(rank);
+			
 			ep.setManagingOrganization(ResourceFactory.makeResourceReference(resultSet.getString("managing_organization_id"), "Organization", null, "Managing Organization"));
 			ep.setPeriod(ResourceFactory.makePeriod(resultSet.getDate("period_start"),resultSet.getDate("period_end"))); 
 
@@ -56,11 +71,15 @@ public class BulkEndpointBuilder implements IEndpointUseCase {
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
 				ep.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null));
 			}
+			
+			
 
 			// Handle the status code
 			handleStatus(resultSet,ep);
 
 			handleMimeTypes(resultSet, ep);
+			
+			handlePayloadTypes(connection, ep, epId);
 			
 			handleHeaders(resultSet, ep);
 			
@@ -115,7 +134,15 @@ public class BulkEndpointBuilder implements IEndpointUseCase {
 			ep.addPayloadMimeType(mime); 
 		}
 	}
-	
+
+	private void handlePayloadTypes(Connection connection, VhDirEndpoint ep, int epId) throws SQLException{
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "Select * from fhir_codeable_concept where endpoint_payload_type_id = ?", epId);
+		while (resultset.next()) {
+			CodeableConcept cc = ResourceFactory.getCodeableConcept(resultset);
+			ep.addPayloadType(cc);
+		}
+	}
+
 	private void handleHeaders(ResultSet resultset, VhDirEndpoint ep) throws SQLException{
 		String headerstr = resultset.getString("header"); // assume a semicolon-delimited list of headers
 		if (headerstr == null) {

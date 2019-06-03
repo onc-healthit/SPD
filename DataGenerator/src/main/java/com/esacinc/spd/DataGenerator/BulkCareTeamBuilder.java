@@ -10,6 +10,7 @@ import java.util.List;
 import org.hl7.fhir.r4.model.CareTeam.CareTeamParticipantComponent;
 import org.hl7.fhir.r4.model.CareTeam.CareTeamStatus;
 import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Reference;
 import org.hl7.fhir.r4.model.StringType;
 
@@ -38,7 +39,8 @@ public class BulkCareTeamBuilder {
 		List<VhDirCareTeam> careteams = new ArrayList<VhDirCareTeam>();
 		
 		int cnt = 0;
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_careteam WHERE careteam_id > " + BulkDataApp.FROM_ID_CARETEAMS + " ORDER BY careteam_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_careteam WHERE careteam_id > " + BulkDataApp.FROM_ID_CARETEAMS + " ORDER BY careteam_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirCareTeam ct = new VhDirCareTeam();
 		
@@ -249,6 +251,13 @@ public class BulkCareTeamBuilder {
 		while(resultset.next()) {
 			CodeableConcept cc = ResourceFactory.getCodeableConcept(resultset);
 			ct.addCategory(cc);  
+		}
+		// Careteam needs at least one category. If none found in db, create an appropriate one..
+		if (ct.getCategory().isEmpty()) {
+			CodeableConcept cc = new CodeableConcept();
+			Coding cdng = ResourceFactory.makeCoding("LA2097-8","Condition-focused care team","http://loinc.ogr", false);
+			cc.addCoding(cdng);
+			ct.addCategory(cc);
 		}
 	}
 

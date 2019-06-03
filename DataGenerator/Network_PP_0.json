@@ -42,6 +42,6 @@
   "partOf": {
     "id": "1",
     "reference": "Organization/1313848",
-    "type": "Organization"
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
   }
 }

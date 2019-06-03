@@ -14,7 +14,7 @@
   "providedBy": {
     "id": "21",
     "reference": "Organization/1313866",
-    "type": "Organization"
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
   },
   "category": [
     {

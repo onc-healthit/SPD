@@ -36,7 +36,8 @@ public class BulkInsurancePlanBuilder {
 	public List<VhDirInsurancePlan> getInsurancePlans(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirInsurancePlan> insurancePlans = new ArrayList<VhDirInsurancePlan>();
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_insurance_plan WHERE insurance_plan_id > " + BulkDataApp.FROM_ID_INSURANCEPLANS + " ORDER BY insurance_plan_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_insurance_plan WHERE insurance_plan_id > " + BulkDataApp.FROM_ID_INSURANCEPLANS + " ORDER BY insurance_plan_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirInsurancePlan ip = new VhDirInsurancePlan();
 		

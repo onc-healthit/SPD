@@ -93,11 +93,11 @@
   "ownedBy": {
     "id": "29",
     "reference": "Organization/1313874",
-    "type": "Organization"
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
   },
   "administeredBy": {
     "id": "29",
     "reference": "Organization/1313874",
-    "type": "Organization"
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
   }
 }

@@ -143,7 +143,7 @@
   "managingOrganization": [
     {
       "reference": "Organization/596",
-      "type": "Organization",
+      "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization",
       "display": "Managing Orgaization"
     }
   ]

@@ -465,7 +465,7 @@ public class BulkDataApp extends BuildControlSettings {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ORGANIZATIONS,FROM_ID_ORGANIZATIONS,"ndjson")));
 			BufferedWriter pp_writer = null;
 			if (MAX_PP_ENTRIES > 0){
-				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ORGANIZATIONS,FROM_ID_ORGANIZATIONS,"ndjson")));
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ORGANIZATIONS,FROM_ID_ORGANIZATIONS,"json")));
 			}
 			int cnt = 0;
 			for (VhDirOrganization org : organizations) {
@@ -681,7 +681,7 @@ public class BulkDataApp extends BuildControlSettings {
 			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_VALIDATIONS,FROM_ID_VALIDATIONS,"ndjson")));
 			BufferedWriter pp_writer = null;
 			if (MAX_PP_ENTRIES > 0){
-				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_VALIDATIONS,FROM_ID_VALIDATIONS,"ndjson")));
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_VALIDATIONS,FROM_ID_VALIDATIONS,"json")));
 			}
 			for (VhDirValidation val : validations) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {

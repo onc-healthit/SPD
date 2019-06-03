@@ -35,7 +35,8 @@ public class BulkOrganizationBuilder implements IDigitalCertificate, IQualificat
 		int cnt = 0;
 		int certCount = 0;
 		int orgId = 0;
-	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization WHERE organization_id > " + BulkDataApp.FROM_ID_ORGANIZATIONS + " ORDER BY organization_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization WHERE organization_id > " + BulkDataApp.FROM_ID_ORGANIZATIONS + " ORDER BY organization_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirOrganization org = new VhDirOrganization();
 			try {
@@ -48,7 +49,7 @@ public class BulkOrganizationBuilder implements IDigitalCertificate, IQualificat
 			
 			org.setText(ResourceFactory.makeNarrative("Organization (id: " + orgId + ")"));
 
-			
+		
 			// Handle description
 			org.setDescription(resultSet.getString("description"));
 			
@@ -78,7 +79,20 @@ public class BulkOrganizationBuilder implements IDigitalCertificate, IQualificat
          			
 			// Handle aliases
          	handleAliases(connection, resultSet, org, orgId);
-			
+
+         	// Now that we have aliases, we can handle the case where name isn't specified in the db
+			String name = resultSet.getString("name");
+			if (name == null || name.isEmpty()) {
+				// If no name, the use the first alias, if there is one.
+				List<StringType> names = org.getAlias();
+				if (names != null && names.size() > 0) {
+					name = names.get(0).asStringValue();
+				}
+				else name = "Not provided";
+			}
+			org.setName(name);
+
+
             // Handle the telecoms
          	handleTelecoms(connection, org, orgId);
          	

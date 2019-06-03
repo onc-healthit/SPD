@@ -139,6 +139,7 @@ public class BuildControlSettings {
 			DatabaseUtil.connectionUrl = PropertiesUtil.getPropertyString("connectionUrl", DatabaseUtil.connectionUrl);
 			DatabaseUtil.zipConnectionUrl = PropertiesUtil.getPropertyString("zipConnectionUrl", DatabaseUtil.zipConnectionUrl);
 			DatabaseUtil.MAX_CONNECT_ATTEMPTS = PropertiesUtil.getPropertyInteger("MAX_CONNECT_ATTEMPTS", DatabaseUtil.MAX_CONNECT_ATTEMPTS);
+			DatabaseUtil.GLOBAL_LIMIT = PropertiesUtil.getPropertyInteger("GLOBAL_LIMIT", DatabaseUtil.GLOBAL_LIMIT);
 			
 			// Re-Initialize whether we want to do a couple basic tests of the Geocode function. (Probably we don't.)
 			Geocoding.DO_GEOCODE_TEST =  PropertiesUtil.getPropertyBoolean("DO_GEOTEST",Geocoding.DO_GEOCODE_TEST);

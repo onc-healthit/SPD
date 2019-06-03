@@ -47,7 +47,7 @@
         },
         {
           "url": "expirationDate",
-          "valueDate": "2020-06-02"
+          "valueDate": "2020-06-03"
         },
         {
           "url": "trustFramework",
@@ -68,12 +68,12 @@
   "active": true,
   "practitioner": {
     "reference": "Practitioner/3",
-    "type": "Practitioner",
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-practitioner",
     "display": "Practitioner"
   },
   "organization": {
     "reference": "Organization/188095",
-    "type": "Organization",
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization",
     "display": "Organization"
   },
   "code": [

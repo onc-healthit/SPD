@@ -13,12 +13,12 @@
   "active": true,
   "organization": {
     "reference": "Organization/1314015",
-    "type": "Organization",
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization",
     "display": "Organization"
   },
   "participatingOrganization": {
     "reference": "VhdirOrganization/596",
-    "type": "VhdirOrganization",
+    "type": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-vhdirorganization",
     "display": "Participating Organization"
   }
 }

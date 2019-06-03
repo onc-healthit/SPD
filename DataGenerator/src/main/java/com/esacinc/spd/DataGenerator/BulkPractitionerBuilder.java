@@ -42,7 +42,8 @@ public class BulkPractitionerBuilder {
 		List<VhDirPractitioner> practitioners = new ArrayList<VhDirPractitioner>();
 		int cnt = 0;
 		int certCount = 0;
-	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner WHERE practitioner_id > " + BulkDataApp.FROM_ID_PRACTITIONERS + " ORDER BY practitioner_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner WHERE practitioner_id > " + BulkDataApp.FROM_ID_PRACTITIONERS + " ORDER BY practitioner_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirPractitioner prac = new VhDirPractitioner();
 		

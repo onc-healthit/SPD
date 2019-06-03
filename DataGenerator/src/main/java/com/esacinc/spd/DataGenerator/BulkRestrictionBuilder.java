@@ -35,7 +35,8 @@ public class BulkRestrictionBuilder {
 	public List<VhDirRestriction> getRestrictions(Connection connection) throws SQLException, ParseException {
 		List<VhDirRestriction> restrictions = new ArrayList<VhDirRestriction>();
 		int cnt = 0;
-	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_restriction WHERE restriction_id > " + BulkDataApp.FROM_ID_RESTRICTIONS + " ORDER BY restriction_id",null);
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_restriction WHERE restriction_id > " + BulkDataApp.FROM_ID_RESTRICTIONS + " ORDER BY restriction_id " + limit,null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirRestriction res = new VhDirRestriction();
 		
@@ -46,10 +47,11 @@ public class BulkRestrictionBuilder {
 
 			res.setText(ResourceFactory.makeNarrative("Consent (id: " + resId + ")"));
 
-			res.setScope(ResourceFactory.getCodeableConcept(resultSet.getInt("scope_cc_id"),connection));
+			
 			res.setDateTime(resultSet.getDate("date_time"));	
 			
-
+			handleScope(connection,resultSet, res);
+			
 			handleStatus(resultSet, res);
 			
 			handleCategories(connection, res, resId);
@@ -66,6 +68,21 @@ public class BulkRestrictionBuilder {
 		return restrictions;
 	}
 
+	private  void handleScope(Connection connection, ResultSet resultset, VhDirRestriction res) throws SQLException{
+		int ccId = resultset.getInt("scope_cc_id");
+		if (ccId != 0) {
+			res.setScope(ResourceFactory.getCodeableConcept(resultset.getInt("scope_cc_id"),connection));
+		} 
+		// Has to be a scope. Make one up if needed.
+		else {
+			CodeableConcept cc = new CodeableConcept();
+			cc.setText("privacy");
+			Coding cdng = ResourceFactory.makeCoding("patient-privacy", "Privacy Consent", "http://terminology.hl7.org/CodeSystem/consentscope", false);
+			cc.addCoding(cdng);
+			res.setScope(cc);
+		}
+		
+	}
 	
 	/**
 	 * Handles a status  for Restrictions
@@ -103,6 +120,15 @@ public class BulkRestrictionBuilder {
 			CodeableConcept cc = ResourceFactory.getCodeableConcept(resultset);
 			res.addCategory(cc);
 		}
+		// Needs at least one category. Make one up if needed.
+		if (res.getCategory() == null ||res.getCategory().isEmpty()) {
+			CodeableConcept cc = new CodeableConcept();
+			cc.setText("Information Access");
+			Coding cdng = ResourceFactory.makeCoding("INFA", "information access", "http://terminology.hl7.org/CodeSystem/v3-ActCode", false);
+			cc.addCoding(cdng);
+			res.addCategory(cc);
+			
+		}
 	}
 
 	/**
@@ -119,7 +145,17 @@ public class BulkRestrictionBuilder {
 			ConsentPolicyComponent cc = new ConsentPolicyComponent();
 			cc.setId(resultset.getString("policy_id"));
 			cc.setUri(resultset.getString("uri"));
+			res.addPolicy(cc);
 		}
+		// Needs at least one policy. Make one up if needed
+		if (res.getPolicy() == null ||res.getPolicy().isEmpty()) {
+			ConsentPolicyComponent cc = new ConsentPolicyComponent();
+			cc.setAuthority("policy");
+			cc.setUri("http://www.acmc.gov/omnibus-policy.html");
+			res.addPolicy(cc);
+			
+		}
+
 	}
 
 	/**
@@ -139,9 +175,12 @@ public class BulkRestrictionBuilder {
 				cc.setType(ConsentProvisionType.fromCode(resultset.getString("type")));
 			}
 			catch (Exception e) {
-				cc.setType(ConsentProvisionType.NULL);
+				cc.setType(ConsentProvisionType.PERMIT);
 				ErrorReport.writeWarning("VhDirRestriction", res.getId(), "unrecognized type ", e.getMessage());
 
+			}
+			if (cc.getType() == null) {
+				cc.setType(ConsentProvisionType.PERMIT);
 			}
 			// TODO this is a problem since the vhdir resource says action is a singleton (0..), while the standard has it as a list.
 			CodeableConcept action = ResourceFactory.getCodeableConcept(resultset.getInt("action_cc_id"),connection);
@@ -152,7 +191,7 @@ public class BulkRestrictionBuilder {
 				provisionActorComponent actor = new provisionActorComponent();
 				actor.setRole(ResourceFactory.getCodeableConcept(actorResultSet.getInt("role_cc_id"),connection));
 				actor.setReference(ResourceFactory.getResourceReference(actorResultSet.getInt("reference_resource_id"), connection));
-				
+				cc.addActor(actor);
 			}
 			
 			String securityLabels = resultset.getString("security_label"); // assume this is a ";" delimited string of security labels of the form code,display
@@ -209,7 +248,15 @@ public class BulkRestrictionBuilder {
 				provisionActorComponent actor = new provisionActorComponent();
 				actor.setRole(ResourceFactory.getCodeableConcept(actorResultSet.getInt("role_cc_id"),connection));
 				actor.setReference(ResourceFactory.getResourceReference(actorResultSet.getInt("reference_resource_id"), connection));
-				
+				cc.addActor(actor);
+			}
+			if (cc.getActor() == null || cc.getActor().isEmpty()) {
+				provisionActorComponent actor = new provisionActorComponent();
+				CodeableConcept ccncpt = new CodeableConcept();
+				Coding cdng = ResourceFactory.makeCoding("IRCP","information recipient","http://terminology.hl7.org/CodeSystem/v3-ParticipationType",false);
+				ccncpt.addCoding(cdng);
+				actor.setRole(ccncpt);
+				cc.addActor(actor);
 			}
 			res.setProvision(cc);
 			return; // we are only expecting one provision

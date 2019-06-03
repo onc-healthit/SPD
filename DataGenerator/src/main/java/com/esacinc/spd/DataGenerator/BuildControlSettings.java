@@ -20,8 +20,8 @@ public class BuildControlSettings {
 	
 	protected static boolean DO_REPORTING =   true;   // false means no error report file generated.
 	public static int        MAX_ENTRIES =    5;      // Control how many entries we process in each section and output. -1 means ALL. 
-	public static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
-	protected static int     PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
+	public static int        MAX_PP_ENTRIES = 10;     // Number of resources to put in the pretty print file. -1 means all
+	protected static int     PP_NTH_CONSOLE = 0;      // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
 	// Which VhDir resources to generate...
 	protected static boolean DO_ALL = false;   // If true, process all resource type, regardless of settings below
@@ -39,6 +39,8 @@ public class BuildControlSettings {
 	protected static boolean DO_PRACTITIONERROLES = true;
 
 	// Which VhDir resource files to generate...
+	// Note that these are the base pieces of filenames that get created for
+	// various purposes. (See makeFilename, below)
 	protected static String FILE_ORGANIZATIONS = "Organization";
 	protected static String FILE_PRACTITIONERS = "Practitioner";
 	protected static String FILE_NETWORKS = "Network";
@@ -53,6 +55,8 @@ public class BuildControlSettings {
 	protected static String FILE_RESTRICTIONS = "Restriction";
 
 	// Indicate where to start reading from the db (id) for each resource
+	// These numbers are incorporated into SQL queries that retrieve the 
+	// main vhdir resources from the database. (e.g   "where organizatio_id > FROM_ID_ORGANIZATIONS")
 	protected static int FROM_ID_ORGANIZATIONS = 0;
 	protected static int FROM_ID_PRACTITIONERS = 0;
 	protected static int FROM_ID_NETWORKS = 0;
@@ -158,11 +162,24 @@ public class BuildControlSettings {
 		return (MAX_ENTRIES == -1 || cnt < MAX_ENTRIES);
 	}
 	
+	/**
+	 * 
+	 * Create a filename given a base resource name, 
+	 * the id of the first resource in the file,
+	 * and the type (extension) of file to create.
+	 * The extension determines whether to add a _PP suffix to the base name to indicate
+	 * pretty-print resources.
+	 * 
+	 * @param base
+	 * @param cnt
+	 * @param extension
+	 * @return
+	 */
 	protected static String makeFilename(String base, int cnt, String extension) {
 		if (extension.equalsIgnoreCase("ndjson"))
 			return base+"_"+cnt+"."+extension;
 		else {
-			return base+"_PP_"+cnt+"."+extension;
+			return base+"_PP_"+cnt+"."+extension; 
 		}
 	}
 

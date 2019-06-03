@@ -1,14 +1,14 @@
 {
-  "resourceType": "Practitioner",
+  "resourceType": "Organization",
   "id": "1",
   "meta": {
     "profile": [
-      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-practitioner"
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
     ]
   },
   "text": {
     "status": "generated",
-    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003ePractitioner (id: 1)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 1)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
   },
   "extension": [
     {
@@ -63,29 +63,49 @@
           }
         }
       ]
+    },
+    {
+      "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/alias",
+      "valueVhdir-alias": {
+        "id": "3",
+        "valueString": "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
+      }
+    }
+  ],
+  "identifier": [
+    {
+      "id": "1",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "http://hl7.org/fhir/sid/us-npi",
+      "value": "1679062467"
     }
   ],
   "active": true,
-  "name": [
+  "type": [
     {
-      "id": "1313847",
-      "use": "official",
-      "family": "\u0027ANDERSON",
-      "given": [
-        "VERA"
-      ],
-      "prefix": [
-        "MRS."
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+          "code": "prov",
+          "display": "Healthcare Provider",
+          "userSelected": false
+        }
       ]
-    },
-    {
-      "id": "1323847",
-      "use": "usual"
     }
+  ],
+  "name": "NORTHLAND SPECIAL EDUCATION COOPERATIVE",
+  "alias": [
+    "NORTHLAND SPECIAL EDUCATION COOPERATIVE"
   ],
   "telecom": [
     {
-      "id": "6569231",
+      "id": "1",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -119,27 +139,23 @@
               "valueCode": "sat"
             },
             {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
               "url": "allDay",
-              "valueBoolean": false
-            },
-            {
-              "url": "availableStartTime",
-              "valueTime": "08:00:00"
-            },
-            {
-              "url": "availableEndTime",
-              "valueTime": "17:00:00"
+              "valueBoolean": true
             }
           ]
         }
       ],
       "system": "phone",
-      "value": "7603763662",
+      "value": "8023433151",
       "use": "work",
       "rank": 1
     },
     {
-      "id": "6589231",
+      "id": "20001",
       "extension": [
         {
           "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
@@ -173,92 +189,181 @@
               "valueCode": "sat"
             },
             {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
               "url": "allDay",
-              "valueBoolean": false
-            },
-            {
-              "url": "availableStartTime",
-              "valueTime": "08:00:00"
-            },
-            {
-              "url": "availableEndTime",
-              "valueTime": "17:00:00"
+              "valueBoolean": true
             }
           ]
         }
       ],
       "system": "phone",
-      "value": "7603793412",
+      "value": "8023433151",
       "use": "work",
       "rank": 2
+    },
+    {
+      "id": "40001",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+          "extension": [
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "mon"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "tue"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "wed"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "thu"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "fri"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sat"
+            },
+            {
+              "url": "daysOfWeek",
+              "valueCode": "sun"
+            },
+            {
+              "url": "allDay",
+              "valueBoolean": true
+            }
+          ]
+        }
+      ],
+      "system": "phone",
+      "value": "8023433151",
+      "rank": 1
     }
   ],
   "address": [
     {
-      "id": "2627693",
+      "id": "1",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
           "extension": [
             {
               "url": "latitude",
-              "valueDecimal": 35.784367
+              "valueDecimal": 40.03263
             },
             {
               "url": "longitude",
-              "valueDecimal": -118.43769
+              "valueDecimal": -76.33328
             }
           ]
         }
       ],
       "use": "billing",
       "line": [
-        "PO BOX 347"
+        "327 DEVON DR"
       ],
-      "state": "CA",
-      "postalCode": "932380347",
+      "state": "PA",
+      "postalCode": "176034609",
       "country": "US"
     },
     {
-      "id": "2637693",
+      "id": "10001",
       "extension": [
         {
           "url": "http://hl7.org/fhir/StructureDefinition/geolocation",
           "extension": [
             {
               "url": "latitude",
-              "valueDecimal": 35.617148
+              "valueDecimal": 40.03263
             },
             {
               "url": "longitude",
-              "valueDecimal": -118.45299
+              "valueDecimal": -76.33328
             }
           ]
         }
       ],
       "use": "work",
       "line": [
-        "2731 NUGGET AVE"
+        "327 DEVON DR"
       ],
-      "state": "CA",
-      "postalCode": "932402632",
+      "state": "PA",
+      "postalCode": "176034609",
       "country": "US"
     }
   ],
-  "gender": "female",
-  "communication": [
+  "contact": [
     {
-      "id": "x9393",
-      "coding": [
+      "id": "1",
+      "name": {
+        "id": "1",
+        "use": "official",
+        "family": "GHIMIREY",
+        "given": [
+          "TEK"
+        ]
+      },
+      "telecom": [
         {
-          "system": "urn:ietf:bcp:47",
-          "version": "0.2.0",
-          "code": "en-US",
-          "display": "English(Region\u003dUnited States)",
-          "userSelected": true
+          "id": "40001",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/contactpoint-availabletime",
+              "extension": [
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "mon"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "tue"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "wed"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "thu"
+                },
+                {
+                  "url": "daysOfWeek",
+                  "valueCode": "fri"
+                },
+                {
+                  "url": "allDay",
+                  "valueBoolean": false
+                },
+                {
+                  "url": "availableStartTime",
+                  "valueTime": "08:00:00"
+                },
+                {
+                  "url": "availableEndTime",
+                  "valueTime": "17:00:00"
+                }
+              ]
+            }
+          ],
+          "system": "phone",
+          "value": "8023433151",
+          "rank": 1
         }
-      ],
-      "text": "Just made something up"
+      ]
     }
   ]
 }

@@ -20,7 +20,7 @@ public class BuildControlSettings {
 	
 	protected static boolean DO_REPORTING =   true;   // false means no error report file generated.
 	public static int        MAX_ENTRIES =    5;      // Control how many entries we process in each section and output. -1 means ALL. 
-	protected static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
+	public static int     MAX_PP_ENTRIES = 10;   // Number of resources to put in the pretty print file. -1 means all
 	protected static int     PP_NTH_CONSOLE = 0;    // Indicates prettyPrint nth item to System.output. Use -1 to skip
 
 	// Which VhDir resources to generate...
@@ -39,33 +39,32 @@ public class BuildControlSettings {
 	protected static boolean DO_PRACTITIONERROLES = true;
 
 	// Which VhDir resource files to generate...
-	protected static String FILE_ORGANIZATIONS = "Organization.ndjson";
-	protected static String FILE_PRACTITIONERS = "Practitioner.ndjson";
-	protected static String FILE_NETWORKS = "Network.ndjson";
-	protected static String FILE_LOCATIONS = "Location.ndjson";
-	protected static String FILE_VALIDATIONS = "Validation.ndjson";
-	protected static String FILE_ENDPOINTS = "Endpoint.ndjson";
-	protected static String FILE_CARETEAMS = "Careteam.ndjson";
-	protected static String FILE_HEALTHCARESERVICES = "HealthcareService.ndjson";
-	protected static String FILE_INSURANCEPLANS = "InsurancePlan.ndjson";
-	protected static String FILE_ORGANIZATIONAFFILIATIONS = "OrganizationAffiliation.ndjson";
-	protected static String FILE_PRACTITIONERROLES = "PractitionerRole.ndjson";
-	protected static String FILE_RESTRICTIONS = "Restriction.ndjson";
+	protected static String FILE_ORGANIZATIONS = "Organization";
+	protected static String FILE_PRACTITIONERS = "Practitioner";
+	protected static String FILE_NETWORKS = "Network";
+	protected static String FILE_LOCATIONS = "Location";
+	protected static String FILE_VALIDATIONS = "Validation";
+	protected static String FILE_ENDPOINTS = "Endpoint";
+	protected static String FILE_CARETEAMS = "Careteam";
+	protected static String FILE_HEALTHCARESERVICES = "HealthcareService";
+	protected static String FILE_INSURANCEPLANS = "InsurancePlan";
+	protected static String FILE_ORGANIZATIONAFFILIATIONS = "OrganizationAffiliation";
+	protected static String FILE_PRACTITIONERROLES = "PractitionerRole";
+	protected static String FILE_RESTRICTIONS = "Restriction";
 
-	// Which VhDir resource pretty-printed files to generate...
-	// (Set to null or "" to not generate a file.)
-	protected static String FILE_ORGANIZATIONS_PP = "Organization_PP.json";
-	protected static String FILE_PRACTITIONERS_PP = "Practitioner_PP.json";
-	protected static String FILE_NETWORKS_PP = "Network_PP.json";
-	protected static String FILE_LOCATIONS_PP = "Location_PP.json";
-	protected static String FILE_VALIDATIONS_PP = "Validation_PP.json";
-	protected static String FILE_ENDPOINTS_PP = "Endpoint_PP.json";
-	protected static String FILE_CARETEAMS_PP = "Careteam_PP.json";
-	protected static String FILE_HEALTHCARESERVICES_PP = "HealthcareService_PP.json";
-	protected static String FILE_INSURANCEPLANS_PP = "InsurancePlan_PP.json";
-	protected static String FILE_ORGANIZATIONAFFILIATIONS_PP = "OrganizationAffiliation_PP.json";
-	protected static String FILE_PRACTITIONERROLES_PP = "PractitionerRole_PP.json";
-	protected static String FILE_RESTRICTIONS_PP = "Restriction_PP.json";
+	// Indicate where to start reading from the db (id) for each resource
+	protected static int FROM_ID_ORGANIZATIONS = 0;
+	protected static int FROM_ID_PRACTITIONERS = 0;
+	protected static int FROM_ID_NETWORKS = 0;
+	protected static int FROM_ID_LOCATIONS = 0;
+	protected static int FROM_ID_VALIDATIONS = 0;
+	protected static int FROM_ID_ENDPOINTS = 0;
+	protected static int FROM_ID_CARETEAMS = 0;
+	protected static int FROM_ID_HEALTHCARESERVICES = 0;
+	protected static int FROM_ID_INSURANCEPLANS = 0;
+	protected static int FROM_ID_RESTRICTIONS = 0;
+	protected static int FROM_ID_ORGANIZATIONAFFILIATIONS = 0;
+	protected static int FROM_ID_PRACTITIONERROLES = 0;
 
 	/**
 	 * Maybe re-initialize all of our global static variables from values found in SPD_Settings.properties file.
@@ -120,20 +119,19 @@ public class BuildControlSettings {
 			FILE_PRACTITIONERROLES = PropertiesUtil.getPropertyString("FILE_PRACTITIONERROLES", FILE_PRACTITIONERROLES);
 			FILE_RESTRICTIONS = PropertiesUtil.getPropertyString("FILE_RESTRICTIONS", FILE_RESTRICTIONS);
 	
-			// Re-Initialize the variables we use to control what files our pretty printed json resources get printed to...
-			FILE_ORGANIZATIONS_PP = PropertiesUtil.getPropertyString("FILE_ORGANIZATIONS_PP", FILE_ORGANIZATIONS_PP);
-			FILE_PRACTITIONERS_PP = PropertiesUtil.getPropertyString("FILE_PRACTITIONERS_PP", FILE_PRACTITIONERS_PP);
-			FILE_NETWORKS_PP = PropertiesUtil.getPropertyString("FILE_NETWORKS_PP", FILE_NETWORKS_PP);
-			FILE_LOCATIONS_PP = PropertiesUtil.getPropertyString("FILE_LOCATIONS_PP", FILE_LOCATIONS_PP);
-			FILE_VALIDATIONS_PP = PropertiesUtil.getPropertyString("FILE_VALIDATIONS_PP", FILE_ORGANIZATIONS_PP);
-			FILE_ENDPOINTS_PP = PropertiesUtil.getPropertyString("FILE_ENDPOINTS_PP", FILE_ENDPOINTS_PP);
-			FILE_CARETEAMS_PP = PropertiesUtil.getPropertyString("FILE_CARETEAMS_PP", FILE_CARETEAMS_PP);
-			FILE_HEALTHCARESERVICES_PP = PropertiesUtil.getPropertyString("FILE_HEALTHCARESERVICES_PP", FILE_HEALTHCARESERVICES_PP);
-			FILE_INSURANCEPLANS_PP = PropertiesUtil.getPropertyString("FILE_INSURANCEPLANS_PP", FILE_INSURANCEPLANS_PP);
-			FILE_ORGANIZATIONAFFILIATIONS_PP = PropertiesUtil.getPropertyString("FILE_ORGANIZATIONAFFILIATIONS_PP", FILE_ORGANIZATIONAFFILIATIONS_PP);
-			FILE_PRACTITIONERROLES_PP = PropertiesUtil.getPropertyString("FILE_PRACTITIONERROLES_PP", FILE_PRACTITIONERROLES_PP);
-			FILE_RESTRICTIONS_PP = PropertiesUtil.getPropertyString("FILE_RESTRICTIONS_PP", FILE_RESTRICTIONS_PP);
-	
+			FROM_ID_ORGANIZATIONS = PropertiesUtil.getPropertyInteger("FROM_ID_ORGANIZATIONS", FROM_ID_ORGANIZATIONS);
+			FROM_ID_PRACTITIONERS = PropertiesUtil.getPropertyInteger("FROM_ID_PRACTITIONERS", FROM_ID_PRACTITIONERS);
+			FROM_ID_NETWORKS = PropertiesUtil.getPropertyInteger("FROM_ID_NETWORKS", FROM_ID_NETWORKS);
+			FROM_ID_LOCATIONS = PropertiesUtil.getPropertyInteger("FROM_ID_LOCATIONS", FROM_ID_LOCATIONS);
+			FROM_ID_VALIDATIONS = PropertiesUtil.getPropertyInteger("FROM_ID_VALIDATIONS", FROM_ID_ORGANIZATIONS);
+			FROM_ID_ENDPOINTS = PropertiesUtil.getPropertyInteger("FROM_ID_ENDPOINTS", FROM_ID_ENDPOINTS);
+			FROM_ID_CARETEAMS = PropertiesUtil.getPropertyInteger("FROM_ID_CARETEAMS", FROM_ID_CARETEAMS);
+			FROM_ID_HEALTHCARESERVICES = PropertiesUtil.getPropertyInteger("FROM_ID_HEALTHCARESERVICES", FROM_ID_HEALTHCARESERVICES);
+			FROM_ID_INSURANCEPLANS = PropertiesUtil.getPropertyInteger("FROM_ID_INSURANCEPLANS", FROM_ID_INSURANCEPLANS);
+			FROM_ID_ORGANIZATIONAFFILIATIONS = PropertiesUtil.getPropertyInteger("FROM_ID_ORGANIZATIONAFFILIATIONS", FROM_ID_ORGANIZATIONAFFILIATIONS);
+			FROM_ID_PRACTITIONERROLES = PropertiesUtil.getPropertyInteger("FROM_ID_PRACTITIONERROLES", FROM_ID_PRACTITIONERROLES);
+			FROM_ID_RESTRICTIONS = PropertiesUtil.getPropertyInteger("FROM_ID_RESTRICTIONS", FROM_ID_RESTRICTIONS);
+
 			// Re-Initialize the variables we use connect to datasources...
 			DatabaseUtil.dbUsername = PropertiesUtil.getPropertyString("dbUsername", DatabaseUtil.dbUsername);
 			DatabaseUtil.dbPassword = PropertiesUtil.getPropertyString("dbPassword", DatabaseUtil.dbUsername);
@@ -158,5 +156,14 @@ public class BuildControlSettings {
 	public static boolean okToProceed(int cnt) {
 		return (MAX_ENTRIES == -1 || cnt < MAX_ENTRIES);
 	}
+	
+	protected static String makeFilename(String base, int cnt, String extension) {
+		if (extension.equalsIgnoreCase("ndjson"))
+			return base+"_"+cnt+"."+extension;
+		else {
+			return base+"_PP_"+cnt+"."+extension;
+		}
+	}
+
 
 }

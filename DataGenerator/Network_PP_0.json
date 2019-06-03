@@ -1,0 +1,47 @@
+{
+  "resourceType": "Organization",
+  "id": "1",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganization (id: 1)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "identifier": [
+    {
+      "id": "1313849",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/uv/vhdir/StructureDefinition/identifier-status",
+          "valueCode": "active"
+        }
+      ],
+      "use": "official",
+      "system": "https://www.cms.gov/CCIIO/",
+      "value": "AKN001"
+    }
+  ],
+  "active": true,
+  "name": "BEST Life and Health National Network",
+  "alias": [
+    "BEST Life and Health National Network",
+    "Endeavor Select",
+    "Delta Dental Premier",
+    "Heritage and Dental Choice"
+  ],
+  "address": [
+    {
+      "id": "11414619",
+      "use": "work",
+      "state": "AK"
+    }
+  ],
+  "partOf": {
+    "id": "1",
+    "reference": "Organization/1313848",
+    "type": "Organization"
+  }
+}

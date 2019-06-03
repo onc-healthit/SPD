@@ -35,7 +35,7 @@ public class BulkRestrictionBuilder {
 	public List<VhDirRestriction> getRestrictions(Connection connection) throws SQLException, ParseException {
 		List<VhDirRestriction> restrictions = new ArrayList<VhDirRestriction>();
 		int cnt = 0;
-	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_restriction", null);
+	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_restriction WHERE restriction_id > " + BulkDataApp.FROM_ID_RESTRICTIONS + " ORDER BY restriction_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirRestriction res = new VhDirRestriction();
 		

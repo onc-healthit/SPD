@@ -38,7 +38,7 @@ public class BulkCareTeamBuilder {
 		List<VhDirCareTeam> careteams = new ArrayList<VhDirCareTeam>();
 		
 		int cnt = 0;
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_careteam", null);
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_careteam WHERE careteam_id > " + BulkDataApp.FROM_ID_CARETEAMS + " ORDER BY careteam_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirCareTeam ct = new VhDirCareTeam();
 		

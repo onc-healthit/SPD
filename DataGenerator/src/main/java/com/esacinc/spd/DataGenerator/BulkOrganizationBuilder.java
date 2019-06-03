@@ -35,7 +35,7 @@ public class BulkOrganizationBuilder implements IDigitalCertificate, IQualificat
 		int cnt = 0;
 		int certCount = 0;
 		int orgId = 0;
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization", null);
+	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization WHERE organization_id > " + BulkDataApp.FROM_ID_ORGANIZATIONS + " ORDER BY organization_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirOrganization org = new VhDirOrganization();
 			try {

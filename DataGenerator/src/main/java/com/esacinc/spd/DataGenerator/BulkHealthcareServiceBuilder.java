@@ -36,7 +36,7 @@ public class BulkHealthcareServiceBuilder implements INewPatients {
 	public List<VhDirHealthcareService> getHealthcareServices(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirHealthcareService> healthcareservices = new ArrayList<VhDirHealthcareService>();
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_healthcare_service", null);
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_healthcare_service WHERE healthcare_service_id > " + BulkDataApp.FROM_ID_HEALTHCARESERVICES + " ORDER BY healthcare_service_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating healthcareservice for id " + resultSet.getInt("healthcare_service_id"));
 			VhDirHealthcareService hs = new VhDirHealthcareService();

@@ -42,7 +42,7 @@ public class BulkPractitionerBuilder {
 		List<VhDirPractitioner> practitioners = new ArrayList<VhDirPractitioner>();
 		int cnt = 0;
 		int certCount = 0;
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner", null);
+	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner WHERE practitioner_id > " + BulkDataApp.FROM_ID_PRACTITIONERS + " ORDER BY practitioner_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirPractitioner prac = new VhDirPractitioner();
 		
@@ -113,7 +113,7 @@ public class BulkPractitionerBuilder {
 			try {
 				prac.setGender(AdministrativeGender.fromCode(gender));
 			}
-			catch (IllegalArgumentException e){
+			catch (Exception e){
 				// If we get an error, then it may just be that the db has "f" or "m" as the gender. At least we can handle that case...
 				if ("F".equalsIgnoreCase(gender)) {
 					prac.setGender(AdministrativeGender.FEMALE);

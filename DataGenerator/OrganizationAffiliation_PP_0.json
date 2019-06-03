@@ -1,0 +1,24 @@
+{
+  "resourceType": "OrganizationAffiliation",
+  "id": "1",
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organizationaffiliation"
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "\u003cdiv xmlns\u003d\"http://www.w3.org/1999/xhtml\"\u003e\n      \u003ch4\u003eOrganizationAffiliation (id: 1)\u003c/h4\u003e\u003cp\u003eInsert html in div element that summarizes this resource\n      \u003c/p\u003e\n    \u003c/div\u003e"
+  },
+  "active": true,
+  "organization": {
+    "reference": "Organization/1314015",
+    "type": "Organization",
+    "display": "Organization"
+  },
+  "participatingOrganization": {
+    "reference": "VhdirOrganization/596",
+    "type": "VhdirOrganization",
+    "display": "Participating Organization"
+  }
+}

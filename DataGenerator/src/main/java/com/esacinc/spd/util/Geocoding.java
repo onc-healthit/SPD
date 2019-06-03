@@ -231,5 +231,16 @@ public class Geocoding implements IGeoLocation {
 		}
 		System.out.println("Done. Examined " + cnt + " address zip codes");
 	}
-
+/*
+	static public void doAllGeocodingw(Connection connection) throws SQLException {
+		ResultSet addrResultset = DatabaseUtil.runQuery(connection, "SELECT * from fhir_codeable_concept where coding_system like '%snomed.org%'", null);
+		while (addrResultset.next()) {
+			System.out.println("updating " + addrResultset.getString("codeable_concept_id"));
+		    String updateQuery = "UPDATE fhir_codeable_concept SET coding_system='http://snomed.info/sct' WHERE codeable_concept_id = ?";
+		    PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+		    updateStatement.setString(1, addrResultset.getString("codeable_concept_id"));
+			updateStatement.executeUpdate();
+		}
+		System.out.println("done");
+	}*/
 }

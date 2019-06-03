@@ -35,7 +35,7 @@ public class BulkNetworkBuilder {
 		int cnt = 0;
 		List<VhDirNetwork> networks = new ArrayList<VhDirNetwork>();
 		
-        ResultSet resultSet = DatabaseUtil.runQuery(connection,  "SELECT * FROM vhdir_network", null);
+	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_network WHERE network_id > " + BulkDataApp.FROM_ID_NETWORKS + " ORDER BY network_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirNetwork nw = new VhDirNetwork();
 		

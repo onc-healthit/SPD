@@ -63,7 +63,8 @@ public class BulkDataApp extends BuildControlSettings {
 		// Open connections to the databases that we will use throughout.
 		Connection connection = DatabaseUtil.openAllConnections();
 
-		if (Geocoding.PROCESS_GEOCODES_ONLY) {
+		if (Geocoding.PROCESS_GEOCODES_ONLY) { 
+			System.out.println("Only...");
 			try {
 				Geocoding.doAllGeocoding(connection);
 			}
@@ -461,10 +462,10 @@ public class BulkDataApp extends BuildControlSettings {
 		FhirContext ctx = FhirContext.forR4();
 		IParser jsonParser = ctx.newJsonParser();
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ORGANIZATIONS,FROM_ID_ORGANIZATIONS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_ORGANIZATIONS_PP != null &&  !FILE_ORGANIZATIONS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ORGANIZATIONS,FROM_ID_ORGANIZATIONS,"ndjson")));
 			}
 			int cnt = 0;
 			for (VhDirOrganization org : organizations) {
@@ -505,10 +506,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_PRACTITIONERS,FROM_ID_PRACTITIONERS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_PRACTITIONERS_PP != null &&  !FILE_PRACTITIONERS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_PRACTITIONERS,FROM_ID_PRACTITIONERS,"json")));
 			}
 			for (VhDirPractitioner prac : practitioners) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -548,10 +549,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERROLES));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_PRACTITIONERROLES,FROM_ID_PRACTITIONERROLES,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_PRACTITIONERROLES_PP != null &&  !FILE_PRACTITIONERROLES_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_PRACTITIONERROLES_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_PRACTITIONERROLES,FROM_ID_PRACTITIONERROLES,"json")));
 			}
 			for (VhDirPractitionerRole prac : practitionerroles) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -591,10 +592,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NETWORKS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_NETWORKS,FROM_ID_NETWORKS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_NETWORKS_PP != null &&  !FILE_NETWORKS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_NETWORKS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_NETWORKS,FROM_ID_NETWORKS,"json")));
 			}
 			for (VhDirNetwork nw : networks) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -634,10 +635,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_LOCATIONS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_LOCATIONS,FROM_ID_LOCATIONS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_LOCATIONS_PP != null &&  !FILE_LOCATIONS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_LOCATIONS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_LOCATIONS,FROM_ID_LOCATIONS,"json")));
 			}
 			for (VhDirLocation loc : locations) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -677,10 +678,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_VALIDATIONS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_VALIDATIONS,FROM_ID_VALIDATIONS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_VALIDATIONS_PP != null &&  !FILE_VALIDATIONS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_VALIDATIONS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_VALIDATIONS,FROM_ID_VALIDATIONS,"ndjson")));
 			}
 			for (VhDirValidation val : validations) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -720,10 +721,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_ENDPOINTS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ENDPOINTS,FROM_ID_ENDPOINTS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_ENDPOINTS_PP != null &&  !FILE_ENDPOINTS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_ENDPOINTS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ENDPOINTS,FROM_ID_ENDPOINTS,"json")));
 			}
 			for (VhDirEndpoint ep : endpoints) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -762,10 +763,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_CARETEAMS,FROM_ID_CARETEAMS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_CARETEAMS_PP != null &&  !FILE_CARETEAMS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_CARETEAMS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_CARETEAMS,FROM_ID_CARETEAMS,"json")));
 			}
 			for (VhDirCareTeam ct : careteams) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -804,10 +805,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_HEALTHCARESERVICES));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_HEALTHCARESERVICES,FROM_ID_HEALTHCARESERVICES,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_HEALTHCARESERVICES_PP != null &&  !FILE_HEALTHCARESERVICES_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_HEALTHCARESERVICES_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_HEALTHCARESERVICES,FROM_ID_HEALTHCARESERVICES,"json")));
 			}
 			for (VhDirHealthcareService ct : services) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -846,10 +847,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_INSURANCEPLANS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_INSURANCEPLANS,FROM_ID_INSURANCEPLANS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_INSURANCEPLANS_PP != null &&  !FILE_INSURANCEPLANS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_INSURANCEPLANS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_INSURANCEPLANS,FROM_ID_INSURANCEPLANS,"json")));
 			}
 			for (VhDirInsurancePlan plan : plans) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -888,10 +889,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_RESTRICTIONS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_RESTRICTIONS,FROM_ID_RESTRICTIONS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_RESTRICTIONS_PP != null &&  !FILE_RESTRICTIONS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_RESTRICTIONS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_RESTRICTIONS,FROM_ID_RESTRICTIONS,"json")));
 			}
 			for (VhDirRestriction plan : restrictions) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -930,10 +931,10 @@ public class BulkDataApp extends BuildControlSettings {
 		IParser jsonParser = ctx.newJsonParser();
 		int cnt = 0;
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONAFFILIATIONS));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ORGANIZATIONAFFILIATIONS,FROM_ID_ORGANIZATIONAFFILIATIONS,"ndjson")));
 			BufferedWriter pp_writer = null;
-			if (FILE_ORGANIZATIONAFFILIATIONS_PP != null &&  !FILE_ORGANIZATIONAFFILIATIONS_PP.isEmpty()){
-				pp_writer = new BufferedWriter(new FileWriter(FILE_ORGANIZATIONAFFILIATIONS_PP));
+			if (MAX_PP_ENTRIES > 0){
+				pp_writer = new BufferedWriter(new FileWriter(makeFilename(FILE_ORGANIZATIONAFFILIATIONS,FROM_ID_ORGANIZATIONAFFILIATIONS,"json")));
 			}
 			for (VhDirOrganizationAffiliation plan : affiliations) {
 				if(MAX_ENTRIES != -1 && cnt >= MAX_ENTRIES) {
@@ -1018,4 +1019,5 @@ public class BulkDataApp extends BuildControlSettings {
 		}
 		return prettyJsonString;
 	}
+	
 }

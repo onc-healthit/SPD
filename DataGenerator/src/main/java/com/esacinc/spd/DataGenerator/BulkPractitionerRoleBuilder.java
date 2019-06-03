@@ -35,7 +35,7 @@ public class BulkPractitionerRoleBuilder implements IQualification, INewPatients
 	public List<VhDirPractitionerRole> getPractitionerRoles(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirPractitionerRole> practitionerroles = new ArrayList<VhDirPractitionerRole>();
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner_role", null);
+	       ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_practitioner_role WHERE practitioner_role_id > " + BulkDataApp.FROM_ID_PRACTITIONERROLES + " ORDER BY practitioner_role_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating practitionerRole for id " + resultSet.getInt("practitioner_role_id"));
 			VhDirPractitionerRole pr = new VhDirPractitionerRole();

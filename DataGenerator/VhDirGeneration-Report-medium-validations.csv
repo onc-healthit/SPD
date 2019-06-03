@@ -1,0 +1,35 @@
+MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
+C |Setup |ErrorReport | | |Generation Time: Sun Jun 02 17:12:36 CDT 2019
+C |Setup |Control Variables | | |Build Control variables re-initialized from properties in file: SPD_Settings.properties 
+C |Setup |Control Variables | | |Process all resource types: Yes, Max Entries: 1, Max Pretty Print Entries: 20, Print Nth of each Resource to console: 0
+C |Setup |DB Conections | | |SPD: jdbc:mysql://65.111.255.73:3306/spd_large, ZipCodes: jdbc:mysql://65.111.255.73:3306/zipcode, 
+I |  |DO_ORGANIZATIONS | | |
+I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue Jun 02 17:16:00 CDT 2020
+I |  | | | |1 Organizations Collected
+I |  |DO_PRACTITIONERS | | |
+I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue Jun 02 17:20:30 CDT 2020
+W |VhDirPractitioner(id: 1)  |VhDirPractitioner |1 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
+I |  | | | |1 Practitioners Collected
+I |  |DO_NETWORKS | | |
+I |  | | | |1 Networks Collected
+I |  |DO_LOCATIONS | | |
+I |  | | | |1 Locations Collected
+I |  |DO_VALIDATIONS | | |
+I |  | | | |1 Validations Collected
+I |  |DO_ENDPOINTS | | |
+I |  | | | |0 Endpoints Collected
+I |  |DO_CARETEAMS | | |
+I |  | | | |1 CareTeams Collected
+I |  |DO_HEALTHCARESERVICES | | |
+I |  | | | |1 Healthcare Services Collected
+I |  |DO_INSURANCEPLANS | | |
+I |  | | | |1 Insurance Plans Collected
+I |  |DO_ORGANIZATIONAFFILIATIONS | | |
+I |  | | | |1 Organization Affiliations Collected
+I |  |DO_PRACTITIONERROLES | | |
+I |VhDirPractitionerRole(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Tue Jun 02 17:21:20 CDT 2020
+I |  | | | |1 Practitioner Roles Collected
+I |  |DO_RESTRICTIONS | | |
+I |  | | | |1 Restrictions Collected
+I |  |END | | |Wrote 0 error, 1 warning, 0 geocode, and 27 info messages
+I |  |END | | |Elapsed time: 0 hours, 8 minutes, 45 seconds

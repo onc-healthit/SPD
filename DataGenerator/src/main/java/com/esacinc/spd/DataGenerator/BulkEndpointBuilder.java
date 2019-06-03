@@ -31,7 +31,7 @@ public class BulkEndpointBuilder implements IEndpointUseCase {
 	public List<VhDirEndpoint> getEndpoints(Connection connection) throws SQLException, ParseException {
 		int cnt = 0;
 		List<VhDirEndpoint> endpoints = new ArrayList<VhDirEndpoint>();
-        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_endpoint", null);
+        ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_endpoint WHERE endpoint_id > " + BulkDataApp.FROM_ID_ENDPOINTS + " ORDER BY endpoint_id",null);
 		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			//System.out.println("Creating location for id " + resultSet.getInt("location_id"));
 			VhDirEndpoint ep = new VhDirEndpoint();

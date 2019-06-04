@@ -5,6 +5,13 @@ from nppes_data_generators.utils.scrubbing import pick_one
 
 
 def synthetic_address_line_generator():
+    '''
+    Generate an address line concatenating a number, a cardinal direction, a street name and a street type.
+
+    Memoizes the result for a given input to speedup the process.
+
+    :return: Memoized function to be called with a given input
+    '''
     load_addr_vocab = load_vocabulary('addresses')
 
     cardinal_directions = load_addr_vocab('cardinal_directions.csv')

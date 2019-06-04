@@ -11,6 +11,16 @@ from nppes_data_loaders.etl.etl import SQLJob
 
 @toolz.curry
 def npi_transformer(entity_id, to_cursor, records):
+    '''
+    Use by :func:migrate_identifier
+
+    Generate synthesized NPIs in reversed order starting at the minimum NPI value already in the DB.
+
+    :param entity_id: The entity for which to synthesize identifiers
+    :param to_cursor: MySQL cursor. Helps in getting min NPI already in DB.
+    :param records: Records for which to synthesize identifier values
+    :return: Just(synthesized records) or Nothing() in case of any failure
+    '''
     stmt = """SELECT CAST(MIN(value) AS UNSIGNED) 
               FROM identifier 
               WHERE {} IS NOT NULL 
@@ -24,7 +34,17 @@ def npi_transformer(entity_id, to_cursor, records):
 
 
 @toolz.curry
-def hios_issuer_id_transformer(entity_id, to_cursor, ids):
+def hios_issuer_id_transformer(entity_id, to_cursor, records):
+    '''
+    Use by :func:migrate_identifier
+
+    Generate identifier values incrementally based on the maximum value already in the DB.
+
+    :param entity_id: The entity for which to synthesize identifiers
+    :param to_cursor: MySQL cursor. Helps in getting max value already in DB.
+    :param records: Records for which to synthesize identifier values
+    :return: Just(synthesized records) or Nothing() in case of any failure
+    '''
     stmt = """SELECT CAST(MAX(value) AS UNSIGNED) 
               FROM identifier 
               WHERE {} IS NOT NULL 
@@ -34,16 +54,36 @@ def hios_issuer_id_transformer(entity_id, to_cursor, ids):
         .map(next)\
         .map(first)\
         .map(lambda max_issuer_id: itertools.count((max_issuer_id or 0)+1))\
-        .map(lambda issuer_ids: map(lambda id, issuer_id: id[:-1] + (issuer_id,), ids, issuer_ids))
+        .map(lambda issuer_ids: map(lambda record, issuer_id: record[:-1] + (issuer_id,), records, issuer_ids))
 
 
 @toolz.curry
-def identity_transformer(entity_id, to_cursor, ids):
-    return Just(ids)
+def identity_transformer(entity_id, to_cursor, records):
+    '''
+    Use by :func:migrate_identifier
+
+    Return the identifiers unchanged.
+
+    :param entity_id: Ignored
+    :param to_cursor: Ignored
+    :param records: Records for which to synthesize identifier values
+    :return: Just(records)
+    '''
+    return Just(records)
 
 
 @toolz.curry
 def migrate_identifier(entity_id, system, transformer):
+    '''
+    Migrate the identifier table for the given entity and system. This function is meant to be called by the entity
+    for which we want to synthesize identifiers.
+
+    :param entity_id: Entity to migrate identifiers for (ex. vhdir_organization, vhdir_practitioner...)
+    :param system: Identifier system use for these identifiers (ex. http://hl7.org/fhir/sid/us-npi)
+    :param transformer: Not all identifiers are synthesized the same way depending on it's context. The entity calling
+    this method will tell which one to use.
+    :return: Just(connections) if everything went well else Nothing()
+    '''
     extract_stmt = """
                     SELECT {0}, identifier_id, identifier_status, identifier_status_value_code, `use`, system, 
                         type_cc_id, period_start, period_end, value

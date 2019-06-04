@@ -1,22 +1,22 @@
 from itertools import groupby
 
-import toolz
 from oslash import Just
 
 from nppes_data_generators.names.networks import synthetic_network_name_generator
 from nppes_data_loaders.etl.etl import SQLJob, SQLPipeline
 from nppes_data_loaders.migration.identifier import migrate_identifier, identity_transformer
 
-'''
-Within the same transaction:
-1. Migrate vhdir_network: synthesize name and alias and keep the rest the same
-2. Migrate identifier
-3. Migrate telecom
-4. Migrate address
-5. Migrate resource_reference ***NOT HERE***
-6. Migrate contact ***NOT HERE***
-'''
+
 def migrate_vhdir_network():
+    '''
+    Extract: Pull all networks from original DB
+    Transform: Synthesize both name and alias for each network using
+        :func:nppes_data_generators.names.networks.synthetic_network_name_generator
+    Load: Push synthesized networks to scrubbed DB
+
+    :param connections: Two-connection tuple to know where to pull the data from and here to push it back to
+    :return: Just(connections) if everything went well else Nothing()
+    '''
     extract_stmt = """SELECT n.network_id, n.meta_data_id, n.active, n.period_start, n.period_end, 
                         n.part_of_resource_reference_id, n.practitioner_role_id, n.organization_affiliation_id, 
                         n.coverage_id, n.plan_id, n.alias, n.name, a.state 
@@ -30,7 +30,6 @@ def migrate_vhdir_network():
                     part_of_resource_reference_id, practitioner_role_id, organization_affiliation_id, coverage_id, 
                     plan_id, name, alias) VALUES ({})""".format(('%s,'*12)[:-1])
 
-    @toolz.curry
     def transform(_, networks):
         name_synthesizer = synthetic_network_name_generator
 
@@ -44,6 +43,14 @@ def migrate_vhdir_network():
 
 
 def migrate_networks(connections):
+    '''
+    Migrate networks first and then their identifiers.
+
+    Need to turn off FK checks (setup/teardown) due to table inter-dependencies.
+
+    :param connections:  Two-connection tuple to know where to pull the data from and here to push it back to
+    :return:
+    '''
     return SQLPipeline(migrate_vhdir_network(),
                        migrate_identifier('network_id', 'https://www.cms.gov/CCIIO/', identity_transformer),
                        setup='SET FOREIGN_KEY_CHECKS=0;',

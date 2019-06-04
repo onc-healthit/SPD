@@ -7,10 +7,17 @@ from nppes_data_loaders.etl.etl import SQLJob
 
 @toolz.curry
 def migrate_address(connections):
+    '''
+    Extract: Pull all addresses from original DB
+    Transform: Synthesize address line1 for each address
+    Load: Push synthesized addresses to scrubbed DB
+
+    :param connections: Two-connection tuple to know where to pull the data from and here to push it back to
+    :return: Just(connections) if everything went well else Nothing()
+    '''
     extract_stmt = 'SELECT * FROM address;'
     load_stmt = 'INSERT INTO address VALUES ({});'.format(('%s,'*18)[:-1])
 
-    @toolz.curry
     def transform(_, addresses):
         address_line_generator = synthetic_address_line_generator()
 

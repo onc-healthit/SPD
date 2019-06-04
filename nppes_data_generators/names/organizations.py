@@ -1,7 +1,9 @@
+import itertools
 import random
 
 import toolz
 from oslash import Just, List
+from toolz import memoize
 
 from nppes_data_generators.utils.common import load_vocabulary
 from nppes_data_generators.utils.scrubbing import re_remove, re_split, remove_unwanted, breakdown, pick_other, \
@@ -49,7 +51,8 @@ def scrub_list(non_identifiables, restricted_non_identifiables, names, token_lis
     """
     scrubbed_list = tuple(_ for _ in (scrub_token(non_identifiables, names, _) for _ in token_list) if _)
     res = scrub_list(restricted_non_identifiables, [], names, token_list) if token_list and scrubbed_list == token_list \
-        else scrubbed_list if all(map(lambda _: _ in names or _ in non_identifiables, scrubbed_list)) \
+        else scrubbed_list if (all(map(lambda _: _ in names or _ in non_identifiables, scrubbed_list))
+                               and any(map(lambda _: _ in restricted_non_identifiables, scrubbed_list))) \
         else tuple()
     return res
 
@@ -133,7 +136,7 @@ def scrub_tokenized_name(non_identifiables, med_vocab, names, taxonomies, tokens
 
 
 @toolz.curry
-def scrub_name(non_identifiables, med_vocab, names, acronyms, name, *taxonomies):
+def scrub_name(non_identifiables, med_vocab, names, acronyms, org_numbers, name, *taxonomies):
     """
     :param id: The organization id
     :param name: The organization name
@@ -153,6 +156,7 @@ def scrub_name(non_identifiables, med_vocab, names, acronyms, name, *taxonomies)
         .map(tokenize(acronyms))\
         .map(token_scrubber)\
         .map(' '.join)\
+        .map(lambda _: _ if len(_.strip()) else 'Organization #{}'.format(next(org_numbers)))\
         .from_just()
 
 
@@ -179,4 +183,10 @@ def synthetic_org_name_generator():
     non_identifiables = entity_types | med_vocab | titles | general_vocab
     acronyms = entity_types | titles | name_prefixes | name_suffixes
 
-    return scrub_name(non_identifiables, med_vocab, names, acronyms)
+    org_numbers = itertools.count()
+
+    @memoize(key=lambda args, kwargs: args[0])
+    def go(name, *taxonomies):
+        return scrub_name(non_identifiables, med_vocab, names, acronyms, org_numbers, name, *taxonomies)
+
+    return go

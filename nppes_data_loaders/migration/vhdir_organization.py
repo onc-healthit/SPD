@@ -5,17 +5,19 @@ from nppes_data_generators.names.organizations import synthetic_org_name_generat
 from nppes_data_loaders.etl.etl import SQLJob, SQLPipeline
 from nppes_data_loaders.migration.identifier import migrate_identifier, npi_transformer, \
     hios_issuer_id_transformer
-from tests.utils import timing
 
-'''
-Within the same transaction:
-1. Migrate vhdir_organization: organization_id, name, active, partOf_organization_id
-2. Migrate identifier: use, system, organization_id, value
-3. Migrate telecom: organization_id, system, value
-4. Migrate address: organization_id, use, type, line1, city, district, state, postalCode, country, latitude, longitude
-5. Migrate organization_contact: organization_id, purpose_cc_id, name_id, address_id
-'''
+
 def migrate_vhdir_organization():
+    '''
+    Extract: Pull all organizations from original DB, along with their taxonomies
+    Transform: Synthesize the name field using the
+        :func:nppes_data_generators.names.organizations.synthetic_org_name_generator, then attach the name of the
+        parent organization if any
+    Load: Push synthesized organizations to scrubbed DB
+
+    :param connections: Two-connection tuple to know where to pull the data from and here to push it back to
+    :return: Just(connections) if everything went well else Nothing()
+    '''
     extract_stmt = """
             SELECT o.organization_id, o.name, COALESCE(GROUP_CONCAT(DISTINCT t.value), ''), 
                 active, partOf_organization_id
@@ -27,10 +29,7 @@ def migrate_vhdir_organization():
     load_stmt = """INSERT INTO vhdir_organization (organization_id, name, active, partOf_organization_id, 
                 partOf_organization_name) VALUES (%s, %s, %s, %s, %s);"""
 
-    @toolz.curry
-    @timing
     def transform(_, orgs):
-        print('Entering transform')
         name_synthesizer = synthetic_org_name_generator()
 
         def scrub_org(org):
@@ -45,9 +44,7 @@ def migrate_vhdir_organization():
             partOf_name = (d.get(org[-1])[1],) if d.get(org[-1]) else (None,)
             return org + partOf_name
 
-        '''
-         list(orgs) here to avoid keeping connection writing to net too long
-        '''
+        # Keep dict of generated names to attach parent org. names afterward
         without_partOf_name = {_[0]: _ for _ in map(scrub_org, orgs)}
         with_partOf_name = map(attach_partOf_name(without_partOf_name), without_partOf_name.values())
         return Just(with_partOf_name)
@@ -56,6 +53,15 @@ def migrate_vhdir_organization():
 
 
 def migrate_organizations(connections):
+    '''
+    Migrate organizations first, then identifiers belonging to NPPES orgs, then those belonging to CCIIO orgs.
+
+    Need to turn off FK checks (setup/teardown) due to intra-dependencies. For instance, an org. might refer to its
+    parent that has not been loaded yet.
+
+    :param connections:
+    :return:
+    '''
     return SQLPipeline(migrate_vhdir_organization(),
                        migrate_identifier('organization_id', 'http://hl7.org/fhir/sid/us-npi', npi_transformer),
                        migrate_identifier('organization_id', 'https://www.cms.gov/CCIIO/', hios_issuer_id_transformer),

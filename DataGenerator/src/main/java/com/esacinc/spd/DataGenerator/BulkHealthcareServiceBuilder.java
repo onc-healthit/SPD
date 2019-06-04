@@ -46,7 +46,8 @@ public class BulkHealthcareServiceBuilder implements INewPatients {
 			int hsId = resultSet.getInt("healthcare_service_id");
 			hs.setId(resultSet.getString("healthcare_service_id"));
 			ErrorReport.setCursor("VhDirHealthcareService", hs.getId());
-
+			System.out.println("HCService: " + hsId);
+			
 			hs.setText(ResourceFactory.makeNarrative("HealthcareService (id: " + hsId + ")"));
 
 			hs.setActive(resultSet.getBoolean("active"));

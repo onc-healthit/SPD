@@ -1,35 +1,50 @@
 MSG TYPE |PROCESS CURSOR |RESOURCE |ID |SHORT NOTE |MESSAGE
-C |Setup |ErrorReport | | |Generation Time: Mon Jun 03 02:07:14 CDT 2019
+C |Setup |ErrorReport | | |Generation Time: Tue Jun 04 09:26:48 CDT 2019
 C |Setup |Control Variables | | |Build Control variables re-initialized from properties in file: SPD_Settings.properties 
-C |Setup |Control Variables | | |Process all resource types: Yes, Max Entries: 1, Max Pretty Print Entries: 20, Print Nth of each Resource to console: 0
-C |Setup |DB Conections | | |SPD: jdbc:mysql://65.111.255.73:3306/spd_large, ZipCodes: jdbc:mysql://65.111.255.73:3306/zipcode, 
+C |Setup |Control Variables | | |Process all resource types: Yes, Max Entries: 10, Max Pretty Print Entries: 10, Print Nth of each Resource to console: 0
+C |Setup |DB Conections | | |SPD: jdbc:mysql://65.111.255.73:3306/spd_large_scrubbed, ZipCodes: jdbc:mysql://65.111.255.73:3306/zipcode, 
 I |  |DO_ORGANIZATIONS | | |
-I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Wed Jun 03 02:09:00 CDT 2020
-I |  | | | |1 Organizations Collected
+I |VhDirOrganization(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Thu Jun 04 09:26:49 CDT 2020
+I |VhDirOrganization(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Thu Jun 04 09:26:50 CDT 2020
+I |VhDirOrganization(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Thu Jun 04 09:26:51 CDT 2020
+I |  | | | |10 Organizations Collected
 I |  |DO_PRACTITIONERS | | |
-I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Wed Jun 03 02:13:10 CDT 2020
+I |VhDirPractitioner(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Thu Jun 04 09:26:57 CDT 2020
 W |VhDirPractitioner(id: 1)  |VhDirPractitioner |1 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
-I |  | | | |1 Practitioners Collected
+I |VhDirPractitioner(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Thu Jun 04 09:26:57 CDT 2020
+W |VhDirPractitioner(id: 2)  |VhDirPractitioner |2 |unrecognized gender: M |Unknown AdministrativeGender code 'M'
+I |VhDirPractitioner(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Thu Jun 04 09:26:58 CDT 2020
+W |VhDirPractitioner(id: 3)  |VhDirPractitioner |3 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
+W |VhDirPractitioner(id: 4)  |VhDirPractitioner |4 |unrecognized gender: M |Unknown AdministrativeGender code 'M'
+W |VhDirPractitioner(id: 5)  |VhDirPractitioner |5 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
+W |VhDirPractitioner(id: 6)  |VhDirPractitioner |6 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
+W |VhDirPractitioner(id: 7)  |VhDirPractitioner |7 |unrecognized gender: M |Unknown AdministrativeGender code 'M'
+W |VhDirPractitioner(id: 8)  |VhDirPractitioner |8 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
+W |VhDirPractitioner(id: 9)  |VhDirPractitioner |9 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
+W |VhDirPractitioner(id: 10)  |VhDirPractitioner |10 |unrecognized gender: F |Unknown AdministrativeGender code 'F'
+I |  | | | |10 Practitioners Collected
 I |  |DO_NETWORKS | | |
-I |  | | | |1 Networks Collected
+I |  | | | |10 Networks Collected
 I |  |DO_LOCATIONS | | |
-I |  | | | |1 Locations Collected
+I |  | | | |10 Locations Collected
 I |  |DO_VALIDATIONS | | |
-I |  | | | |1 Validations Collected
+I |  | | | |10 Validations Collected
 I |  |DO_ENDPOINTS | | |
 I |  | | | |0 Endpoints Collected
 I |  |DO_CARETEAMS | | |
-I |  | | | |1 CareTeams Collected
+I |  | | | |10 CareTeams Collected
 I |  |DO_HEALTHCARESERVICES | | |
-I |  | | | |1 Healthcare Services Collected
+I |  | | | |10 Healthcare Services Collected
 I |  |DO_INSURANCEPLANS | | |
-I |  | | | |1 Insurance Plans Collected
+I |  | | | |10 Insurance Plans Collected
 I |  |DO_ORGANIZATIONAFFILIATIONS | | |
-I |  | | | |1 Organization Affiliations Collected
+I |  | | | |10 Organization Affiliations Collected
 I |  |DO_PRACTITIONERROLES | | |
-I |VhDirPractitionerRole(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Wed Jun 03 02:13:54 CDT 2020
-I |  | | | |1 Practitioner Roles Collected
+I |VhDirPractitionerRole(id: 1)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 0, role, auth, other, x.509v3, Thu Jun 04 09:27:43 CDT 2020
+I |VhDirPractitionerRole(id: 2)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 1, role, auth, other, x.509v3, Thu Jun 04 09:27:43 CDT 2020
+I |VhDirPractitionerRole(id: 3)  |VhDirDigitalCertificate | |DigitalCertificateFactory.makeDigitalCertificate |Created a fake digital certificate with args: 2, role, auth, other, x.509v3, Thu Jun 04 09:27:44 CDT 2020
+I |  | | | |10 Practitioner Roles Collected
 I |  |DO_RESTRICTIONS | | |
-I |  | | | |1 Restrictions Collected
-I |  |END | | |Wrote 0 error, 1 warning, 0 geocode, and 27 info messages
-I |  |END | | |Elapsed time: 0 hours, 6 minutes, 41 seconds
+I |  | | | |10 Restrictions Collected
+I |  |END | | |Wrote 0 error, 10 warning, 0 geocode, and 33 info messages
+I |  |END | | |Elapsed time: 0 hours, 1 minutes, 4 seconds

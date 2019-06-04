@@ -1,4 +1,3 @@
-import logging
 from functools import reduce
 
 from oslash import Just

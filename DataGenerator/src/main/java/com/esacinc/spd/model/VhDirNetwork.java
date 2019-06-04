@@ -16,7 +16,7 @@ import ca.uhn.fhir.model.api.annotation.ResourceDef;
 
 */
 
-@ResourceDef(name="Network", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network")
+@ResourceDef(name="Organization", profile="http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-network")
 public class VhDirNetwork extends Organization { 
 	private static final long serialVersionUID = 1L;
     
@@ -39,7 +39,7 @@ public class VhDirNetwork extends Organization {
 
 
 	/**
-	 * Add location reference
+	 * Add organization reference
 	 */
 	@Child(name="organization-period", type = {Period.class}, min=0, max=1, modifier=false, summary=true)
 	@Extension(url="http://hl7.org/fhir/uv/vhdir/StructureDefinition/Period", definedLocally=false, isModifier=false)

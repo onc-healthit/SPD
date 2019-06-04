@@ -1,52 +1,22 @@
 package com.esacinc.spd.DataGenerator;
 
+import com.esacinc.spd.model.*;
+import com.esacinc.spd.model.complex_extensions.IDigitalCertificate;
+import com.esacinc.spd.model.complex_extensions.IQualification;
+import com.esacinc.spd.util.*;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
+import org.hl7.fhir.r4.model.Reference;
+import org.hl7.fhir.r4.model.StringType;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
-import org.hl7.fhir.r4.model.Address.AddressUse;
-import org.hl7.fhir.r4.model.CodeType;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.ContactPoint.ContactPointSystem;
-import org.hl7.fhir.r4.model.HumanName;
-import org.hl7.fhir.r4.model.HumanName.NameUse;
-import org.hl7.fhir.r4.model.Identifier.IdentifierUse;
-import org.hl7.fhir.r4.model.Organization.OrganizationContactComponent;
-import org.hl7.fhir.r4.model.Reference;
-import org.hl7.fhir.r4.model.TimeType;
-
-import com.esacinc.spd.model.VhDirAddress;
-import com.esacinc.spd.model.VhDirAlias;
-import com.esacinc.spd.model.VhDirContactPoint;
-import com.esacinc.spd.model.VhDirContactPointAvailableTime;
-import com.esacinc.spd.model.VhDirDigitalCertificate;
-import com.esacinc.spd.model.VhDirEndpoint;
-import com.esacinc.spd.model.VhDirGeoLocation;
-import com.esacinc.spd.model.VhDirIdentifier;
-import com.esacinc.spd.model.VhDirIdentifier.IdentifierStatus;
-import com.esacinc.spd.model.VhDirOrganization;
-import com.esacinc.spd.util.DigitalCertificateFactory;
-import com.esacinc.spd.util.Geocoding;
-import com.esacinc.spd.util.ResourceFactory;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-public class BulkOrganizationBuilder {
+public class BulkOrganizationBuilder implements IDigitalCertificate, IQualification {
 	
 	
 	/**
@@ -61,58 +31,68 @@ public class BulkOrganizationBuilder {
 	public List<VhDirOrganization> getOrganizations(Connection connection) throws SQLException, ParseException {
 		List<VhDirOrganization> organizations = new ArrayList<VhDirOrganization>();
 		
+	
+		int cnt = 0;
 		int certCount = 0;
-		String sql = "SELECT * FROM vhdir_organization";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet resultSet = statement.executeQuery();
-		while (resultSet.next()) {
+		int orgId = 0;
+		String limit = (DatabaseUtil.GLOBAL_LIMIT > 0) ? " LIMIT " +DatabaseUtil.GLOBAL_LIMIT : "";
+	    ResultSet resultSet = DatabaseUtil.runQuery(connection, "SELECT * FROM vhdir_organization WHERE organization_id > " + BulkDataApp.FROM_ID_ORGANIZATIONS + " ORDER BY organization_id " + limit,null);
+		while (resultSet.next() && BulkDataApp.okToProceed(cnt)) {
 			VhDirOrganization org = new VhDirOrganization();
 			try {
 			// set the id
-			int orgId = resultSet.getInt("organization_id");
+			orgId = resultSet.getInt("organization_id");
 			org.setId(resultSet.getString("organization_id"));
-			 					
+			ErrorReport.setCursor("VhDirOrganization", org.getId());
+
+			System.out.println("OrgId: " + orgId);  // temporary debugging for now
+			
+			org.setText(ResourceFactory.makeNarrative("Organization (id: " + orgId + ")"));
+
+		
 			// Handle description
-			String description = resultSet.getString("description");
-			if (description != null) {
-				org.setDescription(description);
-			}
+			org.setDescription(resultSet.getString("description"));
 			
 			// Add a digital certificate to the first 3 organizations
 			if (certCount < DigitalCertificateFactory.MAX_CERTS) {
-				// Figure the date one year from now, use that as an expiration date
-				Date expire = new Date();
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(expire);
-				cal.add(Calendar.YEAR, 1);
 				// args are:  nthCert, type, use, trustFramework, standard, expirationDate
-				org.addDigitalcertficate(DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509.v3", cal.getTime()));
+				System.out.println("Adding a cert");
+				VhDirDigitalCertificate cert = DigitalCertificateFactory.makeDigitalCertificate(certCount++, "role", "auth", "other", "x.509v3", null);
+				org.addDigitalcertficate(cert);
 			}
-						
+			
+        	handleQualifications(connection, org, orgId);
+			
 			// Handle the identifiers
 			handleIdentifiers(connection, org, orgId);
 			
-			// TODO Hard coded active for now
-			int active = resultSet.getInt("active");
-			if (active == 1)
-				org.setActive(true);
-			else
-				org.setActive(false);
+			// 
+			org.setActive(resultSet.getBoolean("active"));
 			
 			// TODO Hard coded type as provider for now
 			CodeableConcept typeConcept = new CodeableConcept();
-            typeConcept.addCoding(ResourceFactory.makeCoding("prov", "prov", "http://terminology.hl7.org/CodeSystem/organization-type", false));
+            typeConcept.addCoding(ResourceFactory.makeCoding("prov", "Healthcare Provider", "http://terminology.hl7.org/CodeSystem/organization-type", false));
             org.addType(typeConcept);
 					
             // Handle the name
-         	String name = resultSet.getString("name");
-         	if (name != null) {
-         		org.setName(name);
-         	}
+            org.setDescription(resultSet.getString("name"));
          			
 			// Handle aliases
-         	// TODO handleAliases(connection, org, orgId);
-			
+         	handleAliases(connection, resultSet, org, orgId);
+
+         	// Now that we have aliases, we can handle the case where name isn't specified in the db
+			String name = resultSet.getString("name");
+			if (name == null || name.isEmpty()) {
+				// If no name, the use the first alias, if there is one.
+				List<StringType> names = org.getAlias();
+				if (names != null && names.size() > 0) {
+					name = names.get(0).asStringValue();
+				}
+				else name = "Not provided";
+			}
+			org.setName(name);
+
+
             // Handle the telecoms
          	handleTelecoms(connection, org, orgId);
          	
@@ -120,24 +100,27 @@ public class BulkOrganizationBuilder {
          	handleAddresses(connection, org, orgId);
 			
 			// Handle the partOf association reference
-         	String partOfId = resultSet.getString("partOf_organization_id");
-         	if (partOfId != null) {
-	         	Reference partOf = new Reference();
-	         	partOf.setId(partOfId);
-	         	partOf.setReference("urn:uuid:" + partOfId);
-	         	org.setPartOf(partOf);
-         	}
+         	org.setPartOf(ResourceFactory.makeResourceReference(resultSet.getString("partOf_organization_id"), "vhdir_organization", null, "Part of Organization"));
 			
 			// Handle contacts
          	handleContacts(connection, org, orgId);
-			 
+         	
+         	// Handle endpoints
+         	handleEndpoints(connection, org, orgId);
+
+            // Handle the restrictions
+         	handleRestrictions(connection, org, orgId);
+
 			organizations.add(org);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
+				ErrorReport.writeError("VhDirOrganization", String.valueOf(orgId), "getOrganizations", e.getMessage());
+
 			}
+			cnt++;
 		}
-		
+		System.out.println("Made " + organizations.size() + " organizations");
 		return organizations;
 	}
 	
@@ -150,12 +133,9 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleIdentifiers(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String idSql = "SELECT * from identifier where organization_id = ?";
-		PreparedStatement idStatement = connection.prepareStatement(idSql);
-		idStatement.setInt(1, orgId);
-		ResultSet idResultset = idStatement.executeQuery();
-		while(idResultset.next()) {
-				VhDirIdentifier identifier = ResourceFactory.getIdentifier(idResultset);
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from identifier where organization_id = ?", orgId);
+		while(resultset.next()) {
+				VhDirIdentifier identifier = ResourceFactory.getIdentifier(resultset);
 				org.addIdentifier(identifier);
 		}
 	}
@@ -169,15 +149,10 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleAddresses(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String addrSql = "SELECT * from address where organization_id = ?";
-		PreparedStatement addrStatement = connection.prepareStatement(addrSql);
-		addrStatement.setInt(1, orgId);
-		ResultSet addrResultset = addrStatement.executeQuery();
-		while(addrResultset.next()) {
-			while(addrResultset.next()) {
-				VhDirAddress addr = ResourceFactory.getAddress(addrResultset, connection);
-				org.addAddress(addr);
-			}
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT address_id from address where organization_id = ?", orgId);
+		while(resultset.next()) {
+			VhDirAddress addr = ResourceFactory.getAddress(resultset.getInt("address_id"), connection);
+			org.addAddress(addr);
 		}
 	}
 	
@@ -190,14 +165,13 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleTelecoms(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String addrSql = "SELECT * from telecom where organization_id = ?";
-		PreparedStatement telecomStatement = connection.prepareStatement(addrSql);
-		telecomStatement.setInt(1, orgId);
-		ResultSet telecomResultset = telecomStatement.executeQuery();
-		while(telecomResultset.next()) {
-			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset);
-			// Add a 24x7 available time for this telecom contact point
-			tele.addAvailableTime(ResourceFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat;sun", true, null, null));
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from telecom where organization_id = ?", orgId);
+		while(resultset.next()) {
+			VhDirTelecom tele = ContactFactory.getTelecom(resultset,connection);
+			if (!tele.hasAvailableTime()) {
+				// Add a 24x7 available time for this telecom contact point
+				tele.addAvailableTime(ContactFactory.makeAvailableTime("sun;mon;tue;wed;thu;fri;sat;sun", true, null, null));
+			}
 			org.addTelecom(tele);
 		}
 	}
@@ -211,64 +185,14 @@ public class BulkOrganizationBuilder {
 	 * @throws SQLException
 	 */
 	private void handleContacts(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String contactSql = "SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, " +
-				"oc.organization_contact_id " +
-     			"FROM name as n, organization_contact as oc " +
-     			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?";
-     	PreparedStatement contactStatement = connection.prepareStatement(contactSql);
-     	contactStatement.setInt(1, orgId);
-		ResultSet contactResultset = contactStatement.executeQuery();
-		while(contactResultset.next()) {
-			OrganizationContactComponent occ = new OrganizationContactComponent();
-			
-			// Set id
-			int orgContactId = contactResultset.getInt("organization_contact_id");
-			occ.setId(contactResultset.getString("organization_contact_id"));
-			
-			// Set name
-			HumanName name = new HumanName();
-			String nameId = contactResultset.getString("name_id");
-			if (nameId != null)
-				name.setId(nameId);
-			
-			String family = contactResultset.getString("family");
-			if (family != null)
-				name.setFamily(family);
-			
-			String prefix = contactResultset.getString("prefix");
-			if (prefix != null)
-				name.addPrefix(prefix);
-			
-			String given = contactResultset.getString("given");
-			if (given != null)
-				name.addGiven(given);
-			
-			String suffix = contactResultset.getString("suffix");
-			if (suffix != null)
-				name.addSuffix(suffix);
-			
-			// Set name use
-			String use = contactResultset.getString("use");
-			if ("official".equals(use))
-				name.setUse(NameUse.OFFICIAL);
-			if ("official".equals(use))
-				name.setUse(NameUse.ANONYMOUS);
-			if ("official".equals(use))
-				name.setUse(NameUse.MAIDEN);
-			if ("official".equals(use))
-				name.setUse(NameUse.NICKNAME);
-			if ("official".equals(use))
-				name.setUse(NameUse.OLD);
-			if ("official".equals(use))
-				name.setUse(NameUse.TEMP);
-			if ("official".equals(use))
-				name.setUse(NameUse.USUAL);
-			
-			occ.setName(name);
-			
-			// Handle telecoms for contacts
-			handleContactTelecoms(connection, occ, orgContactId);
-			
+     	ResultSet resultset = DatabaseUtil.runQuery(connection, 
+     			"SELECT n.name_id, n.use, n.prefix, n.family, n.given, n.suffix, n.period_start, n.period_end, " +
+				"oc.contact_id " +
+     			"FROM name as n, contact as oc " +
+     			"WHERE n.name_id = oc.name_id AND oc.organization_id = ?", 
+     			orgId);
+		while(resultset.next()) {
+			OrganizationContactComponent occ = ContactFactory.getOrganizationContact(resultset, connection);
 			org.addContact(occ);
 		}
 	}
@@ -281,53 +205,65 @@ public class BulkOrganizationBuilder {
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleAliases(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
-		String aliasSql = "SELECT * FROM organization_alias WHERE organization_id = ?";
-     	PreparedStatement aliasStatement = connection.prepareStatement(aliasSql);
-     	aliasStatement.setInt(1, orgId);
-		ResultSet aliasResultset = aliasStatement.executeQuery();
-		while(aliasResultset.next()) {
+	private void handleAliases(Connection connection, ResultSet resultSet, VhDirOrganization org, int orgId) throws SQLException {
+        ResultSet aliasResults = DatabaseUtil.runQuery(connection, "SELECT * FROM organization_alias WHERE organization_id = ?", 3);
+        while(aliasResults.next()) {
 			VhDirAlias alias = new VhDirAlias();
 			
 			// Set id
-			alias.setId(aliasResultset.getString("organization_alias_id"));
-			
-			// Handle type
-			
-			// Handle period
-			
-			// Handle value
-			String value = aliasResultset.getString("value");
-			if (value != null)
-				alias.setValue(value);
-			
-			org.addAlias(alias);
+			alias.setId(aliasResults.getString("organization_alias_id"));
+			alias.setPeriod(ResourceFactory.makePeriod(aliasResults.getDate("period_start"), aliasResults.getDate("period_end")));
+			alias.setType(ResourceFactory.getCodeableConcept(aliasResults.getInt("alias_type_cc_id"), connection));
+			alias.setValue(new StringType(aliasResults.getString("value")));
+			org.addOrgAlias(alias);
+			org.addAlias(aliasResults.getString("value")); // Add base profile alias type
 		}
 	}
 	
+
 	/**
-	 * Gets the telecoms for the contacts for an organization given the organization contact ID
+	 * Handle the endpoint references associated with the organization 
+	 * @param connection
+	 * @param org
+	 * @param orgId
+	 * @throws SQLException
+	 */
+	private void handleEndpoints(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+        ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from vhdir_endpoint where organization_id = ?", orgId);
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.makeResourceReference(resultset.getString("endpoint_id"), "VhDirEndpoint", null, "Organization Endpoint");
+			org.addEndpoint(ref);  
+		}
+	}
+
+	/**
+	 * Handle the restrictions associated with the organization 
+	 * @param connection
+	 * @param prac
+	 * @param pracId
+	 * @throws SQLException
+	 */
+	private void handleRestrictions(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+		ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from resource_reference where organization_restriction_id = ?", orgId);
+		while(resultset.next()) {
+			Reference ref = ResourceFactory.getResourceReference(resultset,connection);
+			org.addUsageRestriction(ref);
+		}
+	}
+
+	/**
+	 * Handles all the elements of the qualifications for Organizations
 	 * 
 	 * @param connection
 	 * @param org
 	 * @param orgId
 	 * @throws SQLException
 	 */
-	private void handleContactTelecoms(Connection connection, OrganizationContactComponent occ,
-			int orgContactId) throws SQLException {
-		String contactSql = "SELECT * FROM telecom WHERE organization_contact_id = ?";
-     	PreparedStatement telecomStatement = connection.prepareStatement(contactSql);
-     	telecomStatement.setInt(1, orgContactId);
-		ResultSet telecomResultset = telecomStatement.executeQuery();
-		while(telecomResultset.next()) {
-			VhDirContactPoint tele = ResourceFactory.getContactPoint(telecomResultset); 
-			// Add weekday, normal business hours availablility for this contact
-			tele.addAvailableTime(ResourceFactory.makeAvailableTime("mon;tue;wed;thu;fri", false, "08:00:00", "17:00:00"));
-			occ.addTelecom(tele);
+	private void handleQualifications(Connection connection, VhDirOrganization org, int orgId) throws SQLException {
+	    ResultSet resultset = DatabaseUtil.runQuery(connection, "SELECT * from qualification where organization_id = ?", orgId);
+		while(resultset.next()) {
+			VhDirQualification qu = ResourceFactory.getVhDirQualification(resultset, connection);
+			org.addQualification(qu);
 		}
 	}
-
-
-
-
 }

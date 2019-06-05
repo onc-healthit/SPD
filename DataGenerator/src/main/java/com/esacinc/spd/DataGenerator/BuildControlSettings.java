@@ -146,6 +146,7 @@ public class BuildControlSettings {
 			DatabaseUtil.GLOBAL_LIMIT = PropertiesUtil.getPropertyInteger("GLOBAL_LIMIT", DatabaseUtil.GLOBAL_LIMIT);
 			
 			// Re-Initialize whether we want to do a couple basic tests of the Geocode function. (Probably we don't.)
+			Geocoding.SKIP_GEOCODE_PROCESSING =  PropertiesUtil.getPropertyBoolean("SKIP_GEOCODE_PROCESSING",Geocoding.SKIP_GEOCODE_PROCESSING);
 			Geocoding.DO_GEOCODE_TEST =  PropertiesUtil.getPropertyBoolean("DO_GEOTEST",Geocoding.DO_GEOCODE_TEST);
 			Geocoding.PROCESS_GEOCODES_ONLY =  PropertiesUtil.getPropertyBoolean("PROCESS_GEOCODES_ONLY",Geocoding.PROCESS_GEOCODES_ONLY);
 			Geocoding.UPDATE_ADDRESSES =  PropertiesUtil.getPropertyBoolean("UPDATE_ADDRESSES",Geocoding.UPDATE_ADDRESSES);

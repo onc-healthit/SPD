@@ -20,7 +20,8 @@ import java.sql.SQLException;
 public class Geocoding implements IGeoLocation {
 	
 	static public boolean PROCESS_GEOCODES_ONLY=false;
-	static public boolean UPDATE_ADDRESSES = false;
+	static public boolean SKIP_GEOCODE_PROCESSING = false; // If true, then don't do any geocoding (local or using external service)
+	static public boolean UPDATE_ADDRESSES = true;
 	static public boolean LIMIT_REACHED = false; 
 	static public Connection zipconnection = null;
 	static public boolean DO_GEOCODE_TEST = false;
@@ -129,9 +130,14 @@ public class Geocoding implements IGeoLocation {
 		VhDirGeoLocation loc = new VhDirGeoLocation();
 		try {
 			// If we don't have a valid lat/lon, the get one by geo locating the given postalCode
-			if (lat == null || lon == null || lat == 0.0 || lon == 0.0) {
-				System.out.println("Geocoding.getGeoLocation:  AddressID: " + addressId + " Calling Geocoding lat-lon for postal code " + postalCode);
-				loc = Geocoding.geocodePostalCode(postalCode, connection, addressId);
+			if (lat == null || lon == null || lat == 0.0 || lon == 0.0 ) {
+				if (!SKIP_GEOCODE_PROCESSING) {
+					System.out.println("Geocoding.getGeoLocation:  AddressID: " + addressId + " Calling Geocoding lat-lon for postal code " + postalCode);
+					loc = Geocoding.geocodePostalCode(postalCode, connection, addressId);
+				}
+				else {
+					loc = null;  // So nothing will get generated
+				}
 			} else {
 				// Otherwise, simply put the lat/lon into a geolocation object.
 				loc = new VhDirGeoLocation();
